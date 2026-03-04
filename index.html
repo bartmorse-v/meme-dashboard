@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Experience Score — Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: #f4f5f7;
+      color: #1a1b1d;
+      padding: 40px 32px;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .header { margin-bottom: 24px; }
+    .header__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #7c5cbf;
+      margin-bottom: 8px;
+    }
+    .header__title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .header__sub { font-size: 14px; color: #6b7280; }
+
+    /* ── Tab Nav ── */
+    .tab-nav {
+      display: flex;
+      gap: 4px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+    .tab-btn {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      padding: 10px 24px;
+      border-radius: 9px;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+      color: #6b7280;
+      transition: all 0.18s ease;
+    }
+    .tab-btn.active {
+      background: #1a1b1d;
+      color: #fff;
+    }
+    .tab-btn:hover:not(.active) {
+      background: #f4f5f7;
+      color: #1a1b1d;
+    }
+
+    /* ── Tab Panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── KPI Cards ── */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 22px;
+      border: 1px solid #e5e7eb;
+    }
+    .kpi__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    .kpi__value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .kpi__badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .kpi__trend { font-size: 12px; color: #6b7280; margin-top: 4px; }
+    .kpi__trend span { font-weight: 600; }
+    .up   { color: #059669; }
+    .down { color: #dc2626; }
+
+    /* ── Band Colors ── */
+    .band--exceptional { background: #d1fae5; color: #065f46; }
+    .band--exceeds     { background: #dbeafe; color: #1e40af; }
+    .band--effective   { background: #fef3c7; color: #92400e; }
+    .band--mixed       { background: #ffe4e6; color: #9f1239; }
+    .band--offtrack    { background: #fecaca; color: #7f1d1d; }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 24px;
+    }
+    .card__title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .card__sub   { font-size: 12px; color: #9ca3af; margin-bottom: 24px; }
+
+    /* ── Charts ── */
+    .chart-wrap  { position: relative; height: 380px; }
+    .bar-wrap    { position: relative; height: 240px; }
+    .hbar-wrap   { position: relative; height: 260px; }
+    .sbar-wrap   { position: relative; height: 220px; }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #4b5563; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ── Grid Layouts ── */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      padding: 8px 10px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #f9fafb;
+      font-variant-numeric: tabular-nums;
+    }
+    tr:last-child td { border-bottom: none; }
+    .score-cell { font-weight: 600; font-size: 14px; }
+    .pill {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* ── EM Scorecard ── */
+    .em-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .em-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px;
+      position: relative;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .em-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .em-card--exceptional { border-top: 3px solid #059669; }
+    .em-card--exceeds     { border-top: 3px solid #3b82f6; }
+    .em-card--effective   { border-top: 3px solid #f59e0b; }
+    .em-card--mixed       { border-top: 3px solid #ef4444; }
+    .em-card--offtrack    { border-top: 3px solid #dc2626; }
+
+    .em-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .em-num {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+    .em-card__score {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .em-card__name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+    .em-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .em-card__dots { font-size: 13px; letter-spacing: 2px; }
+    .em-card__note { font-size: 10px; color: #9ca3af; }
+
+    /* ── NPS Block ── */
+    .nps-score-big {
+      font-size: 64px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #1a1b1d;
+      margin-bottom: 4px;
+    }
+    .nps-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #9ca3af;
+      margin-bottom: 20px;
+    }
+    .nps-bar {
+      display: flex;
+      height: 14px;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .nps-bar__promoter  { background: #059669; }
+    .nps-bar__passive   { background: #9ca3af; }
+    .nps-bar__detractor { background: #dc2626; }
+    .nps-segments {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .nps-seg { text-align: center; }
+    .nps-seg__pct {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: block;
+    }
+    .nps-seg__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .nps-seg__count {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .nps-seg--promoter  .nps-seg__pct   { color: #059669; }
+    .nps-seg--passive   .nps-seg__pct   { color: #6b7280; }
+    .nps-seg--detractor .nps-seg__pct   { color: #dc2626; }
+    .nps-total {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #f3f4f6;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .nps-total strong { color: #1a1b1d; font-weight: 600; }
+
+    /* ── Branch Incentive Badge ── */
+    .incentive-wrap {
+      text-align: center;
+      padding: 8px 0;
+    }
+    .incentive-amount {
+      font-size: 40px;
+      font-weight: 700;
+      color: #059669;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .em-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .kpis  { grid-template-columns: 1fr 1fr; }
+      .grid2 { grid-template-columns: 1fr; }
+      .grid3 { grid-template-columns: 1fr; }
+      .em-grid { grid-template-columns: 1fr; }
+      body { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header__eyebrow">Performance Report · January 2026</div>
+    <h1 class="header__title">Member Experience Score</h1>
+    <p class="header__sub">Copper State Credit Union &nbsp;·&nbsp; Score range 1.00 – 5.00</p>
+  </div>
+
+  <!-- Tab Nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="trend">Score Trend</button>
+    <button class="tab-btn" data-tab="jan26">January 2026 Report</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TAB 1: SCORE TREND
+  ══════════════════════════════════════ -->
+  <div id="panel-trend" class="tab-panel active">
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi__label">Jan 2026 Score</div>
+        <div class="kpi__value" style="color:#7c5cbf">3.56</div>
+        <span class="kpi__badge band--effective">Effective</span>
+        <div class="kpi__trend"><span class="up">+0.38</span> vs Dec 2025</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">2025 Average</div>
+        <div class="kpi__value">3.01</div>
+        <span class="kpi__badge band--effective">Effective</span>
+        <div class="kpi__trend"><span class="down">−0.65</span> vs 2024 avg</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">2024 Average</div>
+        <div class="kpi__value">3.66</div>
+        <span class="kpi__badge band--effective">Effective</span>
+        <div class="kpi__trend"><span class="up">+0.11</span> vs 2023 avg</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">All-Time High</div>
+        <div class="kpi__value">4.08</div>
+        <span class="kpi__badge band--exceeds">Exceeds</span>
+        <div class="kpi__trend">Feb 2024</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__title">Score Trend — Full History</div>
+      <div class="card__sub">Jul 2022 through Jan 2026 · Shaded bands show performance tiers</div>
+      <div class="chart-wrap">
+        <canvas id="trendChart"></canvas>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:#bbf7d0"></div> Exceptional (4.51–5.00)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe"></div> Exceeds Expectations (3.76–4.50)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#fde68a"></div> Effective (2.76–3.75)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#fecaca"></div> Mixed (2.01–2.75)</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#7c5cbf; border-radius:50%"></div> Score Line</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#f97316; border-radius:50%"></div> Jan 2026 (Latest)</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card__title">Annual Average Comparison</div>
+        <div class="card__sub">Average score by year</div>
+        <div class="bar-wrap">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__title">2025 Monthly Breakdown</div>
+        <div class="card__sub">Full year performance</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Month</th><th>Score</th><th>Rating</th></tr></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-trend -->
+
+  <!-- ══════════════════════════════════════
+       TAB 2: JANUARY 2026 REPORT
+  ══════════════════════════════════════ -->
+  <div id="panel-jan26" class="tab-panel">
+
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi__label">MEME Score</div>
+        <div class="kpi__value" style="color:#7c5cbf">3.56</div>
+        <span class="kpi__badge band--effective">Effective</span>
+        <div class="kpi__trend">32 pts across 9 measures</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Total Survey Responses</div>
+        <div class="kpi__value">1,167</div>
+        <div class="kpi__trend">across <strong>6 channels</strong></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Overall Response Rate</div>
+        <div class="kpi__value">26.24%</div>
+        <span class="kpi__badge band--exceeds">Exceeds</span>
+        <div class="kpi__trend">11,168 surveys delivered</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Branch Incentive Payout</div>
+        <div class="incentive-wrap">
+          <div class="incentive-amount">$125</div>
+          <span class="kpi__badge band--exceptional">Exceptional</span>
+        </div>
+        <div class="kpi__trend">Branch score: 98.15%</div>
+      </div>
+    </div>
+
+    <!-- EM Scorecard -->
+    <div class="card" style="padding-bottom: 8px;">
+      <div class="card__title">EM Benchmark Scorecard</div>
+      <div class="card__sub">All 9 Experience Measures · January 2026 actuals vs performance bands</div>
+      <div class="em-grid" id="emGrid"></div>
+    </div>
+
+    <!-- NPS + Response Rate -->
+    <div class="grid2">
+
+      <div class="card">
+        <div class="card__title">EM 1 — NPS Breakdown</div>
+        <div class="card__sub">Net Promoter Score · 739 responses · Quarterly email survey</div>
+        <div class="nps-score-big">74.56</div>
+        <div class="nps-label">Net Promoter Score</div>
+        <div class="nps-bar">
+          <div class="nps-bar__promoter"  style="width: 81.06%"></div>
+          <div class="nps-bar__passive"   style="width: 12.45%"></div>
+          <div class="nps-bar__detractor" style="width:  6.50%"></div>
+        </div>
+        <div class="nps-segments">
+          <div class="nps-seg nps-seg--promoter">
+            <span class="nps-seg__label">Promoters</span>
+            <span class="nps-seg__pct">81.06%</span>
+            <span class="nps-seg__count">599 responses</span>
+          </div>
+          <div class="nps-seg nps-seg--passive">
+            <span class="nps-seg__label">Passives</span>
+            <span class="nps-seg__pct">12.45%</span>
+            <span class="nps-seg__count">92 responses</span>
+          </div>
+          <div class="nps-seg nps-seg--detractor">
+            <span class="nps-seg__label">Detractors</span>
+            <span class="nps-seg__pct">6.50%</span>
+            <span class="nps-seg__count">48 responses</span>
+          </div>
+        </div>
+        <div class="nps-total">Score = Promoters − Detractors &nbsp;·&nbsp; <strong>739</strong> total responses</div>
+      </div>
+
+      <div class="card">
+        <div class="card__title">EM 2 — Response Rate by Channel</div>
+        <div class="card__sub">Responses ÷ Surveys Delivered · Higher = more statistically accurate</div>
+        <div class="hbar-wrap">
+          <canvas id="responseChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Star Rating Charts -->
+    <div class="grid2">
+      <div class="card">
+        <div class="card__title">EM 6 — Chat Experience</div>
+        <div class="card__sub">Post-chat star rating via Talkdesk · 26 responses · Avg: 2.50 / 5</div>
+        <div class="sbar-wrap">
+          <canvas id="chatChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__title">EM 8 — Phone Call Experience</div>
+        <div class="card__sub">Recorded call rating · Solution Center · 301 responses · Avg: 4.36 / 5</div>
+        <div class="sbar-wrap">
+          <canvas id="phoneChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-jan26 -->
+
+</div><!-- /page -->
+
+<script>
+// ═══════════════════════════════════════════════
+//  SHARED UTILITIES
+// ═══════════════════════════════════════════════
+function avg(arr) {
+  return Math.round(arr.reduce((a, b) => a + b, 0) / arr.length * 100) / 100;
+}
+
+function getBand(v) {
+  if (v >= 4.51) return { label: 'Exceptional', cls: 'band--exceptional' };
+  if (v >= 3.76) return { label: 'Exceeds',     cls: 'band--exceeds'    };
+  if (v >= 2.76) return { label: 'Effective',   cls: 'band--effective'  };
+  if (v >= 2.01) return { label: 'Mixed',        cls: 'band--mixed'      };
+  return               { label: 'Off Track',    cls: 'band--offtrack'   };
+}
+
+const tooltipDefaults = {
+  backgroundColor: '#1a1b1d',
+  titleFont: { size: 12 },
+  bodyFont: { size: 13 },
+  padding: 12,
+  cornerRadius: 8,
+};
+
+// ═══════════════════════════════════════════════
+//  TAB 1 DATA
+// ═══════════════════════════════════════════════
+const allData = [
+  { label: 'Jul-22', value: 3.75 }, { label: 'Aug-22', value: 3.88 },
+  { label: 'Sep-22', value: 3.60 }, { label: 'Oct-22', value: 3.73 },
+  { label: 'Nov-22', value: 3.73 }, { label: 'Dec-22', value: 3.75 },
+  { label: 'Jan-23', value: 3.18 }, { label: 'Feb-23', value: 3.83 },
+  { label: 'Mar-23', value: 3.92 }, { label: 'Apr-23', value: 3.67 },
+  { label: 'May-23', value: 3.42 }, { label: 'Jun-23', value: 3.58 },
+  { label: 'Jul-23', value: 3.42 }, { label: 'Aug-23', value: 3.50 },
+  { label: 'Sep-23', value: 3.58 }, { label: 'Oct-23', value: 3.83 },
+  { label: 'Nov-23', value: 3.25 }, { label: 'Dec-23', value: 3.67 },
+  { label: 'Jan-24', value: 3.64 }, { label: 'Feb-24', value: 4.08 },
+  { label: 'Mar-24', value: 3.83 }, { label: 'Apr-24', value: 3.67 },
+  { label: 'May-24', value: 3.75 }, { label: 'Jun-24', value: 3.50 },
+  { label: 'Jul-24', value: 3.83 }, { label: 'Aug-24', value: 3.75 },
+  { label: 'Sep-24', value: 3.25 }, { label: 'Oct-24', value: 3.58 },
+  { label: 'Nov-24', value: 3.75 }, { label: 'Dec-24', value: 3.80 },
+  { label: 'Jan-25', value: 3.82 }, { label: 'Feb-25', value: 2.56 },
+  { label: 'Mar-25', value: 3.11 }, { label: 'Apr-25', value: 2.70 },
+  { label: 'May-25', value: 2.60 }, { label: 'Jun-25', value: 2.90 },
+  { label: 'Jul-25', value: 3.10 }, { label: 'Aug-25', value: 3.18 },
+  { label: 'Sep-25', value: 3.27 }, { label: 'Oct-25', value: 3.36 },
+  { label: 'Nov-25', value: 3.36 }, { label: 'Dec-25', value: 3.18 },
+  { label: 'Jan-26', value: 3.56 },
+];
+
+const yearAvgs = [
+  { year: '2022', avg: avg([3.75,3.88,3.60,3.73,3.73,3.75]) },
+  { year: '2023', avg: avg([3.18,3.83,3.92,3.67,3.42,3.58,3.42,3.50,3.58,3.83,3.25,3.67]) },
+  { year: '2024', avg: avg([3.64,4.08,3.83,3.67,3.75,3.50,3.83,3.75,3.25,3.58,3.75,3.80]) },
+  { year: '2025', avg: avg([3.82,2.56,3.11,2.70,2.60,2.90,3.10,3.18,3.27,3.36,3.36,3.18]) },
+];
+
+// ── Trend Chart ──
+const bandPlugin = {
+  id: 'bandPlugin',
+  beforeDraw(chart) {
+    const { ctx: c, scales: { x, y } } = chart;
+    [
+      { min: 4.51, max: 5.00, color: 'rgba(187,247,208,0.35)' },
+      { min: 3.76, max: 4.50, color: 'rgba(191,219,254,0.35)' },
+      { min: 2.76, max: 3.75, color: 'rgba(253,230,138,0.30)' },
+      { min: 2.01, max: 2.75, color: 'rgba(254,202,202,0.45)' },
+    ].forEach(b => {
+      const yTop = y.getPixelForValue(b.max), yBot = y.getPixelForValue(b.min);
+      c.save(); c.fillStyle = b.color;
+      c.fillRect(x.left, yTop, x.right - x.left, yBot - yTop);
+      c.restore();
+    });
+  }
+};
+
+const pointColors = allData.map((d, i) => i === allData.length - 1 ? '#f97316' : '#7c5cbf');
+const pointRadius = allData.map((d, i) => i === allData.length - 1 ? 7 : 4);
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  plugins: [bandPlugin],
+  data: {
+    labels: allData.map(d => d.label),
+    datasets: [{
+      data: allData.map(d => d.value),
+      borderColor: '#7c5cbf', borderWidth: 2.5,
+      pointBackgroundColor: pointColors, pointBorderColor: pointColors,
+      pointRadius, pointHoverRadius: 7, tension: 0.35, fill: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { ...tooltipDefaults, callbacks: { label: ctx => ` Score: ${ctx.parsed.y.toFixed(2)}  (${getBand(ctx.parsed.y).label})` } }
+    },
+    scales: {
+      x: { ticks: { font: { size: 10 }, color: '#9ca3af', maxRotation: 45, autoSkip: true, maxTicksLimit: 20 }, grid: { color: 'rgba(0,0,0,0.04)' } },
+      y: { min: 2.00, max: 5.00, ticks: { stepSize: 0.25, font: { size: 11 }, color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.06)' } }
+    }
+  }
+});
+
+// ── Bar Chart ──
+const barColors = yearAvgs.map(d => d.avg >= 3.76 ? '#bfdbfe' : d.avg >= 2.76 ? '#fde68a' : '#fecaca');
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: yearAvgs.map(d => d.year),
+    datasets: [{ data: yearAvgs.map(d => d.avg), backgroundColor: barColors, borderWidth: 0, borderRadius: 8 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { ...tooltipDefaults, callbacks: { label: ctx => ` Avg: ${ctx.parsed.y.toFixed(2)}  (${getBand(ctx.parsed.y).label})` } }
+    },
+    scales: {
+      y: { min: 2.00, max: 4.50, ticks: { stepSize: 0.25, font: { size: 11 }, color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.06)' } },
+      x: { ticks: { font: { size: 12, weight: '600' }, color: '#4b5563' }, grid: { display: false } }
+    }
+  }
+});
+
+// ── 2025 Table ──
+const tbody = document.getElementById('tableBody');
+allData.filter(d => d.label.includes('-25')).forEach(d => {
+  const band = getBand(d.value);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${d.label}</td><td class="score-cell">${d.value.toFixed(2)}</td><td><span class="pill ${band.cls}">${band.label}</span></td>`;
+  tbody.appendChild(tr);
+});
+
+// ═══════════════════════════════════════════════
+//  TAB 2 DATA
+// ═══════════════════════════════════════════════
+const emData = [
+  { em: 1,  name: 'NPS',                  actual: '74.56',   unit: 'pts',  rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: '-100 to +100 scale' },
+  { em: 2,  name: 'Survey Response Rate', actual: '26.24%',  unit: '',     rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: '6 channels combined' },
+  { em: 3,  name: 'Consumer Loan',        actual: '100.00%', unit: '',     rawScore: 5, rating: 'Exceptional', cls: 'exceptional', note: 'CSAT · 15 responses' },
+  { em: 4,  name: 'New Member',           actual: '92.31%',  unit: '',     rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: 'CSAT · 13 responses' },
+  { em: 5,  name: 'Mortgage YTD',         actual: '80.00%',  unit: '',     rawScore: 3, rating: 'Effective',   cls: 'effective',   note: 'CSAT · 5 responses' },
+  { em: 6,  name: 'Chat Experience',      actual: '2.50',    unit: '/ 5',  rawScore: 2, rating: 'Mixed',       cls: 'mixed',       note: 'Star rating · 26 responses' },
+  { em: 7,  name: 'Branch Experience',    actual: '98.95%',  unit: '',     rawScore: 5, rating: 'Exceptional', cls: 'exceptional', note: 'CSAT · 95 responses' },
+  { em: 8,  name: 'Phone Call',           actual: '4.36',    unit: '/ 5',  rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: 'Star rating · 301 responses' },
+  { em: 9,  name: 'Digital Experience',   actual: '51.89%',  unit: '',     rawScore: 1, rating: 'Off Track',   cls: 'offtrack',    note: 'CSAT · 106 responses' },
+];
+
+const responseRates = [
+  { channel: 'Mortgage YTD',    responses: 5,   delivered: 6,    rate: 83.33 },
+  { channel: 'New Member',      responses: 13,  delivered: 44,   rate: 29.55 },
+  { channel: 'Phone Call',      responses: 301, delivered: 2042, rate: 14.74 },
+  { channel: 'Branch',          responses: 95,  delivered: 845,  rate: 11.24 },
+  { channel: 'Consumer Loan',   responses: 14,  delivered: 148,  rate: 9.46  },
+  { channel: 'NPS',             responses: 739, delivered: 8083, rate: 9.14  },
+];
+
+const chatRatings  = [
+  { stars: '5 ★', count: 8,   pct: 30.77 },
+  { stars: '4 ★', count: 1,   pct: 3.85  },
+  { stars: '3 ★', count: 2,   pct: 7.69  },
+  { stars: '2 ★', count: 0,   pct: 0.00  },
+  { stars: '1 ★', count: 15,  pct: 57.69 },
+];
+const phoneRatings = [
+  { stars: '5 ★', count: 237, pct: 78.74 },
+  { stars: '4 ★', count: 12,  pct: 3.99  },
+  { stars: '3 ★', count: 13,  pct: 4.32  },
+  { stars: '2 ★', count: 2,   pct: 0.66  },
+  { stars: '1 ★', count: 37,  pct: 12.29 },
+];
+
+const starColors = ['#7c5cbf','#3b82f6','#f59e0b','#f97316','#dc2626'];
+
+// ── EM Scorecard Cards ──
+const emGrid = document.getElementById('emGrid');
+emData.forEach(em => {
+  const filled = '●'.repeat(em.rawScore);
+  const empty  = '○'.repeat(5 - em.rawScore);
+  const scoreColor = {
+    exceptional: '#059669', exceeds: '#3b82f6', effective: '#f59e0b', mixed: '#ef4444', offtrack: '#dc2626'
+  }[em.cls];
+  const card = document.createElement('div');
+  card.className = `em-card em-card--${em.cls}`;
+  card.innerHTML = `
+    <div class="em-card__header">
+      <span class="em-num">EM ${em.em}</span>
+      <span class="pill band--${em.cls}">${em.rating}</span>
+    </div>
+    <div class="em-card__score" style="color:${scoreColor}">${em.actual}<span style="font-size:16px;color:#9ca3af;font-weight:500"> ${em.unit}</span></div>
+    <div class="em-card__name">${em.name}</div>
+    <div class="em-card__footer">
+      <div class="em-card__dots" style="color:${scoreColor}">${filled}<span style="color:#e5e7eb">${empty}</span></div>
+      <div class="em-card__note">${em.note}</div>
+    </div>
+  `;
+  emGrid.appendChild(card);
+});
+
+// ═══════════════════════════════════════════════
+//  TAB SWITCHING + LAZY CHART INIT
+// ═══════════════════════════════════════════════
+let jan26Initialized = false;
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'jan26' && !jan26Initialized) {
+      initJan26Charts();
+      jan26Initialized = true;
+    }
+  });
+});
+
+function initJan26Charts() {
+
+  // ── Response Rate Chart ──
+  new Chart(document.getElementById('responseChart'), {
+    type: 'bar',
+    data: {
+      labels: responseRates.map(d => d.channel),
+      datasets: [{
+        data: responseRates.map(d => d.rate),
+        backgroundColor: responseRates.map(d =>
+          d.rate >= 20 ? 'rgba(124,92,191,0.8)' : 'rgba(124,92,191,0.45)'
+        ),
+        borderWidth: 0,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          ...tooltipDefaults,
+          callbacks: {
+            label: ctx => {
+              const d = responseRates[ctx.dataIndex];
+              return ` ${ctx.parsed.x.toFixed(2)}%  (${d.responses} / ${d.delivered.toLocaleString()})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { callback: v => v + '%', font: { size: 11 }, color: '#9ca3af' },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        },
+        y: {
+          ticks: { font: { size: 12 }, color: '#4b5563' },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+
+  // ── Star Rating Charts (shared builder) ──
+  function starChart(id, ratings) {
+    new Chart(document.getElementById(id), {
+      type: 'bar',
+      data: {
+        labels: ratings.map(d => d.stars),
+        datasets: [{
+          data: ratings.map(d => d.pct),
+          backgroundColor: starColors,
+          borderWidth: 0,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            ...tooltipDefaults,
+            callbacks: {
+              label: ctx => {
+                const d = ratings[ctx.dataIndex];
+                return ` ${d.pct.toFixed(1)}%  (${d.count} responses)`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            max: 100,
+            ticks: { callback: v => v + '%', font: { size: 11 }, color: '#9ca3af' },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          y: {
+            ticks: { font: { size: 13 }, color: '#4b5563' },
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  starChart('chatChart', chatRatings);
+  starChart('phoneChart', phoneRatings);
+}
+</script>
+</body>
+</html>
