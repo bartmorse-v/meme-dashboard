@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposal — MEME Dashboard — Copper State Credit Union</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark:    #1a1b1d;
+      --purple:  #7c5cbf;
+      --lavender:#d6bfff;
+      --bg:      #f8f4f1;
+      --white:   #ffffff;
+      --muted:   #6b7280;
+      --border:  #e5e7eb;
+      --green:   #059669;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: var(--white);
+      color: var(--dark);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 64px 48px;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      padding-bottom: 48px;
+      border-bottom: 2px solid var(--dark);
+      margin-bottom: 48px;
+    }
+    .cover__label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 20px;
+    }
+    .cover__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .cover__subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .cover__meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .meta-item__label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .meta-item__value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    /* ── Sections ── */
+    .section { margin-bottom: 48px; }
+    .section__label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 10px;
+    }
+    .section__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+    .section p {
+      color: #374151;
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+
+    /* ── Prototype Link ── */
+    .prototype-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-left: 4px solid var(--purple);
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: box-shadow 0.18s ease, transform 0.18s ease;
+    }
+    .prototype-link:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .prototype-link__label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 4px;
+    }
+    .prototype-link__title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+    .prototype-link__url {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .prototype-link__arrow {
+      font-size: 20px;
+      color: var(--purple);
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+
+    /* ── ROI Cards ── */
+    .roi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .roi-card {
+      border-radius: 14px;
+      padding: 24px;
+      border: 1.5px solid var(--border);
+    }
+    .roi-card--red {
+      background: #fff5f5;
+      border-color: #fecaca;
+    }
+    .roi-card--green {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+    }
+    .roi-card__label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .roi-card--red .roi-card__label { color: #dc2626; }
+    .roi-card--green .roi-card__label { color: var(--green); }
+    .roi-card__range {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .roi-card--red .roi-card__range { color: #dc2626; }
+    .roi-card--green .roi-card__range { color: var(--green); }
+    .roi-card__sub {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    /* ── Phase Cards ── */
+    .phase {
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .phase__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px;
+      background: var(--dark);
+      color: var(--white);
+    }
+    .phase__header--light {
+      background: var(--bg);
+      color: var(--dark);
+      border-bottom: 1.5px solid var(--border);
+    }
+    .phase__num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 4px;
+    }
+    .phase__name {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .phase__price {
+      text-align: right;
+    }
+    .phase__price-amount {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .phase__price-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+    .phase__body { padding: 28px; }
+    .phase__description {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+    .phase__deliverables-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .deliverables {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+    .deliverables li {
+      font-size: 13.5px;
+      color: #374151;
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .deliverables li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--purple);
+      font-size: 9px;
+      top: 4px;
+    }
+
+    /* ── Investment Summary ── */
+    .investment {
+      background: var(--dark);
+      color: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+    .investment__title {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--lavender);
+      margin-bottom: 20px;
+    }
+    .investment__rows { margin-bottom: 20px; }
+    .investment__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+    }
+    .investment__row:last-child { border-bottom: none; }
+    .investment__row-label { color: rgba(255,255,255,0.7); }
+    .investment__row-value { font-weight: 600; }
+    .investment__total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0 0;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .investment__total-label {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .investment__total-value {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--lavender);
+    }
+
+    /* ── Timeline ── */
+    .timeline { margin-bottom: 48px; }
+    .timeline__rows { border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .timeline__row {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .timeline__row:last-child { border-bottom: none; }
+    .timeline__week {
+      padding: 14px 20px;
+      background: var(--bg);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      border-right: 1px solid var(--border);
+    }
+    .timeline__task {
+      padding: 14px 20px;
+      font-size: 13.5px;
+      color: #374151;
+      display: flex;
+      align-items: center;
+    }
+    .timeline__milestone {
+      font-weight: 600;
+      color: var(--purple);
+    }
+
+    /* ── Terms ── */
+    .terms { margin-bottom: 48px; }
+    .terms__list {
+      list-style: none;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .terms__list li {
+      padding: 14px 20px;
+      font-size: 13.5px;
+      color: #374151;
+      border-bottom: 1px solid var(--border);
+      padding-left: 40px;
+      position: relative;
+    }
+    .terms__list li:last-child { border-bottom: none; }
+    .terms__list li::before {
+      content: counter(term);
+      counter-increment: term;
+      position: absolute;
+      left: 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--purple);
+      top: 17px;
+    }
+    .terms__list { counter-reset: term; }
+
+    /* ── Signature ── */
+    .signature {
+      border-top: 2px solid var(--dark);
+      padding-top: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+    .sig__label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 48px;
+    }
+    .sig__line {
+      border-bottom: 1px solid var(--dark);
+      margin-bottom: 8px;
+    }
+    .sig__name { font-size: 13px; font-weight: 600; }
+    .sig__title { font-size: 12px; color: var(--muted); }
+
+    /* ── Print ── */
+    .print-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .print-btn:hover { background: #2c2d30; }
+
+    @media print {
+      .print-btn { display: none; }
+      body { font-size: 13px; }
+      .page { padding: 32px; }
+      .phase { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Cover -->
+  <div class="cover">
+    <div class="cover__label">Project Proposal</div>
+    <h1 class="cover__title">MEME Dashboard —<br />Automation & Expansion</h1>
+    <p class="cover__subtitle">Member Experience Measurement Engine</p>
+    <div class="cover__meta">
+      <div class="meta-item">
+        <div class="meta-item__label">Prepared For</div>
+        <div class="meta-item__value">Copper State Credit Union</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-item__label">Prepared By</div>
+        <div class="meta-item__value">Bart Morse</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-item__label">Date</div>
+        <div class="meta-item__value">March 6, 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <div class="section">
+    <div class="section__label">Overview</div>
+    <h2 class="section__title">Project Summary</h2>
+    <p>
+      Copper State Credit Union currently tracks member experience across nine distinct channels, compiled manually each month into a spreadsheet. This proposal outlines a two-phase engagement to transform that process: first by completing a fully interactive, multi-tab visual dashboard, and second by automating data collection from HubSpot, Talkdesk, and additional sources — eliminating the need for manual reporting entirely.
+    </p>
+    <p>
+      Phase 1 delivers immediate value with a polished, shareable dashboard. Phase 2 builds the infrastructure to keep it current automatically, month after month.
+    </p>
+    <a href="https://bartmorse-v.github.io/meme-dashboard/" target="_blank" class="prototype-link">
+      <div class="prototype-link__left">
+        <div class="prototype-link__label">Live Prototype</div>
+        <div class="prototype-link__title">MEME Dashboard — January 2026</div>
+        <div class="prototype-link__url">bartmorse-v.github.io/meme-dashboard</div>
+      </div>
+      <div class="prototype-link__arrow">→</div>
+    </a>
+  </div>
+
+  <!-- ROI -->
+  <div class="section">
+    <div class="section__label">The Business Case</div>
+    <h2 class="section__title">Cost of the Current Process</h2>
+    <p>
+      The MEME report is currently produced through manual data aggregation across eleven spreadsheet tabs — pulling figures from HubSpot, Talkdesk, and other platforms, calculating scores, formatting outputs, and distributing results each month. When staff time is accounted for at fully-loaded rates, this process is estimated to cost Copper State between <strong>$18,000 and $25,000 annually</strong>.
+    </p>
+    <p>
+      This engagement replaces that recurring cost with a one-time investment — after which the dashboard updates itself, every month, automatically.
+    </p>
+    <div class="roi-grid">
+      <div class="roi-card roi-card--red">
+        <div class="roi-card__label">Current Annual Cost</div>
+        <div class="roi-card__range">$18,000 – $25,000</div>
+        <div class="roi-card__sub">Manual aggregation, staff time, formatting, and distribution — recurring every year</div>
+      </div>
+      <div class="roi-card roi-card--green">
+        <div class="roi-card__label">This Engagement</div>
+        <div class="roi-card__range">$11,850</div>
+        <div class="roi-card__sub">One-time investment. Fully automated thereafter. Pays for itself within the first year.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="section">
+    <div class="section__label">Scope of Work</div>
+    <h2 class="section__title">Engagement Phases</h2>
+
+    <div class="phase">
+      <div class="phase__header">
+        <div>
+          <div class="phase__num">Phase 1</div>
+          <div class="phase__name">Dashboard Completion</div>
+        </div>
+        <div class="phase__price">
+          <div class="phase__price-amount">$4,250</div>
+          <div class="phase__price-label">Fixed Fee</div>
+        </div>
+      </div>
+      <div class="phase__body">
+        <p class="phase__description">
+          The existing dashboard covers two of the eleven spreadsheet tabs. Phase 1 completes the remaining nine, refines visualizations based on feedback, and delivers a fully polished, publicly shareable dashboard hosted on GitHub Pages.
+        </p>
+        <div class="phase__deliverables-title">Deliverables</div>
+        <ul class="deliverables">
+          <li>9 additional dashboard tabs built out</li>
+          <li>Consistent design system across all tabs</li>
+          <li>Visualization refinements and feedback iterations</li>
+          <li>Mobile-responsive layout across all tabs</li>
+          <li>Interactive charts with tooltips and filtering</li>
+          <li>Live URL on GitHub Pages, shareable with stakeholders</li>
+          <li>Up to 3 rounds of revision</li>
+          <li>Final file handoff with documentation</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase">
+      <div class="phase__header phase__header--light">
+        <div>
+          <div class="phase__num" style="color:var(--purple); opacity:1">Phase 2</div>
+          <div class="phase__name">Automated Data Pipeline</div>
+        </div>
+        <div class="phase__price">
+          <div class="phase__price-amount">$7,600</div>
+          <div class="phase__price-label">Fixed Fee</div>
+        </div>
+      </div>
+      <div class="phase__body">
+        <p class="phase__description">
+          Phase 2 eliminates manual data entry by connecting the dashboard directly to HubSpot, Talkdesk, and up to two additional data sources. A scheduled GitHub Actions workflow runs automatically each month, pulls fresh data from each source, and updates the dashboard — no human intervention required.
+        </p>
+        <div class="phase__deliverables-title">Deliverables</div>
+        <ul class="deliverables">
+          <li>HubSpot API integration (surveys, CSAT, NPS)</li>
+          <li>Talkdesk API integration (chat &amp; phone ratings)</li>
+          <li>Up to 2 additional source integrations</li>
+          <li>Automated monthly GitHub Actions workflow</li>
+          <li>Dynamic data.json layer (dashboard reads live data)</li>
+          <li>MEME score auto-calculation logic</li>
+          <li>Error handling and failure alerts</li>
+          <li>Technical documentation for internal team</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Investment -->
+  <div class="investment">
+    <div class="investment__title">Investment Summary</div>
+    <div class="investment__rows">
+      <div class="investment__row">
+        <span class="investment__row-label">Phase 1 — Dashboard Completion</span>
+        <span class="investment__row-value">$4,250</span>
+      </div>
+      <div class="investment__row">
+        <span class="investment__row-label">Phase 2 — Automated Data Pipeline</span>
+        <span class="investment__row-value">$7,600</span>
+      </div>
+    </div>
+    <div class="investment__total">
+      <span class="investment__total-label">Total Project Investment</span>
+      <span class="investment__total-value">$11,850</span>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline section">
+    <div class="section__label">Timeline</div>
+    <h2 class="section__title">4-Week Delivery Schedule</h2>
+    <div class="timeline__rows">
+      <div class="timeline__row">
+        <div class="timeline__week">Week 1</div>
+        <div class="timeline__task">Remaining 9 dashboard tabs built · API discovery &amp; credential setup begins in parallel</div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 2</div>
+        <div class="timeline__task">Visualization refinements &amp; revision rounds · HubSpot + Talkdesk field mapping</div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 2 — End</div>
+        <div class="timeline__task"><span class="timeline__milestone">✦ Phase 1 Complete — Full dashboard live and delivered</span></div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 3</div>
+        <div class="timeline__task">Pipeline development · GitHub Actions workflow · Integration testing</div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 4</div>
+        <div class="timeline__task">End-to-end validation · Documentation · Handoff</div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 4 — End</div>
+        <div class="timeline__task"><span class="timeline__milestone">✦ Phase 2 Complete — Fully automated pipeline live</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms -->
+  <div class="terms section">
+    <div class="section__label">Terms &amp; Assumptions</div>
+    <h2 class="section__title">Project Terms</h2>
+    <ul class="terms__list">
+      <li>Phase 1 requires access to all 11 spreadsheet tabs and timely feedback during revision rounds.</li>
+      <li>Phase 2 requires Copper State to provide HubSpot Private App API credentials and Talkdesk API access prior to development start.</li>
+      <li>Up to 2 additional data sources are included in Phase 2. Each additional source beyond that is scoped and priced separately.</li>
+      <li>Payment terms: 50% deposit to begin each phase, 50% due upon completion.</li>
+      <li>Phases run concurrently to achieve the 4-week delivery target. API credentials and field mapping must be provided no later than end of Week 1 for Phase 2 to remain on schedule.</li>
+      <li>Proposal is valid for 30 days from the date above.</li>
+      <li>Ongoing maintenance and monthly support available following project completion — quoted separately upon request.</li>
+    </ul>
+  </div>
+
+  <!-- Signature -->
+  <div class="signature">
+    <div>
+      <div class="sig__label">Accepted — Copper State Credit Union</div>
+      <div class="sig__line"></div>
+      <div class="sig__name">Authorized Signature</div>
+      <div class="sig__title">Name / Title / Date</div>
+    </div>
+    <div>
+      <div class="sig__label">Prepared By</div>
+      <div class="sig__line"></div>
+      <div class="sig__name">Bart Morse</div>
+      <div class="sig__title">Date: March 6, 2026</div>
+    </div>
+  </div>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">Save as PDF ↓</button>
+
+</body>
+</html>
