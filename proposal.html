@@ -479,7 +479,7 @@
       Copper State Credit Union currently tracks member experience across nine distinct channels, compiled manually each month into a spreadsheet. This proposal outlines a two-phase engagement to transform that process: first by completing a fully interactive, multi-tab visual dashboard, and second by automating data collection from HubSpot, Talkdesk, and additional sources — eliminating the need for manual reporting entirely.
     </p>
     <p>
-      Phase 1 delivers immediate value with a polished, shareable dashboard. Phase 2 builds the infrastructure to keep it current automatically, month after month.
+      Phase 1 delivers immediate value with a polished, shareable dashboard. Phase 2 builds the infrastructure to keep it current automatically — on a daily, weekly, or custom schedule.
     </p>
     <a href="https://bartmorse-v.github.io/meme-dashboard/" target="_blank" class="prototype-link">
       <div class="prototype-link__left">
@@ -499,7 +499,7 @@
       The MEME report is currently produced through manual data aggregation across eleven spreadsheet tabs — pulling figures from HubSpot, Talkdesk, and other platforms, calculating scores, formatting outputs, and distributing results each month. When staff time is accounted for at fully-loaded rates, this process is estimated to cost Copper State between <strong>$18,000 and $25,000 annually</strong>.
     </p>
     <p>
-      This engagement replaces that recurring cost with a one-time investment — after which the dashboard updates itself, every month, automatically.
+      This engagement replaces that recurring cost with a one-time investment — after which the dashboard updates itself automatically, as often as daily.
     </p>
     <div class="roi-grid">
       <div class="roi-card roi-card--red">
@@ -563,14 +563,14 @@
       </div>
       <div class="phase__body">
         <p class="phase__description">
-          Phase 2 eliminates manual data entry by connecting the dashboard directly to HubSpot, Talkdesk, and up to two additional data sources. A scheduled GitHub Actions workflow runs automatically each month, pulls fresh data from each source, and updates the dashboard — no human intervention required.
+          Phase 2 eliminates manual data entry by connecting the dashboard directly to HubSpot, Talkdesk, and up to two additional data sources. A scheduled GitHub Actions workflow runs automatically on a configurable cadence — daily, weekly, or monthly — pulling fresh data from each source and updating the dashboard with no human intervention required.
         </p>
         <div class="phase__deliverables-title">Deliverables</div>
         <ul class="deliverables">
           <li>HubSpot API integration (surveys, CSAT, NPS)</li>
           <li>Talkdesk API integration (chat &amp; phone ratings)</li>
           <li>Up to 2 additional source integrations</li>
-          <li>Automated monthly GitHub Actions workflow</li>
+          <li>Automated GitHub Actions workflow (daily, weekly, or custom schedule)</li>
           <li>Dynamic data.json layer (dashboard reads live data)</li>
           <li>MEME score auto-calculation logic</li>
           <li>Error handling and failure alerts</li>
@@ -602,7 +602,7 @@
   <!-- Timeline -->
   <div class="timeline section">
     <div class="section__label">Timeline</div>
-    <h2 class="section__title">4-Week Delivery Schedule</h2>
+    <h2 class="section__title">6-Week Delivery Schedule</h2>
     <div class="timeline__rows">
       <div class="timeline__row">
         <div class="timeline__week">Week 1</div>
@@ -613,22 +613,41 @@
         <div class="timeline__task">Visualization refinements &amp; revision rounds · HubSpot + Talkdesk field mapping</div>
       </div>
       <div class="timeline__row">
-        <div class="timeline__week">Week 2 — End</div>
+        <div class="timeline__week">Week 3</div>
+        <div class="timeline__task">Final revisions · Stakeholder review · Dashboard polish</div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 3 — End</div>
         <div class="timeline__task"><span class="timeline__milestone">✦ Phase 1 Complete — Full dashboard live and delivered</span></div>
       </div>
       <div class="timeline__row">
-        <div class="timeline__week">Week 3</div>
+        <div class="timeline__week">Week 4</div>
         <div class="timeline__task">Pipeline development · GitHub Actions workflow · Integration testing</div>
       </div>
       <div class="timeline__row">
-        <div class="timeline__week">Week 4</div>
+        <div class="timeline__week">Week 5</div>
+        <div class="timeline__task">Additional source integrations · End-to-end testing</div>
+      </div>
+      <div class="timeline__row">
+        <div class="timeline__week">Week 6</div>
         <div class="timeline__task">End-to-end validation · Documentation · Handoff</div>
       </div>
       <div class="timeline__row">
-        <div class="timeline__week">Week 4 — End</div>
+        <div class="timeline__week">Week 6 — End</div>
         <div class="timeline__task"><span class="timeline__milestone">✦ Phase 2 Complete — Fully automated pipeline live</span></div>
       </div>
     </div>
+  </div>
+
+  <!-- Expectations of CSCU -->
+  <div class="terms section">
+    <div class="section__label">Expectations of CSCU</div>
+    <h2 class="section__title">Expectations of CSCU</h2>
+    <ul class="terms__list">
+      <li>Provide API access to HubSpot, Talkdesk, and any other data sources required for the report.</li>
+      <li>Report design revisions are limited to six rounds.</li>
+      <li>Report stakeholders will be available to sync via Zoom at least once a week for 30 minutes.</li>
+    </ul>
   </div>
 
   <!-- Terms -->
@@ -640,7 +659,7 @@
       <li>Phase 2 requires Copper State to provide HubSpot Private App API credentials and Talkdesk API access prior to development start.</li>
       <li>Up to 2 additional data sources are included in Phase 2. Each additional source beyond that is scoped and priced separately.</li>
       <li>Payment terms: 50% deposit to begin each phase, 50% due upon completion.</li>
-      <li>Phases run concurrently to achieve the 4-week delivery target. API credentials and field mapping must be provided no later than end of Week 1 for Phase 2 to remain on schedule.</li>
+      <li>Phases run concurrently to achieve the 6-week delivery target. API credentials and field mapping must be provided no later than end of Week 1 for Phase 2 to remain on schedule.</li>
       <li>Proposal is valid for 30 days from the date above.</li>
       <li>Ongoing maintenance and monthly support available following project completion — quoted separately upon request.</li>
     </ul>
