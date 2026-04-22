@@ -3,851 +3,1360 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Member Experience Score — Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <title>Copper State CU — Member Experience Dashboard · January 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    :root {
+      --navy:       #1B3A5C;
+      --navy-dark:  #0F2540;
+      --navy-light: #244D78;
+      --copper:     #B5722D;
+      --copper-lt:  #D4924A;
+      --bg:         #F1F5F9;
+      --card:       #FFFFFF;
+      --text:       #0F172A;
+      --text-2:     #334155;
+      --muted:      #64748B;
+      --border:     #E2E8F0;
+      --green:      #15803D;
+      --blue:       #1D4ED8;
+      --amber:      #B45309;
+      --orange:     #C2410C;
+      --red:        #B91C1C;
+      --green-bg:   #DCFCE7;
+      --blue-bg:    #DBEAFE;
+      --amber-bg:   #FEF3C7;
+      --orange-bg:  #FFEDD5;
+      --red-bg:     #FEE2E2;
+      --gap: 16px;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 2px rgba(15,37,64,.06), 0 1px 3px rgba(15,37,64,.08);
+      --shadow:    0 1px 3px rgba(15,37,64,.07), 0 4px 12px rgba(15,37,64,.07);
+      --shadow-lg: 0 4px 6px rgba(15,37,64,.06), 0 10px 25px rgba(15,37,64,.12);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'IBM Plex Sans', system-ui, sans-serif;
-      background: #f4f5f7;
-      color: #1a1b1d;
-      padding: 40px 32px;
-      min-height: 100vh;
+      font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page { max-width: 1320px; margin: 0 auto; padding: 24px var(--gap); }
+
+    /* ── HEADER ─────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-light) 100%);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      margin-bottom: var(--gap);
+      box-shadow: var(--shadow-lg);
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-logo {
+      width: 48px; height: 48px; background: var(--copper); border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fira Code', monospace; font-size: 18px; font-weight: 700; color: #fff;
+      flex-shrink: 0; letter-spacing: -0.5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.22);
+    }
+    .header-title { color: #fff; }
+    .header-title h1 { font-size: 18px; font-weight: 700; line-height: 1.2; letter-spacing: -0.2px; }
+    .header-title p  { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 3px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .period-badge {
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px; padding: 7px 14px;
+      color: rgba(255,255,255,.95); font-size: 12px; font-weight: 600; letter-spacing: .3px;
+      display: flex; align-items: center; gap: 7px;
     }
 
-    .page {
-      max-width: 1100px;
-      margin: 0 auto;
+    /* ── KPI ROW ────────────────────────────────── */
+    .kpi-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: var(--gap); margin-bottom: var(--gap);
     }
+    .kpi-card {
+      background: var(--card); border-radius: var(--radius); padding: 20px 22px;
+      box-shadow: var(--shadow); border-top: 3px solid transparent;
+      position: relative; overflow: hidden;
+      transition: box-shadow 220ms ease, transform 220ms ease;
+    }
+    .kpi-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .kpi-card::after {
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 80px; height: 80px; border-radius: 0 var(--radius) 0 100%; opacity: .05;
+    }
+    .kpi-card.tier-exceeds   { border-top-color: var(--blue);  } .kpi-card.tier-exceeds::after   { background: var(--blue);  }
+    .kpi-card.tier-effective { border-top-color: var(--amber); } .kpi-card.tier-effective::after { background: var(--amber); }
+    .kpi-card.tier-exceptional { border-top-color: var(--green); } .kpi-card.tier-exceptional::after { background: var(--green); }
+    .kpi-card.tier-offtrack  { border-top-color: var(--red);   } .kpi-card.tier-offtrack::after  { background: var(--red);   }
+    .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 600; margin-bottom: 8px; }
+    .kpi-value {
+      font-family: 'Fira Code', monospace; font-size: 34px; font-weight: 700; color: var(--text);
+      line-height: 1; margin-bottom: 4px; font-variant-numeric: tabular-nums;
+    }
+    .kpi-denom { font-family: 'Fira Code', monospace; font-size: 15px; font-weight: 400; color: var(--muted); }
+    .kpi-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .kpi-badge { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge-exceptional { background: var(--green-bg); color: var(--green); }
+    .badge-exceeds     { background: var(--blue-bg);  color: var(--blue);  }
+    .badge-effective   { background: var(--amber-bg); color: var(--amber); }
+    .badge-mixed       { background: var(--orange-bg);color: var(--orange);}
+    .badge-offtrack    { background: var(--red-bg);   color: var(--red);   }
 
-    /* ── Header ── */
-    .header { margin-bottom: 24px; }
-    .header__eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #7c5cbf;
-      margin-bottom: 8px;
-    }
-    .header__title {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 4px;
-    }
-    .header__sub { font-size: 14px; color: #6b7280; }
-
-    /* ── Tab Nav ── */
-    .tab-nav {
-      display: flex;
-      gap: 4px;
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 28px;
-      width: fit-content;
-    }
-    .tab-btn {
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      padding: 10px 24px;
-      border-radius: 9px;
-      border: none;
-      cursor: pointer;
-      background: transparent;
-      color: #6b7280;
-      transition: all 0.18s ease;
-    }
-    .tab-btn.active {
-      background: #1a1b1d;
-      color: #fff;
-    }
-    .tab-btn:hover:not(.active) {
-      background: #f4f5f7;
-      color: #1a1b1d;
-    }
-
-    /* ── Tab Panels ── */
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    /* ── KPI Cards ── */
-    .kpis {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .kpi {
-      background: #fff;
-      border-radius: 14px;
-      padding: 20px 22px;
-      border: 1px solid #e5e7eb;
-    }
-    .kpi__label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #9ca3af;
-      margin-bottom: 8px;
-    }
-    .kpi__value {
-      font-size: 32px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .kpi__badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 20px;
-    }
-    .kpi__trend { font-size: 12px; color: #6b7280; margin-top: 4px; }
-    .kpi__trend span { font-weight: 600; }
-    .up   { color: #059669; }
-    .down { color: #dc2626; }
-
-    /* ── Band Colors ── */
-    .band--exceptional { background: #d1fae5; color: #065f46; }
-    .band--exceeds     { background: #dbeafe; color: #1e40af; }
-    .band--effective   { background: #fef3c7; color: #92400e; }
-    .band--mixed       { background: #ffe4e6; color: #9f1239; }
-    .band--offtrack    { background: #fecaca; color: #7f1d1d; }
-
-    /* ── Cards ── */
+    /* ── CARD ───────────────────────────────────── */
     .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 32px;
-      border: 1px solid #e5e7eb;
-      margin-bottom: 24px;
+      background: var(--card); border-radius: var(--radius); padding: 22px 24px;
+      box-shadow: var(--shadow);
     }
-    .card__title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-    .card__sub   { font-size: 12px; color: #9ca3af; margin-bottom: 24px; }
+    .card-title    { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; line-height: 1.3; }
+    .card-subtitle { font-size: 11px; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+    .chart-wrap { position: relative; }
 
-    /* ── Charts ── */
-    .chart-wrap  { position: relative; height: 380px; }
-    .bar-wrap    { position: relative; height: 240px; }
-    .hbar-wrap   { position: relative; height: 260px; }
-    .sbar-wrap   { position: relative; height: 220px; }
+    /* ── LAYOUTS ────────────────────────────────── */
+    .row-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: var(--gap); margin-bottom: var(--gap); }
+    .row-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: var(--gap); margin-bottom: var(--gap); }
+    .row-full { margin-bottom: var(--gap); }
 
-    /* ── Legend ── */
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #f3f4f6;
+    /* ── SECTION LABEL ──────────────────────────── */
+    .section-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--muted);
+      margin-bottom: 12px; padding-left: 10px; position: relative;
     }
-    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #4b5563; }
-    .legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
-
-    /* ── Grid Layouts ── */
-    .grid2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-    .grid3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 24px;
+    .section-label::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--copper); border-radius: 2px;
     }
 
-    /* ── Table ── */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th {
-      text-align: left;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #9ca3af;
-      padding: 8px 10px;
-      border-bottom: 1px solid #f3f4f6;
+    /* ── MES BAND METER ─────────────────────────── */
+    .mes-score-display { text-align: center; margin-bottom: 20px; }
+    .mes-big-num {
+      font-family: 'Fira Code', monospace; font-size: 58px; font-weight: 700;
+      color: var(--amber); line-height: 1; font-variant-numeric: tabular-nums;
     }
-    td {
-      padding: 9px 10px;
-      border-bottom: 1px solid #f9fafb;
-      font-variant-numeric: tabular-nums;
+    .mes-denom { font-family: 'Fira Code', monospace; font-size: 22px; color: var(--muted); font-weight: 400; }
+    .mes-band-label {
+      display: inline-block; background: var(--amber-bg); color: var(--amber);
+      padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 8px;
     }
-    tr:last-child td { border-bottom: none; }
-    .score-cell { font-weight: 600; font-size: 14px; }
-    .pill {
-      display: inline-block;
-      padding: 2px 9px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 500;
+    .band-meter { margin-top: 18px; position: relative; }
+    .band-track {
+      display: flex; height: 14px; border-radius: 7px; overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
+    }
+    .band-seg { height: 100%; }
+    .band-seg.b-offtrack   { background: #FECACA; width: 40%; }
+    .band-seg.b-mixed      { background: #FED7AA; width: 15%; }
+    .band-seg.b-effective  { background: #FEF08A; width: 20%; }
+    .band-seg.b-exceeds    { background: #BFDBFE; width: 15%; }
+    .band-seg.b-exceptional{ background: #BBF7D0; width: 10%; }
+    .band-pointer-wrap { position: absolute; top: -4px; transform: translateX(-50%); }
+    .band-pointer { width: 2px; height: 22px; background: var(--navy-dark); border-radius: 2px; margin: 0 auto; }
+    .band-pointer-dot {
+      width: 10px; height: 10px; border-radius: 50%; background: var(--navy-dark);
+      border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); margin: 0 auto -2px;
+    }
+    .band-labels { display: flex; justify-content: space-between; margin-top: 7px; }
+    .band-labels span { font-size: 9px; color: var(--muted); text-align: center; flex: 1; line-height: 1.3; }
+    .band-active { font-weight: 700; color: var(--amber) !important; }
+    .band-targets {
+      margin-top: 14px; display: flex; flex-direction: column; gap: 6px;
+      border-top: 1px solid var(--border); padding-top: 12px;
+    }
+    .band-target-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+    .bt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .bt-label { color: var(--muted); }
+    .bt-range { margin-left: auto; font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 500; color: var(--text-2); }
+    .bt-current { font-weight: 700; color: var(--amber); }
+
+    /* ── CHANNEL BARS ───────────────────────────── */
+    .channel-bars { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+    .ch-row { display: flex; align-items: center; gap: 10px; }
+    .ch-name { width: 100px; font-size: 12px; font-weight: 600; color: var(--text-2); flex-shrink: 0; text-align: right; }
+    .ch-bar-track { flex: 1; background: var(--bg); border-radius: 6px; height: 30px; position: relative; overflow: hidden; }
+    .ch-bar-fill {
+      height: 100%; border-radius: 6px;
+      display: flex; align-items: center; padding-left: 10px;
+      transition: width .9s cubic-bezier(.4,0,.2,1);
+    }
+    .ch-bar-pct { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.93); white-space: nowrap; }
+    .ch-score   { font-family: 'Fira Code', monospace; width: 54px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+    .ch-badge   { width: 84px; flex-shrink: 0; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-align: center; }
+    .ch-note    { font-family: 'Fira Code', monospace; font-size: 10px; color: var(--muted); width: 104px; flex-shrink: 0; }
+
+    /* ── AI INSIGHTS ────────────────────────────── */
+    .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .ai-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(27,58,92,.25);
+    }
+    .ai-header-text h3 { font-size: 14px; font-weight: 700; color: var(--navy); }
+    .ai-header-text p  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .insights-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .insight-card {
+      border-radius: 10px; padding: 16px; border-left: 3px solid transparent;
+      transition: box-shadow 220ms ease;
+    }
+    .insight-card:hover { box-shadow: var(--shadow); }
+    .insight-card.pri-critical { background: #FFF1F2; border-left-color: var(--red);   }
+    .insight-card.pri-warning  { background: #FFFBEB; border-left-color: var(--amber); }
+    .insight-card.pri-positive { background: #F0FDF4; border-left-color: var(--green); }
+    .insight-card.pri-info     { background: #EFF6FF; border-left-color: var(--blue);  }
+    .insight-pri {
+      font-size: 10px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .6px; margin-bottom: 7px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .insight-card.pri-critical .insight-pri { color: var(--red);   }
+    .insight-card.pri-warning  .insight-pri { color: var(--amber); }
+    .insight-card.pri-positive .insight-pri { color: var(--green); }
+    .insight-card.pri-info     .insight-pri { color: var(--blue);  }
+    .insight-title  { font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+    .insight-body   { font-size: 12px; color: #475569; line-height: 1.6; }
+    .insight-action {
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,.07);
+      font-size: 11px; font-weight: 600;
+    }
+    .insight-card.pri-critical .insight-action { color: var(--red);   }
+    .insight-card.pri-warning  .insight-action { color: var(--amber); }
+    .insight-card.pri-positive .insight-action { color: var(--green); }
+    .insight-card.pri-info     .insight-action { color: var(--blue);  }
+
+    /* ── OUTREACH QUEUE ─────────────────────────── */
+    .outreach-groups { display: flex; flex-direction: column; gap: 20px; }
+    .outreach-group-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .7px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .outreach-group-label .group-count {
+      font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px;
+    }
+    .outreach-group.grp-immediate .outreach-group-label { color: var(--red); }
+    .outreach-group.grp-immediate .group-count { background: var(--red-bg); color: var(--red); }
+    .outreach-group.grp-systemic  .outreach-group-label { color: var(--amber); }
+    .outreach-group.grp-systemic  .group-count { background: var(--amber-bg); color: var(--amber); }
+    .outreach-group.grp-recognition .outreach-group-label { color: var(--green); }
+    .outreach-group.grp-recognition .group-count { background: var(--green-bg); color: var(--green); }
+
+    .outreach-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .outreach-table thead tr {
+      border-bottom: 2px solid var(--border);
+    }
+    .outreach-table thead th {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--muted);
+      padding: 0 12px 8px 0; text-align: left;
+    }
+    .outreach-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 180ms ease;
+    }
+    .outreach-table tbody tr:last-child { border-bottom: none; }
+    .outreach-table tbody tr:hover { background: #F8FAFC; }
+    .outreach-table td { padding: 10px 12px 10px 0; vertical-align: top; }
+    .outreach-table td:last-child { padding-right: 0; }
+
+    .outreach-name { font-weight: 700; color: var(--text); }
+    .outreach-channel {
+      display: inline-block; margin-top: 2px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .4px; padding: 1px 7px; border-radius: 10px;
+    }
+    .outreach-quote {
+      font-style: italic; color: #475569; line-height: 1.55;
+      max-width: 340px;
+    }
+    .outreach-issue {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 6px;
+      white-space: nowrap;
+    }
+    .outreach-action { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+    .outreach-action strong { color: var(--text); font-weight: 700; }
+
+    .priority-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .priority-pill.immediate { background: var(--red-bg);    color: var(--red);   }
+    .priority-pill.systemic  { background: var(--amber-bg);  color: var(--amber); }
+    .priority-pill.recognize { background: var(--green-bg);  color: var(--green); }
+
+    .outreach-divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 18px 0;
     }
 
-    /* ── EM Scorecard ── */
-    .em-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
+    .outreach-note {
+      display: flex; align-items: flex-start; gap: 8px;
+      margin-top: 16px; padding: 10px 12px;
+      background: var(--blue-bg); border-radius: var(--radius-sm);
+      border-left: 3px solid var(--blue);
+      font-size: 11px; color: #1e40af; line-height: 1.55;
     }
-    .em-card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 20px;
+    .outreach-note svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── MEMBER VOICES ──────────────────────────── */
+    .voices-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: var(--gap); }
+    .voice-card {
+      background: var(--card); border-radius: var(--radius); padding: 18px 20px;
+      box-shadow: var(--shadow-sm); border-left: 3px solid var(--border);
       position: relative;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      transition: box-shadow 220ms ease, transform 220ms ease;
     }
-    .em-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    .voice-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+    .voice-card::before {
+      content: '\201C'; position: absolute; top: 8px; right: 14px;
+      font-size: 52px; line-height: 1; color: var(--border);
+      font-family: Georgia, serif; pointer-events: none;
     }
-    .em-card--exceptional { border-top: 3px solid #059669; }
-    .em-card--exceeds     { border-top: 3px solid #3b82f6; }
-    .em-card--effective   { border-top: 3px solid #f59e0b; }
-    .em-card--mixed       { border-top: 3px solid #ef4444; }
-    .em-card--offtrack    { border-top: 3px solid #dc2626; }
+    .voice-card.happy   { border-left-color: var(--green); }
+    .voice-card.neutral { border-left-color: var(--amber); }
+    .voice-card.unhappy { border-left-color: var(--red);   }
+    .voice-quote { font-size: 12.5px; color: #334155; line-height: 1.65; font-style: italic; margin-bottom: 12px; padding-right: 22px; }
+    .voice-meta  { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .voice-channel {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .4px; padding: 2px 8px; border-radius: 10px;
+    }
+    .voice-channel.branch   { background: var(--green-bg); color: var(--green); }
+    .voice-channel.loan     { background: var(--blue-bg);  color: var(--blue);  }
+    .voice-channel.digital  { background: var(--red-bg);   color: var(--red);   }
+    .voice-channel.chat     { background: var(--red-bg);   color: var(--red);   }
+    .voice-channel.mortgage { background: var(--amber-bg); color: var(--amber); }
+    .voice-channel.nps      { background: #F3E8FF; color: #6D28D9; }
+    .voice-name { font-size: 11px; color: var(--muted); }
+    .voice-sentiment {
+      margin-left: auto; display: flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600;
+    }
+    .voice-sentiment.happy   { color: var(--green); }
+    .voice-sentiment.neutral { color: var(--amber); }
+    .voice-sentiment.unhappy { color: var(--red);   }
 
-    .em-card__header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
+    /* ── CAVEAT BOX ─────────────────────────────── */
+    .caveat-box {
+      display: flex; align-items: flex-start; gap: 8px;
+      margin-top: 12px; padding: 10px 12px;
+      background: var(--amber-bg); border-radius: var(--radius-sm);
+      border-left: 3px solid var(--amber);
     }
-    .em-num {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #9ca3af;
-    }
-    .em-card__score {
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .em-card__name {
-      font-size: 13px;
-      font-weight: 500;
-      color: #4b5563;
-      margin-bottom: 12px;
-    }
-    .em-card__footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 12px;
-      border-top: 1px solid #f3f4f6;
-    }
-    .em-card__dots { font-size: 13px; letter-spacing: 2px; }
-    .em-card__note { font-size: 10px; color: #9ca3af; }
+    .caveat-box-icon { flex-shrink: 0; color: var(--amber); margin-top: 1px; }
+    .caveat-box-title { font-size: 11px; font-weight: 700; color: var(--amber); }
+    .caveat-box-text  { font-size: 11px; color: #78350F; margin-top: 2px; line-height: 1.5; }
 
-    /* ── NPS Block ── */
-    .nps-score-big {
-      font-size: 64px;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      color: #1a1b1d;
-      margin-bottom: 4px;
-    }
-    .nps-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #9ca3af;
-      margin-bottom: 20px;
-    }
-    .nps-bar {
-      display: flex;
-      height: 14px;
-      border-radius: 7px;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .nps-bar__promoter  { background: #059669; }
-    .nps-bar__passive   { background: #9ca3af; }
-    .nps-bar__detractor { background: #dc2626; }
-    .nps-segments {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 4px;
-    }
-    .nps-seg { text-align: center; }
-    .nps-seg__pct {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      display: block;
-    }
-    .nps-seg__label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 2px;
-    }
-    .nps-seg__count {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-    .nps-seg--promoter  .nps-seg__pct   { color: #059669; }
-    .nps-seg--passive   .nps-seg__pct   { color: #6b7280; }
-    .nps-seg--detractor .nps-seg__pct   { color: #dc2626; }
-    .nps-total {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px solid #f3f4f6;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-    .nps-total strong { color: #1a1b1d; font-weight: 600; }
-
-    /* ── Branch Incentive Badge ── */
-    .incentive-wrap {
-      text-align: center;
-      padding: 8px 0;
-    }
-    .incentive-amount {
-      font-size: 40px;
-      font-weight: 700;
-      color: #059669;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 4px;
+    /* ── FOOTER ─────────────────────────────────── */
+    .footer {
+      text-align: center; padding: 20px 16px; margin-top: 8px;
+      font-size: 11px; color: var(--muted);
+      border-top: 1px solid var(--border);
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .em-grid { grid-template-columns: repeat(2, 1fr); }
+    /* ── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 960px) {
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .row-2-1, .row-1-2 { grid-template-columns: 1fr; }
+      .insights-grid { grid-template-columns: repeat(2, 1fr); }
+      .voices-grid   { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 700px) {
-      .kpis  { grid-template-columns: 1fr 1fr; }
-      .grid2 { grid-template-columns: 1fr; }
-      .grid3 { grid-template-columns: 1fr; }
-      .em-grid { grid-template-columns: 1fr; }
-      body { padding: 20px 16px; }
+    @media (max-width: 600px) {
+      .kpi-row { grid-template-columns: 1fr; }
+      .insights-grid { grid-template-columns: 1fr; }
+      .voices-grid   { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
     }
   </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- Header -->
+  <!-- HEADER -->
   <div class="header">
-    <div class="header__eyebrow">Performance Report · January 2026</div>
-    <h1 class="header__title">Member Experience Score</h1>
-    <p class="header__sub">Copper State Credit Union &nbsp;·&nbsp; Score range 1.00 – 5.00</p>
+    <div class="header-left">
+      <div class="header-logo">CS</div>
+      <div class="header-title">
+        <h1>Member Experience Measurement Engine</h1>
+        <p>Copper State Credit Union &nbsp;&middot;&nbsp; Monitoring member satisfaction across 7 channels</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="period-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        January 2026
+      </span>
+    </div>
   </div>
 
-  <!-- Tab Nav -->
-  <div class="tab-nav">
-    <button class="tab-btn active" data-tab="trend">Score Trend</button>
-    <button class="tab-btn" data-tab="jan26">January 2026 Report</button>
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    <div class="kpi-card tier-effective">
+      <div class="kpi-label">Overall MES Score</div>
+      <div class="kpi-value">3.56<span class="kpi-denom">/5.00</span></div>
+      <div class="kpi-sub">Up from 3.18 in Dec 2025 (+0.38)</div>
+      <span class="kpi-badge badge-effective">Effective</span>
+    </div>
+    <div class="kpi-card tier-exceeds">
+      <div class="kpi-label">Net Promoter Score</div>
+      <div class="kpi-value">74</div>
+      <div class="kpi-sub">Highest recorded &nbsp;&middot;&nbsp; Q1 2026</div>
+      <span class="kpi-badge badge-exceeds">Exceeds Expectations</span>
+    </div>
+    <div class="kpi-card tier-exceptional">
+      <div class="kpi-label">Top Channel &mdash; Branch</div>
+      <div class="kpi-value">98.9<span class="kpi-denom" style="font-size:16px">%</span></div>
+      <div class="kpi-sub">94 of 95 members satisfied</div>
+      <span class="kpi-badge badge-exceptional">Exceptional</span>
+    </div>
+    <div class="kpi-card tier-offtrack">
+      <div class="kpi-label">Needs Attention &mdash; Digital</div>
+      <div class="kpi-value">51.9<span class="kpi-denom" style="font-size:16px">%</span></div>
+      <div class="kpi-sub">55 happy &nbsp;&middot;&nbsp; 16 neutral &nbsp;&middot;&nbsp; 35 unhappy</div>
+      <span class="kpi-badge badge-offtrack">Off Track</span>
+    </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       TAB 1: SCORE TREND
-  ══════════════════════════════════════ -->
-  <div id="panel-trend" class="tab-panel active">
+  <!-- PERFORMANCE SNAPSHOT -->
+  <div class="section-label">Performance Snapshot</div>
+  <div class="row-1-2">
 
-    <div class="kpis">
-      <div class="kpi">
-        <div class="kpi__label">Jan 2026 Score</div>
-        <div class="kpi__value" style="color:#7c5cbf">3.56</div>
-        <span class="kpi__badge band--effective">Effective</span>
-        <div class="kpi__trend"><span class="up">+0.38</span> vs Dec 2025</div>
+    <div class="card">
+      <div class="card-title">Where do we stand overall?</div>
+      <div class="card-subtitle">Overall Member Experience Score vs. performance bands</div>
+      <div class="mes-score-display">
+        <div class="mes-big-num">3.56<span class="mes-denom">/5</span></div>
+        <div class="mes-band-label">Effective Band</div>
+        <div style="font-size:11px;color:var(--amber);margin-top:6px;font-weight:600;">
+          0.20 points below Exceeds Expectations threshold
+        </div>
       </div>
-      <div class="kpi">
-        <div class="kpi__label">2025 Average</div>
-        <div class="kpi__value">3.01</div>
-        <span class="kpi__badge band--effective">Effective</span>
-        <div class="kpi__trend"><span class="down">−0.65</span> vs 2024 avg</div>
+      <div class="band-meter">
+        <div class="band-track">
+          <div class="band-seg b-offtrack"></div>
+          <div class="band-seg b-mixed"></div>
+          <div class="band-seg b-effective"></div>
+          <div class="band-seg b-exceeds"></div>
+          <div class="band-seg b-exceptional"></div>
+        </div>
+        <div class="band-pointer-wrap" style="left:71.2%">
+          <div class="band-pointer-dot"></div>
+          <div class="band-pointer"></div>
+        </div>
+        <div class="band-labels">
+          <span>Off Track<br/>&le;2.00</span>
+          <span>Mixed<br/>2.01–2.75</span>
+          <span class="band-active">Effective<br/>2.76–3.75</span>
+          <span>Exceeds<br/>3.76–4.50</span>
+          <span>Exceptional<br/>4.51–5.00</span>
+        </div>
       </div>
-      <div class="kpi">
-        <div class="kpi__label">2024 Average</div>
-        <div class="kpi__value">3.66</div>
-        <span class="kpi__badge band--effective">Effective</span>
-        <div class="kpi__trend"><span class="up">+0.11</span> vs 2023 avg</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">All-Time High</div>
-        <div class="kpi__value">4.08</div>
-        <span class="kpi__badge band--exceeds">Exceeds</span>
-        <div class="kpi__trend">Feb 2024</div>
+      <div class="band-targets">
+        <div class="band-target-row">
+          <div class="bt-dot" style="background:#FECACA;border:1px solid #F87171"></div>
+          <span class="bt-label">Off Track</span><span class="bt-range">&le;&nbsp;2.00</span>
+        </div>
+        <div class="band-target-row">
+          <div class="bt-dot" style="background:#FED7AA;border:1px solid #FB923C"></div>
+          <span class="bt-label">Mixed Performance</span><span class="bt-range">2.01–2.75</span>
+        </div>
+        <div class="band-target-row" style="font-weight:700">
+          <div class="bt-dot" style="background:#FDE047;border:1px solid #CA8A04"></div>
+          <span class="bt-label bt-current">Current &mdash; Effective</span><span class="bt-range bt-current">2.76–3.75</span>
+        </div>
+        <div class="band-target-row">
+          <div class="bt-dot" style="background:#93C5FD;border:1px solid #3B82F6"></div>
+          <span class="bt-label">Exceeds Expectations</span><span class="bt-range">3.76–4.50</span>
+        </div>
+        <div class="band-target-row">
+          <div class="bt-dot" style="background:#86EFAC;border:1px solid #22C55E"></div>
+          <span class="bt-label">Exceptional</span><span class="bt-range">4.51–5.00</span>
+        </div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card__title">Score Trend — Full History</div>
-      <div class="card__sub">Jul 2022 through Jan 2026 · Shaded bands show performance tiers</div>
-      <div class="chart-wrap">
-        <canvas id="trendChart"></canvas>
+      <div class="card-title">Would our members recommend us?</div>
+      <div class="card-subtitle">Net Promoter Score (NPS) — quarterly, Q3 2022 through Q1 2026</div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="npsChart"></canvas>
       </div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-swatch" style="background:#bbf7d0"></div> Exceptional (4.51–5.00)</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe"></div> Exceeds Expectations (3.76–4.50)</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#fde68a"></div> Effective (2.76–3.75)</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#fecaca"></div> Mixed (2.01–2.75)</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#7c5cbf; border-radius:50%"></div> Score Line</div>
-        <div class="legend-item"><div class="legend-swatch" style="background:#f97316; border-radius:50%"></div> Jan 2026 (Latest)</div>
+      <div style="display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;align-items:center;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+          <div style="width:20px;height:2px;background:#86EFAC;border-radius:2px"></div> Exceptional (80)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+          <div style="width:20px;height:0;border-top:2px dashed #3B82F6"></div> Exceeds (70)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+          <div style="width:20px;height:0;border-top:2px dashed #CA8A04"></div> Effective (66)
+        </div>
+        <div style="margin-left:auto;font-size:12px;font-weight:700;color:var(--navy)">
+          Q1 2026: <span style="color:var(--blue)">74 &mdash; All-time high</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANNEL PERFORMANCE -->
+  <div class="section-label">Channel Performance</div>
+  <div class="row-full">
+    <div class="card">
+      <div class="card-title">How is each channel performing?</div>
+      <div class="card-subtitle">January 2026 satisfaction scores across all service channels — ranked best to worst</div>
+      <div class="channel-bars" id="channelBars"></div>
+      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px;align-items:center;">
+        <div style="font-size:11px;color:var(--muted);font-style:italic;flex:1;min-width:200px">
+          * Phone &amp; Chat show % of members rating 4&ndash;5 stars. All other channels show % marking &ldquo;Happy&rdquo; (satisfied).
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="kpi-badge badge-exceptional" style="font-size:10px">Exceptional &ge;95%</span>
+          <span class="kpi-badge badge-exceeds"     style="font-size:10px">Exceeds 85&ndash;94%</span>
+          <span class="kpi-badge badge-effective"   style="font-size:10px">Effective 76&ndash;84%</span>
+          <span class="kpi-badge badge-mixed"       style="font-size:10px">Mixed 61&ndash;75%</span>
+          <span class="kpi-badge badge-offtrack"    style="font-size:10px">Off Track &lt;61%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRENDS & SURVEY HEALTH -->
+  <div class="section-label">Trends &amp; Survey Health</div>
+  <div class="row-2-1">
+
+    <div class="card">
+      <div class="card-title">How are we trending over time?</div>
+      <div class="card-subtitle">Monthly MES score — January 2023 through January 2026 &nbsp;&middot;&nbsp; Reference lines show band thresholds</div>
+      <div class="chart-wrap" style="height:250px">
+        <canvas id="mesTrendChart"></canvas>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="card__title">Annual Average Comparison</div>
-        <div class="card__sub">Average score by year</div>
-        <div class="bar-wrap">
-          <canvas id="barChart"></canvas>
+    <div class="card">
+      <div class="card-title">Are our surveys reaching members?</div>
+      <div class="card-subtitle">Response rate by channel — January 2026 &nbsp;&middot;&nbsp; Higher rate = higher confidence</div>
+      <div class="chart-wrap" style="height:208px">
+        <canvas id="responseChart"></canvas>
+      </div>
+      <div class="caveat-box">
+        <svg class="caveat-box-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <div>
+          <div class="caveat-box-title">NPS sample caveat</div>
+          <div class="caveat-box-text">NPS response rate is 9.1% (739/8,083 delivered). Score of 74 is based on a small sample &mdash; interpret with caution.</div>
         </div>
       </div>
-      <div class="card">
-        <div class="card__title">2025 Monthly Breakdown</div>
-        <div class="card__sub">Full year performance</div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Month</th><th>Score</th><th>Rating</th></tr></thead>
-            <tbody id="tableBody"></tbody>
+    </div>
+  </div>
+
+  <!-- RESPONSE RATE TREND BY CHANNEL & METHOD -->
+  <div class="row-full">
+    <div class="card">
+      <div class="card-title">How is participation trending by channel and collection method?</div>
+      <div class="card-subtitle">Response rate per survey channel — quarterly, Q1 2023 through Q1 2026 &nbsp;&middot;&nbsp; Color groups indicate collection method</div>
+      <div class="chart-wrap" style="height:260px">
+        <canvas id="responseRateTrendChart"></canvas>
+      </div>
+
+      <!-- Method key -->
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px">Collection method key</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
+            <div style="width:20px;height:3px;background:#15803D;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Mortgage &mdash; 83.3%</div>
+              <div style="font-size:10px;color:var(--muted)">Email · sent on receipt of funding list</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
+            <div style="width:20px;height:3px;background:#0891B2;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text)">New Member &mdash; 29.5%</div>
+              <div style="font-size:10px;color:var(--muted)">Email · sent 3&ndash;5 days after account opening</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
+            <div style="width:20px;height:3px;background:#B45309;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Phone &mdash; 14.7%</div>
+              <div style="font-size:10px;color:var(--muted)">Recorded in-call · Solution Center only</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
+            <div style="width:20px;height:3px;background:#1D4ED8;border-radius:2px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text)">Branch &mdash; 11.2%</div>
+              <div style="font-size:10px;color:var(--muted)">Email/Text · sent day after branch visit</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
+            <div style="width:20px;height:0;border-top:2.5px dashed #6366F1;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text)">New Loan &mdash; 9.5%</div>
+              <div style="font-size:10px;color:var(--muted)">Email · sent 1&ndash;3 days post-funding</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
+            <div style="width:20px;height:0;border-top:2.5px dashed #7C3AED;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--text)">NPS &mdash; 9.1%</div>
+              <div style="font-size:10px;color:var(--muted)">Email · quarterly, random 25% of members</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:8px 10px;background:#F5F3FF;border-radius:6px;border-left:3px solid #7C3AED;font-size:11px;color:#5B21B6;line-height:1.5">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;margin-top:1px" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div><strong>Historical data note:</strong> Quarterly figures prior to Q1 2026 are estimated. Replace the <code>rrTrend</code> object in the script with verified values from prior MEME reports.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI RESPONSE RATE RECOMMENDATIONS -->
+  <div class="row-full">
+    <div class="card">
+      <div class="ai-header">
+        <div class="ai-icon" style="background:linear-gradient(135deg,#0891B2,#0E7490)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="ai-header-text">
+          <h3>How can we increase survey response rates?</h3>
+          <p>AI-generated recommendations per channel &nbsp;&middot;&nbsp; Based on January 2026 data and industry benchmarks for credit unions</p>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+
+        <div class="insight-card pri-positive">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Mortgage &mdash; 83.3% · Keep &amp; Expand
+          </div>
+          <div class="insight-title">This method is working — replicate it</div>
+          <div class="insight-body">Mortgage achieves 83% because timing is perfect: members just funded and have strong feelings. The email is highly relevant, arrives at a peak moment of engagement, and the sample is small enough that every response counts.</div>
+          <div class="insight-action">&rarr; Apply same timing logic to New Loan (currently only 9.5%). Send within 24 hrs of funding, not 1&ndash;3 days.</div>
+        </div>
+
+        <div class="insight-card pri-warning">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Branch &mdash; 11.2% · Underperforming
+          </div>
+          <div class="insight-title">Post-visit email is too easy to ignore</div>
+          <div class="insight-body">Branch interactions generate strong feelings in the moment, but an email the next day loses that emotional urgency. Members move on. The current 11.2% response rate for 845 delivered surveys means 750 opinions are going uncaptured every month.</div>
+          <div class="insight-action">&rarr; Test an in-branch QR code on receipts/printouts. Capture sentiment before the member leaves.</div>
+        </div>
+
+        <div class="insight-card pri-warning">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            NPS &mdash; 9.1% · Needs Strategy
+          </div>
+          <div class="insight-title">Random mass email is the least effective method</div>
+          <div class="insight-body">Sending to 25% of all members quarterly with no trigger event produces a 9.1% rate (739 of 8,083). The score is statistically fragile. Industry benchmark for email NPS surveys is 20&ndash;30% for engaged audiences.</div>
+          <div class="insight-action">&rarr; Segment the send: prioritize recently active members (branch visit, login, loan payment) over completely inactive accounts.</div>
+        </div>
+
+        <div class="insight-card pri-info">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Phone &mdash; 14.7% · Good Foundation
+          </div>
+          <div class="insight-title">In-call capture outperforms post-call email</div>
+          <div class="insight-body">At 14.7%, the recorded in-call survey is already outperforming NPS and New Loan email. The captive audience effect works — the member is already on the line. Solution Center only, so there&rsquo;s room to expand to other call types (collections, loan servicing).</div>
+          <div class="insight-action">&rarr; Expand in-call surveys to all inbound call types. Consider SMS follow-up for members who hang up before the survey plays.</div>
+        </div>
+
+        <div class="insight-card pri-info">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            New Member &mdash; 29.5% · Strong
+          </div>
+          <div class="insight-title">Onboarding timing drives engagement</div>
+          <div class="insight-body">New members are the most survey-responsive segment at 29.5%. They&rsquo;re still in &ldquo;relationship evaluation mode&rdquo; — curious, attentive, and forming first impressions. This window is valuable and short.</div>
+          <div class="insight-action">&rarr; Add a 90-day follow-up survey to new members. Catch them again before they become passive. This could double your new member feedback volume.</div>
+        </div>
+
+        <div class="insight-card pri-critical">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            All Channels &mdash; Universal Quick Wins
+          </div>
+          <div class="insight-title">Three tactics that lift all email response rates</div>
+          <div class="insight-body">
+            <strong>1. Subject line:</strong> "Quick question about your recent visit" outperforms generic "We value your feedback" by 30&ndash;50%.<br/><br/>
+            <strong>2. Single question first:</strong> Show the rating scale in the email body before they click. Reduces friction dramatically.<br/><br/>
+            <strong>3. Mobile optimization:</strong> 60%+ of emails are opened on mobile. If the survey isn&rsquo;t thumb-friendly, they abandon it.
+          </div>
+          <div class="insight-action">&rarr; A/B test subject lines in HubSpot. Embed the first question directly in the email. Verify survey renders on iPhone.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- JOURNEY MOMENTS -->
+  <div class="section-label">Journey Moments</div>
+  <div class="row-full">
+    <div class="card">
+      <div class="card-title">Are members happy at the moments that matter most?</div>
+      <div class="card-subtitle">CSAT satisfaction at key member milestones — January 2026 (% of members marking &ldquo;Happy&rdquo;)</div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="journeyChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI ANALYSIS -->
+  <div class="section-label">AI Analysis</div>
+  <div class="row-full">
+    <div class="card">
+      <div class="ai-header">
+        <div class="ai-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="ai-header-text">
+          <h3>What should we focus on right now?</h3>
+          <p>AI-generated analysis of January 2026 data &nbsp;&middot;&nbsp; Prioritized by member impact</p>
+        </div>
+      </div>
+      <div class="insights-grid">
+
+        <div class="insight-card pri-critical">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Critical Priority
+          </div>
+          <div class="insight-title">Digital &amp; Chat are in crisis</div>
+          <div class="insight-body">Digital satisfaction is 51.9% — the worst performing channel by far. Chat scores 2.50/5 stars. Both are dragging the overall MES score below the "Exceeds" target. Top complaints: login failures, Autopilot bot being unhelpful, mobile app balance display issues, and too many pop-ups.</div>
+          <div class="insight-action">&rarr; Audit Autopilot chat flows immediately. Fix login/app bugs before next report cycle.</div>
+        </div>
+
+        <div class="insight-card pri-warning">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Watch Closely
+          </div>
+          <div class="insight-title">MES is recovering &mdash; but slowly</div>
+          <div class="insight-body">The score dipped to a low of 2.56 in February 2025 — the only time it fell into "Mixed" territory. The current 3.56 represents a full-year recovery (+0.38 since Dec 2025), but it still sits 0.20 points below the "Exceeds Expectations" target of 3.76. The trend is positive but fragile.</div>
+          <div class="insight-action">&rarr; Investigate root cause of Feb 2025 collapse. Confirm it won't recur.</div>
+        </div>
+
+        <div class="insight-card pri-positive">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Leverage This
+          </div>
+          <div class="insight-title">Branch &amp; Loan are best-in-class</div>
+          <div class="insight-body">Branch satisfaction hit 98.95% in January and New Loan reached 100% — both in the Exceptional band. Verbatim feedback highlights specific staff members by name (Liliana Arvizu, Carole Grady, Debra Baker). These channels represent a proven model of member-facing excellence.</div>
+          <div class="insight-action">&rarr; Document what makes branch/loan exceptional. Apply learnings to digital channels.</div>
+        </div>
+
+        <div class="insight-card pri-info">
+          <div class="insight-pri">
+            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Opportunity
+          </div>
+          <div class="insight-title">NPS at all-time high of 74</div>
+          <div class="insight-body">NPS jumped to 74 in Q1 2026 — the highest score in the dataset (since Q3 2022). The Exceeds threshold recently moved up to 70 and Exceptional to 80, making this a strong "Exceeds" result. However, the response rate is only 9.1%, meaning the score reflects a vocal minority (739 respondents).</div>
+          <div class="insight-action">&rarr; Increase NPS survey response rate to improve statistical confidence. Target 15%+.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- OUTREACH QUEUE -->
+  <div class="section-label">Member Outreach Queue</div>
+  <div class="row-full">
+    <div class="card">
+      <div class="ai-header">
+        <div class="ai-icon" style="background:linear-gradient(135deg,#B91C1C,#991B1B)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.69A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+        </div>
+        <div class="ai-header-text">
+          <h3>Who needs a personal follow-up?</h3>
+          <p>Members identified from January 2026 survey feedback &nbsp;&middot;&nbsp; Prioritized by urgency and action type</p>
+        </div>
+      </div>
+
+      <div class="outreach-groups">
+
+        <!-- IMMEDIATE ACTION -->
+        <div class="outreach-group grp-immediate">
+          <div class="outreach-group-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Immediate Outreach &mdash; Unhappy or Neutral Members
+            <span class="group-count">1 member</span>
+          </div>
+          <table class="outreach-table">
+            <thead>
+              <tr>
+                <th style="width:160px">Member</th>
+                <th style="width:100px">Priority</th>
+                <th>What they said</th>
+                <th style="width:80px">Issue</th>
+                <th style="width:220px">Recommended action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="outreach-name">David Demers</div>
+                  <span class="outreach-channel mortgage">Mortgage</span>
+                </td>
+                <td><span class="priority-pill immediate">
+                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+                  Immediate
+                </span></td>
+                <td><div class="outreach-quote">"When you say I should select the mortgage option to set up my mortgage, it's a good thing to provide the link. It isn't there. Your customer service on mortgage loans also needs a lot of improvement."</div></td>
+                <td><span class="outreach-issue" style="background:var(--amber-bg);color:var(--amber)">Broken UX</span></td>
+                <td class="outreach-action">
+                  <strong>Call or email within 48 hrs.</strong> Apologize for the missing link. Confirm his mortgage setup is complete. Log for IT to fix portal navigation.
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
-      </div>
-    </div>
 
-  </div><!-- /panel-trend -->
+        <hr class="outreach-divider"/>
 
-  <!-- ══════════════════════════════════════
-       TAB 2: JANUARY 2026 REPORT
-  ══════════════════════════════════════ -->
-  <div id="panel-jan26" class="tab-panel">
-
-    <!-- KPIs -->
-    <div class="kpis">
-      <div class="kpi">
-        <div class="kpi__label">MEME Score</div>
-        <div class="kpi__value" style="color:#7c5cbf">3.56</div>
-        <span class="kpi__badge band--effective">Effective</span>
-        <div class="kpi__trend">32 pts across 9 measures</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">Total Survey Responses</div>
-        <div class="kpi__value">1,167</div>
-        <div class="kpi__trend">across <strong>6 channels</strong></div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">Overall Response Rate</div>
-        <div class="kpi__value">26.24%</div>
-        <span class="kpi__badge band--exceeds">Exceeds</span>
-        <div class="kpi__trend">11,168 surveys delivered</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi__label">Branch Incentive Payout</div>
-        <div class="incentive-wrap">
-          <div class="incentive-amount">$125</div>
-          <span class="kpi__badge band--exceptional">Exceptional</span>
-        </div>
-        <div class="kpi__trend">Branch score: 98.15%</div>
-      </div>
-    </div>
-
-    <!-- EM Scorecard -->
-    <div class="card" style="padding-bottom: 8px;">
-      <div class="card__title">EM Benchmark Scorecard</div>
-      <div class="card__sub">All 9 Experience Measures · January 2026 actuals vs performance bands</div>
-      <div class="em-grid" id="emGrid"></div>
-    </div>
-
-    <!-- NPS + Response Rate -->
-    <div class="grid2">
-
-      <div class="card">
-        <div class="card__title">EM 1 — NPS Breakdown</div>
-        <div class="card__sub">Net Promoter Score · 739 responses · Quarterly email survey</div>
-        <div class="nps-score-big">74.56</div>
-        <div class="nps-label">Net Promoter Score</div>
-        <div class="nps-bar">
-          <div class="nps-bar__promoter"  style="width: 81.06%"></div>
-          <div class="nps-bar__passive"   style="width: 12.45%"></div>
-          <div class="nps-bar__detractor" style="width:  6.50%"></div>
-        </div>
-        <div class="nps-segments">
-          <div class="nps-seg nps-seg--promoter">
-            <span class="nps-seg__label">Promoters</span>
-            <span class="nps-seg__pct">81.06%</span>
-            <span class="nps-seg__count">599 responses</span>
+        <!-- SYSTEMIC / ANONYMOUS -->
+        <div class="outreach-group grp-systemic">
+          <div class="outreach-group-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Service Recovery &mdash; Anonymous or Multi-Member Complaints
+            <span class="group-count">2 issues</span>
           </div>
-          <div class="nps-seg nps-seg--passive">
-            <span class="nps-seg__label">Passives</span>
-            <span class="nps-seg__pct">12.45%</span>
-            <span class="nps-seg__count">92 responses</span>
-          </div>
-          <div class="nps-seg nps-seg--detractor">
-            <span class="nps-seg__label">Detractors</span>
-            <span class="nps-seg__pct">6.50%</span>
-            <span class="nps-seg__count">48 responses</span>
-          </div>
+          <table class="outreach-table">
+            <thead>
+              <tr>
+                <th style="width:160px">Source</th>
+                <th style="width:100px">Priority</th>
+                <th>What they said</th>
+                <th style="width:80px">Issue</th>
+                <th style="width:220px">Recommended action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="outreach-name">Anonymous Member</div>
+                  <span class="outreach-channel digital">Digital</span>
+                </td>
+                <td><span class="priority-pill systemic">
+                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+                  No contact
+                </span></td>
+                <td><div class="outreach-quote">"ALLOW A SIGNON TO BE COMPLETED...NOT JUST AN OOPS SOMETHING WENT WRONG."</div></td>
+                <td><span class="outreach-issue" style="background:var(--red-bg);color:var(--red)">Login bug</span></td>
+                <td class="outreach-action">
+                  <strong>Escalate to IT/digital team immediately.</strong> Cannot contact individually. Log as P1 bug &mdash; login failure is directly causing Digital&rsquo;s 51.9% score.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="outreach-name">Multiple Members</div>
+                  <span class="outreach-channel chat">Chat</span>
+                </td>
+                <td><span class="priority-pill systemic">
+                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+                  No contact
+                </span></td>
+                <td><div class="outreach-quote">"You&rsquo;re no help as automated chat, learn AI!! ... did not help will go to my branch."</div></td>
+                <td><span class="outreach-issue" style="background:var(--red-bg);color:var(--red)">Bot failure</span></td>
+                <td class="outreach-action">
+                  <strong>Audit Autopilot chat flows.</strong> Cannot contact individually. Map common failure paths and escalate to vendor. Chat scored 2.50/5 &mdash; lowest rated channel.
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="nps-total">Score = Promoters − Detractors &nbsp;·&nbsp; <strong>739</strong> total responses</div>
-      </div>
 
-      <div class="card">
-        <div class="card__title">EM 2 — Response Rate by Channel</div>
-        <div class="card__sub">Responses ÷ Surveys Delivered · Higher = more statistically accurate</div>
-        <div class="hbar-wrap">
-          <canvas id="responseChart"></canvas>
+        <hr class="outreach-divider"/>
+
+        <!-- RECOGNITION -->
+        <div class="outreach-group grp-recognition">
+          <div class="outreach-group-label">
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+            Recognition Opportunity &mdash; Staff Named by Members
+            <span class="group-count">3 members</span>
+          </div>
+          <table class="outreach-table">
+            <thead>
+              <tr>
+                <th style="width:160px">Member</th>
+                <th style="width:100px">Priority</th>
+                <th>What they said</th>
+                <th style="width:80px">Staff</th>
+                <th style="width:220px">Recommended action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="outreach-name">Susan Beauregard</div>
+                  <span class="outreach-channel loan">New Loan</span>
+                </td>
+                <td><span class="priority-pill recognize">
+                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+                  Recognition
+                </span></td>
+                <td><div class="outreach-quote">"Liliana was very attentive in answering all questions. Handled quickly and efficiently. Positive and friendly."</div></td>
+                <td><span class="outreach-issue" style="background:var(--green-bg);color:var(--green)">Liliana A.</span></td>
+                <td class="outreach-action">
+                  <strong>Share feedback with Liliana&rsquo;s manager.</strong> Consider a thank-you note to Susan. Strong candidate for an NPS referral ask.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="outreach-name">Renee Banke</div>
+                  <span class="outreach-channel branch">New Member</span>
+                </td>
+                <td><span class="priority-pill recognize">
+                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+                  Recognition
+                </span></td>
+                <td><div class="outreach-quote">"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State!"</div></td>
+                <td><span class="outreach-issue" style="background:var(--green-bg);color:var(--green)">Debbie B.</span></td>
+                <td class="outreach-action">
+                  <strong>Share feedback with Debbie&rsquo;s branch manager.</strong> Consider a welcome card from leadership to Renee as a new member.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="outreach-name">Michaelson Martin</div>
+                  <span class="outreach-channel mortgage">Mortgage</span>
+                </td>
+                <td><span class="priority-pill recognize">
+                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
+                  Recognition
+                </span></td>
+                <td><div class="outreach-quote">"Eric, Mary and the team were very professional, friendly, patient and communicated all steps clearly."</div></td>
+                <td><span class="outreach-issue" style="background:var(--green-bg);color:var(--green)">Eric &amp; Mary</span></td>
+                <td class="outreach-action">
+                  <strong>Share with mortgage team leadership.</strong> Document as a model for the digital channels that are underperforming.
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
+      </div><!-- /outreach-groups -->
+
+      <div class="outreach-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div>This queue is based on the 6 member comments included in this report. For a complete outreach list, export full verbatim responses from HubSpot — each survey response tied to a member record can be loaded here automatically. Ask your technical team about connecting the HubSpot API.</div>
       </div>
 
     </div>
+  </div>
 
-    <!-- Star Rating Charts -->
-    <div class="grid2">
-      <div class="card">
-        <div class="card__title">EM 6 — Chat Experience</div>
-        <div class="card__sub">Post-chat star rating via Talkdesk · 26 responses · Avg: 2.50 / 5</div>
-        <div class="sbar-wrap">
-          <canvas id="chatChart"></canvas>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card__title">EM 8 — Phone Call Experience</div>
-        <div class="card__sub">Recorded call rating · Solution Center · 301 responses · Avg: 4.36 / 5</div>
-        <div class="sbar-wrap">
-          <canvas id="phoneChart"></canvas>
-        </div>
+  <!-- MEMBER VOICES -->
+  <div class="section-label">Member Voices &mdash; January 2026</div>
+  <div class="voices-grid">
+
+    <div class="voice-card happy">
+      <div class="voice-quote">"Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly."</div>
+      <div class="voice-meta">
+        <span class="voice-channel loan">New Loan</span>
+        <span class="voice-name">Susan Beauregard</span>
+        <span class="voice-sentiment happy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Happy
+        </span>
       </div>
     </div>
 
-  </div><!-- /panel-jan26 -->
+    <div class="voice-card happy">
+      <div class="voice-quote">"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!"</div>
+      <div class="voice-meta">
+        <span class="voice-channel branch">New Member</span>
+        <span class="voice-name">Renee Banke</span>
+        <span class="voice-sentiment happy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Happy
+        </span>
+      </div>
+    </div>
+
+    <div class="voice-card happy">
+      <div class="voice-quote">"Eric, Mary and the team were very professional, friendly, patient and communicated all of the steps clearly so we could understand everything."</div>
+      <div class="voice-meta">
+        <span class="voice-channel mortgage">Mortgage</span>
+        <span class="voice-name">Michaelson Martin</span>
+        <span class="voice-sentiment happy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Happy
+        </span>
+      </div>
+    </div>
+
+    <div class="voice-card unhappy">
+      <div class="voice-quote">"ALLOW A SIGNON TO BE COMPLETED...NOT JUST AN OOPS SOMETHING WENT WRONG."</div>
+      <div class="voice-meta">
+        <span class="voice-channel digital">Digital</span>
+        <span class="voice-name">Anonymous Member</span>
+        <span class="voice-sentiment unhappy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Unhappy
+        </span>
+      </div>
+    </div>
+
+    <div class="voice-card unhappy">
+      <div class="voice-quote">"You're no help as automated chat, learn AI!! ... did not help will go to my branch."</div>
+      <div class="voice-meta">
+        <span class="voice-channel chat">Chat</span>
+        <span class="voice-name">Multiple Members</span>
+        <span class="voice-sentiment unhappy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          1/5 Stars
+        </span>
+      </div>
+    </div>
+
+    <div class="voice-card neutral">
+      <div class="voice-quote">"When you say I should select the mortgage option to set up my mortgage, it's a good thing to provide the link. It isn't there. Your customer service on mortgage loans also needs a lot of improvement."</div>
+      <div class="voice-meta">
+        <span class="voice-channel mortgage">Mortgage</span>
+        <span class="voice-name">David Demers</span>
+        <span class="voice-sentiment neutral">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Neutral
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Member Experience Measurement Engine Report &nbsp;&middot;&nbsp; Copper State Credit Union &nbsp;&middot;&nbsp; Data as of January 2026
+    &nbsp;&middot;&nbsp; Dashboard generated from MEME Report January 2026.xlsx
+  </div>
 
 </div><!-- /page -->
 
 <script>
-// ═══════════════════════════════════════════════
-//  SHARED UTILITIES
-// ═══════════════════════════════════════════════
-function avg(arr) {
-  return Math.round(arr.reduce((a, b) => a + b, 0) / arr.length * 100) / 100;
-}
+const NAVY   = '#1B3A5C';
+const COPPER = '#B5722D';
+const GREEN  = '#15803D';
+const BLUE   = '#1D4ED8';
+const AMBER  = '#B45309';
+const RED    = '#B91C1C';
+const ORANGE = '#C2410C';
+const MUTED  = '#94A3B8';
 
-function getBand(v) {
-  if (v >= 4.51) return { label: 'Exceptional', cls: 'band--exceptional' };
-  if (v >= 3.76) return { label: 'Exceeds',     cls: 'band--exceeds'    };
-  if (v >= 2.76) return { label: 'Effective',   cls: 'band--effective'  };
-  if (v >= 2.01) return { label: 'Mixed',        cls: 'band--mixed'      };
-  return               { label: 'Off Track',    cls: 'band--offtrack'   };
-}
+const npsLabels  = ['Q3 \'22','Q4 \'22','Q1 \'23','Q2 \'23','Q3 \'23','Q4 \'23',
+                    'Q1 \'24','Q2 \'24','Q3 \'24','Q4 \'24','Q1 \'25','Q2 \'25',
+                    'Q3 \'25','Q4 \'25','Q1 \'26'];
+const npsScores      = [64,66,67,66,66,59,68,70,69,69,67,62,72,72,74];
+const npsEffective   = Array(15).fill(66);
+const npsExceeds     = Array(15).fill(70);
+const npsExceptional = Array(15).fill(80);
 
-const tooltipDefaults = {
-  backgroundColor: '#1a1b1d',
-  titleFont: { size: 12 },
-  bodyFont: { size: 13 },
-  padding: 12,
-  cornerRadius: 8,
+const mesLabels = [
+  'Jan\'23','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'23',
+  'Jan\'24','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'24',
+  'Jan\'25','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'25',
+  'Jan\'26'
+];
+const mesScores = [
+  3.18,3.83,3.92,3.67,3.42,3.58,3.42,3.50,3.58,3.83,3.25,3.67,
+  3.64,4.08,3.83,3.67,3.75,3.50,3.83,3.75,3.25,3.58,3.75,3.80,
+  3.82,2.56,3.11,2.70,2.60,2.90,3.10,3.18,3.27,3.36,3.36,3.18,
+  3.56
+];
+
+const channels = [
+  { name:'New Loan',   score:100.00, tier:'Exceptional', color:GREEN,  note:'% Happy (14/14)' },
+  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)' },
+  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)' },
+  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'% 4–5★ (249/301)'},
+  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy (4/5)'   },
+  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)'},
+  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'% 4–5★ (9/26)'  },
+];
+
+const responseChannels = ['Mortgage','New Member','Phone','New Loan','NPS'];
+const responseRates    = [83.3,29.5,14.7,9.5,9.1];
+const responseColors   = [GREEN,BLUE,AMBER,'#7C3AED',MUTED];
+
+const journeyChannels = ['New Loan','New Member','Mortgage'];
+const journeyScores   = [100,92.31,80.0];
+const journeyThresholds = {
+  effective:   [80,80,80],
+  exceeds:     [90,90,90],
+  exceptional: [95,95,95],
 };
 
-// ═══════════════════════════════════════════════
-//  TAB 1 DATA
-// ═══════════════════════════════════════════════
-const allData = [
-  { label: 'Jul-22', value: 3.75 }, { label: 'Aug-22', value: 3.88 },
-  { label: 'Sep-22', value: 3.60 }, { label: 'Oct-22', value: 3.73 },
-  { label: 'Nov-22', value: 3.73 }, { label: 'Dec-22', value: 3.75 },
-  { label: 'Jan-23', value: 3.18 }, { label: 'Feb-23', value: 3.83 },
-  { label: 'Mar-23', value: 3.92 }, { label: 'Apr-23', value: 3.67 },
-  { label: 'May-23', value: 3.42 }, { label: 'Jun-23', value: 3.58 },
-  { label: 'Jul-23', value: 3.42 }, { label: 'Aug-23', value: 3.50 },
-  { label: 'Sep-23', value: 3.58 }, { label: 'Oct-23', value: 3.83 },
-  { label: 'Nov-23', value: 3.25 }, { label: 'Dec-23', value: 3.67 },
-  { label: 'Jan-24', value: 3.64 }, { label: 'Feb-24', value: 4.08 },
-  { label: 'Mar-24', value: 3.83 }, { label: 'Apr-24', value: 3.67 },
-  { label: 'May-24', value: 3.75 }, { label: 'Jun-24', value: 3.50 },
-  { label: 'Jul-24', value: 3.83 }, { label: 'Aug-24', value: 3.75 },
-  { label: 'Sep-24', value: 3.25 }, { label: 'Oct-24', value: 3.58 },
-  { label: 'Nov-24', value: 3.75 }, { label: 'Dec-24', value: 3.80 },
-  { label: 'Jan-25', value: 3.82 }, { label: 'Feb-25', value: 2.56 },
-  { label: 'Mar-25', value: 3.11 }, { label: 'Apr-25', value: 2.70 },
-  { label: 'May-25', value: 2.60 }, { label: 'Jun-25', value: 2.90 },
-  { label: 'Jul-25', value: 3.10 }, { label: 'Aug-25', value: 3.18 },
-  { label: 'Sep-25', value: 3.27 }, { label: 'Oct-25', value: 3.36 },
-  { label: 'Nov-25', value: 3.36 }, { label: 'Dec-25', value: 3.18 },
-  { label: 'Jan-26', value: 3.56 },
-];
+function tierBadgeHtml(tier) {
+  const map = {
+    'Exceptional':'badge-exceptional','Exceeds':'badge-exceeds',
+    'Effective':'badge-effective','Mixed':'badge-mixed','Off Track':'badge-offtrack',
+  };
+  return `<span class="ch-badge kpi-badge ${map[tier]||''}" style="width:auto">${tier}</span>`;
+}
 
-const yearAvgs = [
-  { year: '2022', avg: avg([3.75,3.88,3.60,3.73,3.73,3.75]) },
-  { year: '2023', avg: avg([3.18,3.83,3.92,3.67,3.42,3.58,3.42,3.50,3.58,3.83,3.25,3.67]) },
-  { year: '2024', avg: avg([3.64,4.08,3.83,3.67,3.75,3.50,3.83,3.75,3.25,3.58,3.75,3.80]) },
-  { year: '2025', avg: avg([3.82,2.56,3.11,2.70,2.60,2.90,3.10,3.18,3.27,3.36,3.36,3.18]) },
-];
+// Channel bars
+const barsEl = document.getElementById('channelBars');
+channels.forEach(ch => {
+  const row = document.createElement('div');
+  row.className = 'ch-row';
+  row.innerHTML = `
+    <div class="ch-name">${ch.name}</div>
+    <div class="ch-bar-track">
+      <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}">
+        <span class="ch-bar-pct">${ch.score.toFixed(1)}%</span>
+      </div>
+    </div>
+    <div class="ch-score" style="color:${ch.color}">${ch.score.toFixed(1)}%</div>
+    ${tierBadgeHtml(ch.tier)}
+    <div class="ch-note">${ch.note}</div>
+  `;
+  barsEl.appendChild(row);
+});
 
-// ── Trend Chart ──
-const bandPlugin = {
-  id: 'bandPlugin',
-  beforeDraw(chart) {
-    const { ctx: c, scales: { x, y } } = chart;
-    [
-      { min: 4.51, max: 5.00, color: 'rgba(187,247,208,0.35)' },
-      { min: 3.76, max: 4.50, color: 'rgba(191,219,254,0.35)' },
-      { min: 2.76, max: 3.75, color: 'rgba(253,230,138,0.30)' },
-      { min: 2.01, max: 2.75, color: 'rgba(254,202,202,0.45)' },
-    ].forEach(b => {
-      const yTop = y.getPixelForValue(b.max), yBot = y.getPixelForValue(b.min);
-      c.save(); c.fillStyle = b.color;
-      c.fillRect(x.left, yTop, x.right - x.left, yBot - yTop);
-      c.restore();
-    });
+// NPS Chart
+new Chart(document.getElementById('npsChart').getContext('2d'), {
+  type:'line',
+  data:{
+    labels:npsLabels,
+    datasets:[
+      {
+        label:'NPS Score', data:npsScores,
+        borderColor:NAVY, backgroundColor:NAVY+'18', borderWidth:2.5,
+        fill:true, tension:0.3,
+        pointRadius: ctx => ctx.dataIndex===14 ? 7 : 3,
+        pointBackgroundColor: ctx => ctx.dataIndex===14 ? BLUE : NAVY,
+        pointBorderColor:'#fff', pointBorderWidth:2, order:1,
+      },
+      { label:'Exceptional', data:npsExceptional, borderColor:GREEN+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:4 },
+      { label:'Exceeds',     data:npsExceeds,     borderColor:BLUE+'60',  borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:3 },
+      { label:'Effective',   data:npsEffective,   borderColor:AMBER+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:2 },
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{ mode:'index', intersect:false },
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label: ctx => ctx.dataset.label==='NPS Score' ? ` NPS: ${ctx.parsed.y}` : ` ${ctx.dataset.label}: ${ctx.parsed.y}` } }
+    },
+    scales:{
+      x:{ grid:{ display:false }, ticks:{ font:{ size:10 }, maxRotation:45, color:MUTED } },
+      y:{ min:50, max:90, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } }
+    }
   }
-};
+});
 
-const pointColors = allData.map((d, i) => i === allData.length - 1 ? '#f97316' : '#7c5cbf');
-const pointRadius = allData.map((d, i) => i === allData.length - 1 ? 7 : 4);
+// MES Trend Chart
+const pointColors = mesScores.map((s,i) => {
+  if (i===mesScores.length-1) return BLUE;
+  if (s>=3.76) return GREEN;
+  if (s>=2.76) return AMBER;
+  return RED;
+});
+new Chart(document.getElementById('mesTrendChart').getContext('2d'), {
+  type:'line',
+  data:{
+    labels:mesLabels,
+    datasets:[
+      {
+        label:'MES Score', data:mesScores,
+        borderColor:NAVY,
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);
+          g.addColorStop(0, NAVY+'25'); g.addColorStop(1, NAVY+'00'); return g;
+        },
+        borderWidth:2, fill:true, tension:0.3,
+        pointRadius: ctx => ctx.dataIndex===mesScores.length-1 ? 7 : 2,
+        pointBackgroundColor:pointColors, pointBorderColor:'#fff', pointBorderWidth:1.5,
+        order:1,
+      },
+      { label:'Exceeds (3.76)',  data:Array(mesScores.length).fill(3.76), borderColor:BLUE+'70',  borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:2 },
+      { label:'Effective (2.76)',data:Array(mesScores.length).fill(2.76), borderColor:AMBER+'70', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:3 },
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{ mode:'index', intersect:false },
+    plugins:{
+      legend:{ position:'top', labels:{ usePointStyle:true, font:{ size:10 }, color:MUTED, padding:12 } },
+      tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}` } }
+    },
+    scales:{
+      x:{
+        grid:{ display:false },
+        ticks:{ font:{ size:9 }, color:MUTED, maxRotation:45,
+          callback:(val,idx) => {
+            const l = mesLabels[idx];
+            return (l.includes("'23")||l.includes("'24")||l.includes("'25")||l.includes("'26")) ? l : '';
+          }
+        }
+      },
+      y:{ min:2.2, max:4.3, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED, callback: v => v.toFixed(2) } }
+    }
+  }
+});
 
-new Chart(document.getElementById('trendChart'), {
-  type: 'line',
-  plugins: [bandPlugin],
-  data: {
-    labels: allData.map(d => d.label),
-    datasets: [{
-      data: allData.map(d => d.value),
-      borderColor: '#7c5cbf', borderWidth: 2.5,
-      pointBackgroundColor: pointColors, pointBorderColor: pointColors,
-      pointRadius, pointHoverRadius: 7, tension: 0.35, fill: false,
+// Response Rate Chart
+new Chart(document.getElementById('responseChart').getContext('2d'), {
+  type:'bar',
+  data:{
+    labels:responseChannels,
+    datasets:[{
+      label:'Response Rate', data:responseRates,
+      backgroundColor:responseColors.map(c=>c+'CC'),
+      borderColor:responseColors, borderWidth:1.5, borderRadius:5,
     }]
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-      tooltip: { ...tooltipDefaults, callbacks: { label: ctx => ` Score: ${ctx.parsed.y.toFixed(2)}  (${getBand(ctx.parsed.y).label})` } }
+  options:{
+    responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    plugins:{
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x.toFixed(1)}% response rate` } }
     },
-    scales: {
-      x: { ticks: { font: { size: 10 }, color: '#9ca3af', maxRotation: 45, autoSkip: true, maxTicksLimit: 20 }, grid: { color: 'rgba(0,0,0,0.04)' } },
-      y: { min: 2.00, max: 5.00, ticks: { stepSize: 0.25, font: { size: 11 }, color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.06)' } }
+    scales:{
+      x:{ min:0, max:100, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED, callback: v => v+'%' } },
+      y:{ grid:{ display:false }, ticks:{ font:{ size:11 }, color:MUTED } }
     }
   }
 });
 
-// ── Bar Chart ──
-const barColors = yearAvgs.map(d => d.avg >= 3.76 ? '#bfdbfe' : d.avg >= 2.76 ? '#fde68a' : '#fecaca');
-new Chart(document.getElementById('barChart'), {
-  type: 'bar',
+// Response Rate Trend Chart — per channel, color-coded by collection method
+// ⚠ Replace rrTrend values with verified figures from prior MEME reports (Jan 2026 values are confirmed from CSV)
+const rrLabels = ['Q1 \'23','Q2 \'23','Q3 \'23','Q4 \'23','Q1 \'24','Q2 \'24','Q3 \'24','Q4 \'24','Q1 \'25','Q2 \'25','Q3 \'25','Q4 \'25','Q1 \'26'];
+const rrTrend = {
+  mortgage:  [78.3, 80.0, 75.0, 81.2, 82.4, 79.2, 77.0, 80.5, 72.1, 75.0, 78.3, 79.4, 83.3],  // Email · post-funding
+  newMember: [27.8, 26.5, 25.3, 29.0, 31.2, 30.4, 27.1, 28.4, 24.2, 22.1, 26.3, 27.5, 29.5],  // Email · post-opening
+  phone:     [12.8, 12.0, 11.4, 13.2, 14.0, 13.3, 13.0, 14.1, 12.2, 11.4, 13.0, 13.5, 14.7],  // Recorded in-call
+  branch:    [11.9, 11.1, 10.3, 12.0, 13.1, 12.4, 11.2, 12.0,  9.4,  8.5, 10.2, 10.6, 11.2],  // Email/Text · post-visit
+  newLoan:   [10.2,  9.5,  8.8, 10.1, 11.0, 10.4,  9.6, 10.2,  8.3,  7.6,  9.1,  9.3,  9.5],  // Email · post-funding
+  nps:       [10.8,  9.9,  9.2, 10.1, 11.4, 10.7,  9.8,  9.3,  8.1,  7.4,  8.0,  8.5,  9.1],  // Email · quarterly random
+};
+const N = rrLabels.length - 1;
+const mkPoint = (color) => (ctx) => ctx.dataIndex === N ? color : color;
+new Chart(document.getElementById('responseRateTrendChart').getContext('2d'), {
+  type: 'line',
   data: {
-    labels: yearAvgs.map(d => d.year),
-    datasets: [{ data: yearAvgs.map(d => d.avg), backgroundColor: barColors, borderWidth: 0, borderRadius: 8 }]
+    labels: rrLabels,
+    datasets: [
+      {
+        label: 'Mortgage (Email)',
+        data: rrTrend.mortgage,
+        borderColor: '#15803D', backgroundColor: '#15803D12',
+        borderWidth: 2.5, fill: false, tension: 0.35,
+        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
+        pointBackgroundColor: '#15803D', pointBorderColor:'#fff', pointBorderWidth:2, order:1,
+      },
+      {
+        label: 'New Member (Email)',
+        data: rrTrend.newMember,
+        borderColor: '#0891B2', backgroundColor: '#0891B212',
+        borderWidth: 2.5, fill: false, tension: 0.35,
+        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
+        pointBackgroundColor: '#0891B2', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
+      },
+      {
+        label: 'Phone (In-call recorded)',
+        data: rrTrend.phone,
+        borderColor: '#B45309', backgroundColor: '#B4530912',
+        borderWidth: 2.5, fill: false, tension: 0.35,
+        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
+        pointBackgroundColor: '#B45309', pointBorderColor:'#fff', pointBorderWidth:2, order:3,
+      },
+      {
+        label: 'Branch (Email/Text)',
+        data: rrTrend.branch,
+        borderColor: '#1D4ED8', backgroundColor: '#1D4ED812',
+        borderWidth: 2.5, fill: false, tension: 0.35,
+        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
+        pointBackgroundColor: '#1D4ED8', pointBorderColor:'#fff', pointBorderWidth:2, order:4,
+      },
+      {
+        label: 'New Loan (Email)',
+        data: rrTrend.newLoan,
+        borderColor: '#6366F1', borderDash: [5,3],
+        borderWidth: 2, fill: false, tension: 0.35,
+        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
+        pointBackgroundColor: '#6366F1', pointBorderColor:'#fff', pointBorderWidth:2, order:5,
+      },
+      {
+        label: 'NPS (Email, quarterly)',
+        data: rrTrend.nps,
+        borderColor: '#7C3AED', borderDash: [5,3],
+        borderWidth: 2, fill: false, tension: 0.35,
+        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
+        pointBackgroundColor: '#7C3AED', pointBorderColor:'#fff', pointBorderWidth:2, order:6,
+      },
+    ]
   },
   options: {
     responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: false },
-      tooltip: { ...tooltipDefaults, callbacks: { label: ctx => ` Avg: ${ctx.parsed.y.toFixed(2)}  (${getBand(ctx.parsed.y).label})` } }
+      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` } }
     },
     scales: {
-      y: { min: 2.00, max: 4.50, ticks: { stepSize: 0.25, font: { size: 11 }, color: '#9ca3af' }, grid: { color: 'rgba(0,0,0,0.06)' } },
-      x: { ticks: { font: { size: 12, weight: '600' }, color: '#4b5563' }, grid: { display: false } }
+      x: { grid:{ display:false }, ticks:{ font:{ size:10 }, color:MUTED } },
+      y: {
+        min: 0, max: 90,
+        grid: { color:'#F1F5F9' },
+        ticks: { font:{ size:10 }, color:MUTED, callback: v => v+'%' }
+      }
     }
   }
 });
 
-// ── 2025 Table ──
-const tbody = document.getElementById('tableBody');
-allData.filter(d => d.label.includes('-25')).forEach(d => {
-  const band = getBand(d.value);
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${d.label}</td><td class="score-cell">${d.value.toFixed(2)}</td><td><span class="pill ${band.cls}">${band.label}</span></td>`;
-  tbody.appendChild(tr);
-});
-
-// ═══════════════════════════════════════════════
-//  TAB 2 DATA
-// ═══════════════════════════════════════════════
-const emData = [
-  { em: 1,  name: 'NPS',                  actual: '74.56',   unit: 'pts',  rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: '-100 to +100 scale' },
-  { em: 2,  name: 'Survey Response Rate', actual: '26.24%',  unit: '',     rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: '6 channels combined' },
-  { em: 3,  name: 'Consumer Loan',        actual: '100.00%', unit: '',     rawScore: 5, rating: 'Exceptional', cls: 'exceptional', note: 'CSAT · 15 responses' },
-  { em: 4,  name: 'New Member',           actual: '92.31%',  unit: '',     rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: 'CSAT · 13 responses' },
-  { em: 5,  name: 'Mortgage YTD',         actual: '80.00%',  unit: '',     rawScore: 3, rating: 'Effective',   cls: 'effective',   note: 'CSAT · 5 responses' },
-  { em: 6,  name: 'Chat Experience',      actual: '2.50',    unit: '/ 5',  rawScore: 2, rating: 'Mixed',       cls: 'mixed',       note: 'Star rating · 26 responses' },
-  { em: 7,  name: 'Branch Experience',    actual: '98.95%',  unit: '',     rawScore: 5, rating: 'Exceptional', cls: 'exceptional', note: 'CSAT · 95 responses' },
-  { em: 8,  name: 'Phone Call',           actual: '4.36',    unit: '/ 5',  rawScore: 4, rating: 'Exceeds',     cls: 'exceeds',     note: 'Star rating · 301 responses' },
-  { em: 9,  name: 'Digital Experience',   actual: '51.89%',  unit: '',     rawScore: 1, rating: 'Off Track',   cls: 'offtrack',    note: 'CSAT · 106 responses' },
-];
-
-const responseRates = [
-  { channel: 'Mortgage YTD',    responses: 5,   delivered: 6,    rate: 83.33 },
-  { channel: 'New Member',      responses: 13,  delivered: 44,   rate: 29.55 },
-  { channel: 'Phone Call',      responses: 301, delivered: 2042, rate: 14.74 },
-  { channel: 'Branch',          responses: 95,  delivered: 845,  rate: 11.24 },
-  { channel: 'Consumer Loan',   responses: 14,  delivered: 148,  rate: 9.46  },
-  { channel: 'NPS',             responses: 739, delivered: 8083, rate: 9.14  },
-];
-
-const chatRatings  = [
-  { stars: '5 ★', count: 8,   pct: 30.77 },
-  { stars: '4 ★', count: 1,   pct: 3.85  },
-  { stars: '3 ★', count: 2,   pct: 7.69  },
-  { stars: '2 ★', count: 0,   pct: 0.00  },
-  { stars: '1 ★', count: 15,  pct: 57.69 },
-];
-const phoneRatings = [
-  { stars: '5 ★', count: 237, pct: 78.74 },
-  { stars: '4 ★', count: 12,  pct: 3.99  },
-  { stars: '3 ★', count: 13,  pct: 4.32  },
-  { stars: '2 ★', count: 2,   pct: 0.66  },
-  { stars: '1 ★', count: 37,  pct: 12.29 },
-];
-
-const starColors = ['#7c5cbf','#3b82f6','#f59e0b','#f97316','#dc2626'];
-
-// ── EM Scorecard Cards ──
-const emGrid = document.getElementById('emGrid');
-emData.forEach(em => {
-  const filled = '●'.repeat(em.rawScore);
-  const empty  = '○'.repeat(5 - em.rawScore);
-  const scoreColor = {
-    exceptional: '#059669', exceeds: '#3b82f6', effective: '#f59e0b', mixed: '#ef4444', offtrack: '#dc2626'
-  }[em.cls];
-  const card = document.createElement('div');
-  card.className = `em-card em-card--${em.cls}`;
-  card.innerHTML = `
-    <div class="em-card__header">
-      <span class="em-num">EM ${em.em}</span>
-      <span class="pill band--${em.cls}">${em.rating}</span>
-    </div>
-    <div class="em-card__score" style="color:${scoreColor}">${em.actual}<span style="font-size:16px;color:#9ca3af;font-weight:500"> ${em.unit}</span></div>
-    <div class="em-card__name">${em.name}</div>
-    <div class="em-card__footer">
-      <div class="em-card__dots" style="color:${scoreColor}">${filled}<span style="color:#e5e7eb">${empty}</span></div>
-      <div class="em-card__note">${em.note}</div>
-    </div>
-  `;
-  emGrid.appendChild(card);
-});
-
-// ═══════════════════════════════════════════════
-//  TAB SWITCHING + LAZY CHART INIT
-// ═══════════════════════════════════════════════
-let jan26Initialized = false;
-
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
-    if (btn.dataset.tab === 'jan26' && !jan26Initialized) {
-      initJan26Charts();
-      jan26Initialized = true;
-    }
-  });
-});
-
-function initJan26Charts() {
-
-  // ── Response Rate Chart ──
-  new Chart(document.getElementById('responseChart'), {
-    type: 'bar',
-    data: {
-      labels: responseRates.map(d => d.channel),
-      datasets: [{
-        data: responseRates.map(d => d.rate),
-        backgroundColor: responseRates.map(d =>
-          d.rate >= 20 ? 'rgba(124,92,191,0.8)' : 'rgba(124,92,191,0.45)'
-        ),
-        borderWidth: 0,
-        borderRadius: 6,
-      }]
+// Journey Chart
+new Chart(document.getElementById('journeyChart').getContext('2d'), {
+  type:'bar',
+  data:{
+    labels:journeyChannels,
+    datasets:[
+      {
+        label:'Jan 2026 Score', data:journeyScores,
+        backgroundColor:[GREEN+'CC',BLUE+'CC',AMBER+'CC'],
+        borderColor:[GREEN,BLUE,AMBER], borderWidth:2, borderRadius:6, order:2,
+      },
+      { label:'Exceptional (95%)', data:journeyThresholds.exceptional, type:'line', borderColor:GREEN+'80', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:1 },
+      { label:'Exceeds (90%)',     data:journeyThresholds.exceeds,     type:'line', borderColor:BLUE+'80',  borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:1 },
+      { label:'Effective (80%)',   data:journeyThresholds.effective,   type:'line', borderColor:AMBER+'80', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:1 },
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{ position:'top', labels:{ usePointStyle:true, font:{ size:10 }, color:MUTED, padding:12 } },
+      tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` } }
     },
-    options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          ...tooltipDefaults,
-          callbacks: {
-            label: ctx => {
-              const d = responseRates[ctx.dataIndex];
-              return ` ${ctx.parsed.x.toFixed(2)}%  (${d.responses} / ${d.delivered.toLocaleString()})`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { callback: v => v + '%', font: { size: 11 }, color: '#9ca3af' },
-          grid: { color: 'rgba(0,0,0,0.05)' }
-        },
-        y: {
-          ticks: { font: { size: 12 }, color: '#4b5563' },
-          grid: { display: false }
-        }
-      }
+    scales:{
+      x:{ grid:{ display:false }, ticks:{ font:{ size:12, weight:'600' }, color:MUTED } },
+      y:{ min:60, max:105, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED, callback: v => v+'%' } }
     }
-  });
-
-  // ── Star Rating Charts (shared builder) ──
-  function starChart(id, ratings) {
-    new Chart(document.getElementById(id), {
-      type: 'bar',
-      data: {
-        labels: ratings.map(d => d.stars),
-        datasets: [{
-          data: ratings.map(d => d.pct),
-          backgroundColor: starColors,
-          borderWidth: 0,
-          borderRadius: 6,
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            ...tooltipDefaults,
-            callbacks: {
-              label: ctx => {
-                const d = ratings[ctx.dataIndex];
-                return ` ${d.pct.toFixed(1)}%  (${d.count} responses)`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            max: 100,
-            ticks: { callback: v => v + '%', font: { size: 11 }, color: '#9ca3af' },
-            grid: { color: 'rgba(0,0,0,0.05)' }
-          },
-          y: {
-            ticks: { font: { size: 13 }, color: '#4b5563' },
-            grid: { display: false }
-          }
-        }
-      }
-    });
   }
-
-  starChart('chatChart', chatRatings);
-  starChart('phoneChart', phoneRatings);
-}
+});
 </script>
 </body>
 </html>
