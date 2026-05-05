@@ -1475,6 +1475,7 @@
     document.getElementById('mainContent').style.display = '';
     document.getElementById('floatChatToggle').style.display = '';
     sessionStorage.setItem('memeAuth', '1');
+    if (typeof lockVoicesHeight === 'function') lockVoicesHeight();
   }
   if (sessionStorage.getItem('memeAuth') === '1') { unlock(); return; }
   document.addEventListener('DOMContentLoaded', () => {
@@ -1969,15 +1970,19 @@ function showChannelTab(key) {
   });
 }
 
+function lockVoicesHeight() {
+  requestAnimationFrame(() => {
+    const tilesCol = document.getElementById('surveyTiles');
+    const rightCol = document.getElementById('channelRightCol');
+    if (tilesCol && rightCol) {
+      rightCol.style.height = tilesCol.offsetHeight + 'px';
+    }
+    selectTile('nps');
+  });
+}
+
 renderSurveyTiles();
-requestAnimationFrame(() => {
-  const tilesCol  = document.getElementById('surveyTiles');
-  const rightCol  = document.getElementById('channelRightCol');
-  if (tilesCol && rightCol) {
-    rightCol.style.height = tilesCol.offsetHeight + 'px';
-  }
-  selectTile('nps');
-});
+lockVoicesHeight();
 
 // ── CHATBOT ──────────────────────────────────────────────────────────────────
 const chatKB = [
