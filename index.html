@@ -6,31 +6,31 @@
   <title>Copper State CU — Member Experience Dashboard · January 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --navy:       #1B3A5C;
-      --navy-dark:  #0F2540;
-      --navy-light: #244D78;
-      --copper:     #B5722D;
-      --copper-lt:  #D4924A;
-      --bg:         #F1F5F9;
+      --navy:       #004987;
+      --navy-dark:  #003366;
+      --navy-light: #1A6BA0;
+      --copper:     #B87333;
+      --copper-lt:  #D4A055;
+      --bg:         #F4F8FC;
       --card:       #FFFFFF;
-      --text:       #0F172A;
-      --text-2:     #334155;
-      --muted:      #64748B;
-      --border:     #E2E8F0;
-      --green:      #15803D;
-      --blue:       #1D4ED8;
-      --amber:      #B45309;
-      --orange:     #C2410C;
-      --red:        #B91C1C;
-      --green-bg:   #DCFCE7;
-      --blue-bg:    #DBEAFE;
-      --amber-bg:   #FEF3C7;
-      --orange-bg:  #FFEDD5;
-      --red-bg:     #FEE2E2;
+      --text:       #2D2926;
+      --text-2:     #545859;
+      --muted:      #545859;
+      --border:     #DDE4ED;
+      --green:      #4E8010;
+      --blue:       #004987;
+      --amber:      #7A5800;
+      --orange:     #545859;
+      --red:        #C41E3A;
+      --green-bg:   #E6F5CC;
+      --blue-bg:    #CCF0FF;
+      --amber-bg:   #FFF5CC;
+      --orange-bg:  #EFEFEF;
+      --red-bg:     #FDE8EA;
       --gap: 16px;
       --radius: 12px;
       --radius-sm: 8px;
@@ -40,7 +40,7 @@
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Montserrat', 'Trebuchet MS', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.5;
@@ -51,20 +51,51 @@
 
     /* ── HEADER ─────────────────────────────────── */
     .header {
-      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-light) 100%);
+      background: url('foil-bg.jpg') center/cover no-repeat;
       border-radius: var(--radius);
-      padding: 24px 28px;
+      padding: 16px 24px;
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
       margin-bottom: var(--gap);
       box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
     }
+    .header-nav {
+      display: flex; align-items: center; gap: 0;
+      margin-top: 6px; flex-wrap: wrap;
+    }
+    .header-nav a {
+      color: rgba(255,255,255,.8); font-size: 11px; font-weight: 600;
+      letter-spacing: .3px; text-decoration: none; padding: 3px 10px;
+      border-radius: 20px; transition: background 150ms ease, color 150ms ease;
+      white-space: nowrap;
+    }
+    .header-nav a:hover { background: rgba(255,255,255,.15); color: #fff; }
+    .header-nav a.active { color: #fff; font-weight: 700; }
+    .header-nav-sep { color: rgba(255,255,255,.3); font-size: 12px; padding: 0 8px; }
+    .header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(20, 8, 0, 0.35);
+      border-radius: var(--radius);
+      pointer-events: none;
+    }
+    .header > * { position: relative; z-index: 1; }
     .header-left { display: flex; align-items: center; gap: 14px; }
     .header-logo {
-      width: 48px; height: 48px; background: var(--copper); border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Fira Code', monospace; font-size: 18px; font-weight: 700; color: #fff;
-      flex-shrink: 0; letter-spacing: -0.5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.22);
+      display: flex; flex-direction: column; align-items: flex-start;
+      flex-shrink: 0; gap: 0;
+    }
+    .header-logo-name {
+      font-size: 22px; font-weight: 800; color: #fff;
+      line-height: 1; letter-spacing: -0.5px;
+    }
+    .header-logo-name span { color: var(--copper-lt); }
+    .header-logo-cu {
+      font-size: 10px; font-weight: 600; color: rgba(255,255,255,.7);
+      letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 1px 6px; border-radius: 2px;
     }
     .header-title { color: #fff; }
     .header-title h1 { font-size: 18px; font-weight: 700; line-height: 1.2; letter-spacing: -0.2px; }
@@ -79,9 +110,14 @@
 
     /* ── KPI ROW ────────────────────────────────── */
     .kpi-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
+      display: grid; grid-template-columns: 1fr 2fr 1fr;
       gap: var(--gap); margin-bottom: var(--gap);
     }
+    .kpi-card.kpi-thermo { display: flex; flex-direction: column; justify-content: center; }
+    .thermo-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 600; margin-bottom: 14px; }
+    .thermo-legend { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+    .thermo-leg-item { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--text-2); white-space: nowrap; }
+    .thermo-leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
     .kpi-card {
       background: var(--card); border-radius: var(--radius); padding: 20px 22px;
       box-shadow: var(--shadow); border-top: 3px solid transparent;
@@ -99,10 +135,10 @@
     .kpi-card.tier-offtrack  { border-top-color: var(--red);   } .kpi-card.tier-offtrack::after  { background: var(--red);   }
     .kpi-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 600; margin-bottom: 8px; }
     .kpi-value {
-      font-family: 'Fira Code', monospace; font-size: 34px; font-weight: 700; color: var(--text);
+      font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 34px; font-weight: 700; color: var(--text);
       line-height: 1; margin-bottom: 4px; font-variant-numeric: tabular-nums;
     }
-    .kpi-denom { font-family: 'Fira Code', monospace; font-size: 15px; font-weight: 400; color: var(--muted); }
+    .kpi-denom { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 15px; font-weight: 400; color: var(--muted); }
     .kpi-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
     .kpi-badge { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
     .badge-exceptional { background: var(--green-bg); color: var(--green); }
@@ -110,6 +146,75 @@
     .badge-effective   { background: var(--amber-bg); color: var(--amber); }
     .badge-mixed       { background: var(--orange-bg);color: var(--orange);}
     .badge-offtrack    { background: var(--red-bg);   color: var(--red);   }
+    .kpi-value-row { display: flex; align-items: baseline; gap: 10px; }
+    .kpi-delta {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 13px; font-weight: 700; padding: 2px 8px;
+      border-radius: 12px; line-height: 1.4; flex-shrink: 0;
+    }
+    .kpi-delta.up   { background: var(--green-bg); color: var(--green); }
+    .kpi-delta.down { background: var(--red-bg);   color: var(--red);   }
+    .kpi-delta.flat { background: #f0f0f0;          color: var(--muted); }
+
+    /* ── TAB BAR ─────────────────────────────────── */
+    .tab-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab-btn {
+      padding: 5px 13px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: var(--bg); font-size: 11px; font-weight: 600; color: var(--muted);
+      cursor: pointer; transition: all 150ms ease; font-family: inherit;
+    }
+    .tab-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .tab-btn:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
+
+    /* ── BAR DELTA ───────────────────────────────── */
+    .ch-delta { font-family:'Montserrat','Trebuchet MS',sans-serif; width:86px; font-size:11px; font-weight:700; flex-shrink:0; text-align:right; }
+    .ch-delta.up   { color: var(--green);  }
+    .ch-delta.down { color: var(--red);    }
+    .ch-delta.flat { color: var(--muted);  }
+    .ch-delta.na   { color: var(--muted); font-weight: 400; }
+
+    /* ── CHANNEL TILES ──────────────────────────── */
+    .channel-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap); margin-bottom: var(--gap);
+    }
+    .ch-tile {
+      background: var(--card); border-radius: var(--radius); padding: 18px 20px;
+      box-shadow: var(--shadow); border-left: 4px solid transparent;
+      position: relative; transition: box-shadow 220ms ease, transform 220ms ease;
+    }
+    .ch-tile:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+    .ch-tile.t-exceptional { border-left-color: var(--green); }
+    .ch-tile.t-exceeds     { border-left-color: var(--blue);  }
+    .ch-tile.t-effective   { border-left-color: var(--amber); }
+    .ch-tile.t-mixed       { border-left-color: var(--orange);}
+    .ch-tile.t-offtrack    { border-left-color: var(--red);   }
+    .ch-tile-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+    .ch-tile-em { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+    .ch-tile-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .ch-tile-score-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .ch-tile-score { font-size: 28px; font-weight: 700; color: var(--text); line-height: 1; font-variant-numeric: tabular-nums; }
+    .ch-tile-unit { font-size: 13px; color: var(--muted); font-weight: 400; }
+    .ch-tile-prev { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+    .ch-tile-delta {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11px; font-weight: 700; padding: 2px 7px;
+      border-radius: 10px; line-height: 1.4; flex-shrink: 0;
+    }
+    .ch-tile-delta.up   { background: var(--green-bg); color: var(--green); }
+    .ch-tile-delta.down { background: var(--red-bg);   color: var(--red);   }
+    .ch-tile-delta.flat { background: #f0f0f0;          color: var(--muted); }
+    .ch-tile-delta.na   { background: #f0f0f0;          color: var(--muted); }
+
+    /* ── COMBINED TIMELINE ───────────────────────── */
+    .timeline-note { font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+    @media (max-width: 960px) {
+      .channel-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .channel-grid { grid-template-columns: 1fr; }
+    }
 
     /* ── CARD ───────────────────────────────────── */
     .card {
@@ -136,13 +241,13 @@
       width: 3px; background: var(--copper); border-radius: 2px;
     }
 
-    /* ── MES BAND METER ─────────────────────────── */
+    /* ── MX BAND METER ─────────────────────────── */
     .mes-score-display { text-align: center; margin-bottom: 20px; }
     .mes-big-num {
-      font-family: 'Fira Code', monospace; font-size: 58px; font-weight: 700;
+      font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 58px; font-weight: 700;
       color: var(--amber); line-height: 1; font-variant-numeric: tabular-nums;
     }
-    .mes-denom { font-family: 'Fira Code', monospace; font-size: 22px; color: var(--muted); font-weight: 400; }
+    .mes-denom { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 22px; color: var(--muted); font-weight: 400; }
     .mes-band-label {
       display: inline-block; background: var(--amber-bg); color: var(--amber);
       padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-top: 8px;
@@ -153,11 +258,11 @@
       box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
     }
     .band-seg { height: 100%; }
-    .band-seg.b-offtrack   { background: #FECACA; width: 40%; }
-    .band-seg.b-mixed      { background: #FED7AA; width: 15%; }
-    .band-seg.b-effective  { background: #FEF08A; width: 20%; }
-    .band-seg.b-exceeds    { background: #BFDBFE; width: 15%; }
-    .band-seg.b-exceptional{ background: #BBF7D0; width: 10%; }
+    .band-seg.b-offtrack   { background: #FECACA; width: 25%; }
+    .band-seg.b-mixed      { background: #FED7AA; width: 18.5%; }
+    .band-seg.b-effective  { background: #FEF08A; width: 25%; }
+    .band-seg.b-exceeds    { background: #BFDBFE; width: 18.75%; }
+    .band-seg.b-exceptional{ background: #BBF7D0; width: 12.75%; }
     .band-pointer-wrap { position: absolute; top: -4px; transform: translateX(-50%); }
     .band-pointer { width: 2px; height: 22px; background: var(--navy-dark); border-radius: 2px; margin: 0 auto; }
     .band-pointer-dot {
@@ -174,7 +279,7 @@
     .band-target-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
     .bt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .bt-label { color: var(--muted); }
-    .bt-range { margin-left: auto; font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 500; color: var(--text-2); }
+    .bt-range { margin-left: auto; font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 11px; font-weight: 500; color: var(--text-2); }
     .bt-current { font-weight: 700; color: var(--amber); }
 
     /* ── CHANNEL BARS ───────────────────────────── */
@@ -187,10 +292,10 @@
       display: flex; align-items: center; padding-left: 10px;
       transition: width .9s cubic-bezier(.4,0,.2,1);
     }
-    .ch-bar-pct { font-family: 'Fira Code', monospace; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.93); white-space: nowrap; }
-    .ch-score   { font-family: 'Fira Code', monospace; width: 54px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+    .ch-bar-pct { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.93); white-space: nowrap; }
+    .ch-score   { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; width: 54px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
     .ch-badge   { width: 84px; flex-shrink: 0; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-align: center; }
-    .ch-note    { font-family: 'Fira Code', monospace; font-size: 10px; color: var(--muted); width: 104px; flex-shrink: 0; }
+    .ch-note    { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 10px; color: var(--muted); width: 104px; flex-shrink: 0; }
 
     /* ── AI INSIGHTS ────────────────────────────── */
     .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -340,7 +445,7 @@
     .voice-channel.digital  { background: var(--red-bg);   color: var(--red);   }
     .voice-channel.chat     { background: var(--red-bg);   color: var(--red);   }
     .voice-channel.mortgage { background: var(--amber-bg); color: var(--amber); }
-    .voice-channel.nps      { background: #F3E8FF; color: #6D28D9; }
+    .voice-channel.nps      { background: #F3E8FF; color: #004987; }
     .voice-name { font-size: 11px; color: var(--muted); }
     .voice-sentiment {
       margin-left: auto; display: flex; align-items: center; gap: 4px;
@@ -371,6 +476,7 @@
     /* ── RESPONSIVE ─────────────────────────────── */
     @media (max-width: 960px) {
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .kpi-card.kpi-thermo { grid-column: 1 / -1; }
       .row-2-1, .row-1-2 { grid-template-columns: 1fr; }
       .insights-grid { grid-template-columns: repeat(2, 1fr); }
       .voices-grid   { grid-template-columns: repeat(2, 1fr); }
@@ -392,10 +498,20 @@
   <!-- HEADER -->
   <div class="header">
     <div class="header-left">
-      <div class="header-logo">CS</div>
+      <img src="cscu-logo-white.png" alt="Copper State Credit Union" style="height:84px;width:auto;display:block;flex-shrink:0">
       <div class="header-title">
         <h1>Member Experience Measurement Engine</h1>
-        <p>Copper State Credit Union &nbsp;&middot;&nbsp; Monitoring member satisfaction across 7 channels</p>
+        <nav class="header-nav">
+          <a href="#" class="active">Dashboard</a>
+          <span class="header-nav-sep">|</span>
+          <a href="#">Member Follow-Ups</a>
+          <span class="header-nav-sep">|</span>
+          <a href="#">Member Voices</a>
+          <span class="header-nav-sep">|</span>
+          <a href="#">Financial Insights</a>
+          <span class="header-nav-sep">|</span>
+          <a href="#">Ask AI</a>
+        </nav>
       </div>
     </div>
     <div class="header-right">
@@ -409,46 +525,17 @@
   <!-- KPI CARDS -->
   <div class="kpi-row">
     <div class="kpi-card tier-effective">
-      <div class="kpi-label">Overall MES Score</div>
-      <div class="kpi-value">3.56<span class="kpi-denom">/5.00</span></div>
-      <div class="kpi-sub">Up from 3.18 in Dec 2025 (+0.38)</div>
+      <div class="kpi-label">Overall MX Score</div>
+      <div class="kpi-value-row">
+        <div class="kpi-value">3.56<span class="kpi-denom">/5.00</span></div>
+        <span class="kpi-delta up">&#9650; +0.38</span>
+      </div>
+      <div class="kpi-sub">vs. 3.18 in Dec 2025</div>
       <span class="kpi-badge badge-effective">Effective</span>
     </div>
-    <div class="kpi-card tier-exceeds">
-      <div class="kpi-label">Net Promoter Score</div>
-      <div class="kpi-value">74</div>
-      <div class="kpi-sub">Highest recorded &nbsp;&middot;&nbsp; Q1 2026</div>
-      <span class="kpi-badge badge-exceeds">Exceeds Expectations</span>
-    </div>
-    <div class="kpi-card tier-exceptional">
-      <div class="kpi-label">Top Channel &mdash; Branch</div>
-      <div class="kpi-value">98.9<span class="kpi-denom" style="font-size:16px">%</span></div>
-      <div class="kpi-sub">94 of 95 members satisfied</div>
-      <span class="kpi-badge badge-exceptional">Exceptional</span>
-    </div>
-    <div class="kpi-card tier-offtrack">
-      <div class="kpi-label">Needs Attention &mdash; Digital</div>
-      <div class="kpi-value">51.9<span class="kpi-denom" style="font-size:16px">%</span></div>
-      <div class="kpi-sub">55 happy &nbsp;&middot;&nbsp; 16 neutral &nbsp;&middot;&nbsp; 35 unhappy</div>
-      <span class="kpi-badge badge-offtrack">Off Track</span>
-    </div>
-  </div>
-
-  <!-- PERFORMANCE SNAPSHOT -->
-  <div class="section-label">Performance Snapshot</div>
-  <div class="row-1-2">
-
-    <div class="card">
-      <div class="card-title">Where do we stand overall?</div>
-      <div class="card-subtitle">Overall Member Experience Score vs. performance bands</div>
-      <div class="mes-score-display">
-        <div class="mes-big-num">3.56<span class="mes-denom">/5</span></div>
-        <div class="mes-band-label">Effective Band</div>
-        <div style="font-size:11px;color:var(--amber);margin-top:6px;font-weight:600;">
-          0.20 points below Exceeds Expectations threshold
-        </div>
-      </div>
-      <div class="band-meter">
+    <div class="kpi-card tier-effective kpi-thermo">
+      <div class="thermo-title">Performance Scale &mdash; Where do we stand?</div>
+      <div class="band-meter" style="margin-top:0">
         <div class="band-track">
           <div class="band-seg b-offtrack"></div>
           <div class="band-seg b-mixed"></div>
@@ -456,7 +543,7 @@
           <div class="band-seg b-exceeds"></div>
           <div class="band-seg b-exceptional"></div>
         </div>
-        <div class="band-pointer-wrap" style="left:71.2%">
+        <div class="band-pointer-wrap" style="left:64%">
           <div class="band-pointer-dot"></div>
           <div class="band-pointer"></div>
         </div>
@@ -468,63 +555,67 @@
           <span>Exceptional<br/>4.51–5.00</span>
         </div>
       </div>
-      <div class="band-targets">
-        <div class="band-target-row">
-          <div class="bt-dot" style="background:#FECACA;border:1px solid #F87171"></div>
-          <span class="bt-label">Off Track</span><span class="bt-range">&le;&nbsp;2.00</span>
-        </div>
-        <div class="band-target-row">
-          <div class="bt-dot" style="background:#FED7AA;border:1px solid #FB923C"></div>
-          <span class="bt-label">Mixed Performance</span><span class="bt-range">2.01–2.75</span>
-        </div>
-        <div class="band-target-row" style="font-weight:700">
-          <div class="bt-dot" style="background:#FDE047;border:1px solid #CA8A04"></div>
-          <span class="bt-label bt-current">Current &mdash; Effective</span><span class="bt-range bt-current">2.76–3.75</span>
-        </div>
-        <div class="band-target-row">
-          <div class="bt-dot" style="background:#93C5FD;border:1px solid #3B82F6"></div>
-          <span class="bt-label">Exceeds Expectations</span><span class="bt-range">3.76–4.50</span>
-        </div>
-        <div class="band-target-row">
-          <div class="bt-dot" style="background:#86EFAC;border:1px solid #22C55E"></div>
-          <span class="bt-label">Exceptional</span><span class="bt-range">4.51–5.00</span>
-        </div>
+      <div class="thermo-legend">
+        <div class="thermo-leg-item"><div class="thermo-leg-dot" style="background:#FECACA"></div>Off Track &le;2.00</div>
+        <div class="thermo-leg-item"><div class="thermo-leg-dot" style="background:#FED7AA"></div>Mixed 2.01–2.75</div>
+        <div class="thermo-leg-item"><div class="thermo-leg-dot" style="background:#FEF08A"></div><strong>Effective 2.76–3.75</strong></div>
+        <div class="thermo-leg-item"><div class="thermo-leg-dot" style="background:#BFDBFE"></div>Exceeds 3.76–4.50</div>
+        <div class="thermo-leg-item"><div class="thermo-leg-dot" style="background:#BBF7D0"></div>Exceptional 4.51–5.00</div>
       </div>
     </div>
+    <div class="kpi-card tier-exceeds">
+      <div class="kpi-label">Net Promoter Score</div>
+      <div class="kpi-value-row">
+        <div class="kpi-value">74</div>
+        <span class="kpi-delta up">&#9650; +2 pts</span>
+      </div>
+      <div class="kpi-sub">vs. 72 in Q4 2025 &nbsp;&middot;&nbsp; Q1 2026</div>
+      <span class="kpi-badge badge-exceeds">Exceeds Expectations</span>
+    </div>
+  </div>
 
+  <!-- NPS & MX SCORE TREND -->
+  <div class="section-label">Would our members recommend us?</div>
+  <div class="row-full">
     <div class="card">
-      <div class="card-title">Would our members recommend us?</div>
-      <div class="card-subtitle">Net Promoter Score (NPS) — quarterly, Q3 2022 through Q1 2026</div>
-      <div class="chart-wrap" style="height:240px">
+      <div class="card-title">Net Promoter Score &amp; MX Score &mdash; Quarterly Trend</div>
+      <div class="card-subtitle">NPS tracks likelihood to recommend (left axis, quarterly Q3 2022&ndash;Q1 2026). MX Score is the composite of all 9 Experience Measures (right axis).</div>
+      <div class="chart-wrap" style="height:290px">
         <canvas id="npsChart"></canvas>
       </div>
       <div style="display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;align-items:center;">
         <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
-          <div style="width:20px;height:2px;background:#86EFAC;border-radius:2px"></div> Exceptional (80)
+          <div style="width:20px;height:3px;background:var(--navy);border-radius:2px"></div> NPS Score (left axis)
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
-          <div style="width:20px;height:0;border-top:2px dashed #3B82F6"></div> Exceeds (70)
+          <div style="width:20px;height:3px;background:#B87333;border-radius:2px;border-top:2px dashed #B87333"></div> MX Score (right axis)
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
-          <div style="width:20px;height:0;border-top:2px dashed #CA8A04"></div> Effective (66)
+          <div style="width:20px;height:0;border-top:2px dashed #86EFAC"></div> Exceptional (NPS 80)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+          <div style="width:20px;height:0;border-top:2px dashed #3B82F6"></div> Exceeds (NPS 70)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+          <div style="width:20px;height:0;border-top:2px dashed #CA8A04"></div> Effective (NPS 66)
         </div>
         <div style="margin-left:auto;font-size:12px;font-weight:700;color:var(--navy)">
-          Q1 2026: <span style="color:var(--blue)">74 &mdash; All-time high</span>
+          Q1 2026: NPS <span style="color:var(--blue)">74 &mdash; All-time high</span> &nbsp;&middot;&nbsp; MX <span style="color:#B87333">3.56</span>
         </div>
       </div>
     </div>
   </div>
 
   <!-- CHANNEL PERFORMANCE -->
-  <div class="section-label">Channel Performance</div>
+  <div class="section-label">Channel Performance &mdash; January 2026</div>
   <div class="row-full">
     <div class="card">
       <div class="card-title">How is each channel performing?</div>
-      <div class="card-subtitle">January 2026 satisfaction scores across all service channels — ranked best to worst</div>
+      <div class="card-subtitle">Jan 2026 satisfaction scores &mdash; ranked best to worst. Change column shows shift vs. previous period.</div>
       <div class="channel-bars" id="channelBars"></div>
       <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px;align-items:center;">
         <div style="font-size:11px;color:var(--muted);font-style:italic;flex:1;min-width:200px">
-          * Phone &amp; Chat show % of members rating 4&ndash;5 stars. All other channels show % marking &ldquo;Happy&rdquo; (satisfied).
+          * Phone &amp; Chat show average star rating (1&ndash;5). All other channels show % of members marking &ldquo;Happy.&rdquo;
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <span class="kpi-badge badge-exceptional" style="font-size:10px">Exceptional &ge;95%</span>
@@ -537,36 +628,40 @@
     </div>
   </div>
 
-  <!-- TRENDS & SURVEY HEALTH -->
-  <div class="section-label">Trends &amp; Survey Health</div>
-  <div class="row-2-1">
-
+  <!-- CHANNEL TIMELINES -->
+  <div class="section-label">Channel Score History</div>
+  <div class="row-full">
     <div class="card">
-      <div class="card-title">How are we trending over time?</div>
-      <div class="card-subtitle">Monthly MES score — January 2023 through January 2026 &nbsp;&middot;&nbsp; Reference lines show band thresholds</div>
-      <div class="chart-wrap" style="height:250px">
-        <canvas id="mesTrendChart"></canvas>
+      <div class="card-title">How has each channel trended over time?</div>
+      <div class="card-subtitle">Click a channel tab to see its full score history with benchmark thresholds</div>
+      <div class="tab-bar" id="channelTabs">
+        <button class="tab-btn active" data-ch="nps">NPS</button>
+        <button class="tab-btn" data-ch="rr">Response Rate</button>
+        <button class="tab-btn" data-ch="loan">Consumer Loan</button>
+        <button class="tab-btn" data-ch="newmbr">New Member</button>
+        <button class="tab-btn" data-ch="mortgage">Mortgage</button>
+        <button class="tab-btn" data-ch="chat">Chat</button>
+        <button class="tab-btn" data-ch="branch">Branch</button>
+        <button class="tab-btn" data-ch="phone">Phone</button>
+        <button class="tab-btn" data-ch="digital">Digital</button>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Are our surveys reaching members?</div>
-      <div class="card-subtitle">Response rate by channel — January 2026 &nbsp;&middot;&nbsp; Higher rate = higher confidence</div>
-      <div class="chart-wrap" style="height:208px">
-        <canvas id="responseChart"></canvas>
+      <div class="chart-wrap" style="height:300px">
+        <canvas id="channelTimelineChart"></canvas>
       </div>
-      <div class="caveat-box">
-        <svg class="caveat-box-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        <div>
-          <div class="caveat-box-title">NPS sample caveat</div>
-          <div class="caveat-box-text">NPS response rate is 9.1% (739/8,083 delivered). Score of 74 is based on a small sample &mdash; interpret with caution.</div>
-        </div>
-      </div>
+      <p id="channelTimelineNote" class="timeline-note"></p>
     </div>
   </div>
 
-  <!-- RESPONSE RATE TREND BY CHANNEL & METHOD -->
-  <div class="row-full">
+  <!-- SURVEY HEALTH -->
+  <div class="section-label">Survey Health</div>
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:var(--gap);margin-bottom:var(--gap);align-items:start">
+    <div class="card">
+      <div class="card-title">Are our surveys reaching members?</div>
+      <div class="card-subtitle">Responses received by channel — January 2026</div>
+      <div class="chart-wrap" style="height:240px">
+        <canvas id="responseChart"></canvas>
+      </div>
+    </div>
     <div class="card">
       <div class="card-title">How is participation trending by channel and collection method?</div>
       <div class="card-subtitle">Response rate per survey channel — quarterly, Q1 2023 through Q1 2026 &nbsp;&middot;&nbsp; Color groups indicate collection method</div>
@@ -579,42 +674,42 @@
         <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px">Collection method key</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
           <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#15803D;border-radius:2px;flex-shrink:0"></div>
+            <div style="width:20px;height:3px;background:#78BE21;border-radius:2px;flex-shrink:0"></div>
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--text)">Mortgage &mdash; 83.3%</div>
               <div style="font-size:10px;color:var(--muted)">Email · sent on receipt of funding list</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#0891B2;border-radius:2px;flex-shrink:0"></div>
+            <div style="width:20px;height:3px;background:#00A3E0;border-radius:2px;flex-shrink:0"></div>
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--text)">New Member &mdash; 29.5%</div>
               <div style="font-size:10px;color:var(--muted)">Email · sent 3&ndash;5 days after account opening</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#B45309;border-radius:2px;flex-shrink:0"></div>
+            <div style="width:20px;height:3px;background:#FFC845;border-radius:2px;flex-shrink:0"></div>
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--text)">Phone &mdash; 14.7%</div>
               <div style="font-size:10px;color:var(--muted)">Recorded in-call · Solution Center only</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#1D4ED8;border-radius:2px;flex-shrink:0"></div>
+            <div style="width:20px;height:3px;background:#004987;border-radius:2px;flex-shrink:0"></div>
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--text)">Branch &mdash; 11.2%</div>
               <div style="font-size:10px;color:var(--muted)">Email/Text · sent day after branch visit</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:0;border-top:2.5px dashed #6366F1;flex-shrink:0"></div>
+            <div style="width:20px;height:0;border-top:2.5px dashed #B87333;flex-shrink:0;width:20px;height:0"></div>
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--text)">New Loan &mdash; 9.5%</div>
               <div style="font-size:10px;color:var(--muted)">Email · sent 1&ndash;3 days post-funding</div>
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:0;border-top:2.5px dashed #7C3AED;flex-shrink:0"></div>
+            <div style="width:20px;height:0;border-top:2.5px dashed #545859;flex-shrink:0;width:20px;height:0"></div>
             <div>
               <div style="font-size:11px;font-weight:700;color:var(--text)">NPS &mdash; 9.1%</div>
               <div style="font-size:10px;color:var(--muted)">Email · quarterly, random 25% of members</div>
@@ -623,7 +718,7 @@
         </div>
       </div>
 
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:8px 10px;background:#F5F3FF;border-radius:6px;border-left:3px solid #7C3AED;font-size:11px;color:#5B21B6;line-height:1.5">
+      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:8px 10px;background:#D0E8F8;border-radius:6px;border-left:3px solid #00A3E0;font-size:11px;color:#003366;line-height:1.5">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;margin-top:1px" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         <div><strong>Historical data note:</strong> Quarterly figures prior to Q1 2026 are estimated. Replace the <code>rrTrend</code> object in the script with verified values from prior MEME reports.</div>
       </div>
@@ -747,7 +842,7 @@
             Critical Priority
           </div>
           <div class="insight-title">Digital &amp; Chat are in crisis</div>
-          <div class="insight-body">Digital satisfaction is 51.9% — the worst performing channel by far. Chat scores 2.50/5 stars. Both are dragging the overall MES score below the "Exceeds" target. Top complaints: login failures, Autopilot bot being unhelpful, mobile app balance display issues, and too many pop-ups.</div>
+          <div class="insight-body">Digital satisfaction is 51.9% — the worst performing channel by far. Chat scores 2.50/5 stars. Both are dragging the overall MX score below the "Exceeds" target. Top complaints: login failures, Autopilot bot being unhelpful, mobile app balance display issues, and too many pop-ups.</div>
           <div class="insight-action">&rarr; Audit Autopilot chat flows immediately. Fix login/app bugs before next report cycle.</div>
         </div>
 
@@ -756,7 +851,7 @@
             <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
             Watch Closely
           </div>
-          <div class="insight-title">MES is recovering &mdash; but slowly</div>
+          <div class="insight-title">MX is recovering &mdash; but slowly</div>
           <div class="insight-body">The score dipped to a low of 2.56 in February 2025 — the only time it fell into "Mixed" territory. The current 3.56 represents a full-year recovery (+0.38 since Dec 2025), but it still sits 0.20 points below the "Exceeds Expectations" target of 3.76. The trend is positive but fragile.</div>
           <div class="insight-action">&rarr; Investigate root cause of Feb 2025 collapse. Confirm it won't recur.</div>
         </div>
@@ -1011,42 +1106,6 @@
       </div>
     </div>
 
-    <div class="voice-card unhappy">
-      <div class="voice-quote">"ALLOW A SIGNON TO BE COMPLETED...NOT JUST AN OOPS SOMETHING WENT WRONG."</div>
-      <div class="voice-meta">
-        <span class="voice-channel digital">Digital</span>
-        <span class="voice-name">Anonymous Member</span>
-        <span class="voice-sentiment unhappy">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          Unhappy
-        </span>
-      </div>
-    </div>
-
-    <div class="voice-card unhappy">
-      <div class="voice-quote">"You're no help as automated chat, learn AI!! ... did not help will go to my branch."</div>
-      <div class="voice-meta">
-        <span class="voice-channel chat">Chat</span>
-        <span class="voice-name">Multiple Members</span>
-        <span class="voice-sentiment unhappy">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M16 17s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          1/5 Stars
-        </span>
-      </div>
-    </div>
-
-    <div class="voice-card neutral">
-      <div class="voice-quote">"When you say I should select the mortgage option to set up my mortgage, it's a good thing to provide the link. It isn't there. Your customer service on mortgage loans also needs a lot of improvement."</div>
-      <div class="voice-meta">
-        <span class="voice-channel mortgage">Mortgage</span>
-        <span class="voice-name">David Demers</span>
-        <span class="voice-sentiment neutral">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          Neutral
-        </span>
-      </div>
-    </div>
-
   </div>
 
   <div class="footer">
@@ -1057,22 +1116,25 @@
 </div><!-- /page -->
 
 <script>
-const NAVY   = '#1B3A5C';
-const COPPER = '#B5722D';
-const GREEN  = '#15803D';
-const BLUE   = '#1D4ED8';
-const AMBER  = '#B45309';
-const RED    = '#B91C1C';
-const ORANGE = '#C2410C';
-const MUTED  = '#94A3B8';
+const NAVY   = '#004987';  // Copper State Blue
+const COPPER = '#B87333';  // Copper State Metallic Copper
+const GREEN  = '#78BE21';  // Copper State Green (Brand)
+const BLUE   = '#00A3E0';  // Copper State Light Blue (Brand)
+const AMBER  = '#FFC845';  // Copper State Yellow (Brand)
+const RED    = '#C41E3A';  // Semantic red (Off Track)
+const ORANGE = '#545859';  // Copper State Dark Gray (Mixed tier)
+const MUTED  = '#545859';  // Copper State Dark Gray
 
-const npsLabels  = ['Q3 \'22','Q4 \'22','Q1 \'23','Q2 \'23','Q3 \'23','Q4 \'23',
-                    'Q1 \'24','Q2 \'24','Q3 \'24','Q4 \'24','Q1 \'25','Q2 \'25',
-                    'Q3 \'25','Q4 \'25','Q1 \'26'];
-const npsScores      = [64,66,67,66,66,59,68,70,69,69,67,62,72,72,74];
-const npsEffective   = Array(15).fill(66);
-const npsExceeds     = Array(15).fill(70);
-const npsExceptional = Array(15).fill(80);
+// NPS plotted at quarter-end months on the 37-month mesLabels axis (Jan'23–Jan'26)
+const npsMonthly = [
+  null,null,67,  null,null,66,  null,null,66,  null,null,59,   // 2023 Q1–Q4
+  null,null,68,  null,null,70,  null,null,69,  null,null,69,   // 2024 Q1–Q4
+  null,null,67,  null,null,62,  null,null,72,  null,null,72,   // 2025 Q1–Q4
+  74                                                             // Jan'26
+];
+const npsEffective   = Array(37).fill(66);
+const npsExceeds     = Array(37).fill(70);
+const npsExceptional = Array(37).fill(80);
 
 const mesLabels = [
   'Jan\'23','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'23',
@@ -1088,18 +1150,18 @@ const mesScores = [
 ];
 
 const channels = [
-  { name:'New Loan',   score:100.00, tier:'Exceptional', color:GREEN,  note:'% Happy (14/14)' },
-  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)' },
-  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)' },
-  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'% 4–5★ (249/301)'},
-  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy (4/5)'   },
-  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)'},
-  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'% 4–5★ (9/26)'  },
+  { name:'New Loan',   score:100.00, tier:'Exceptional', color:GREEN,  note:'% Happy (14/14)',  delta: 0,      deltaDir:'flat' },
+  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',  delta:+3.95,   deltaDir:'up'   },
+  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',  delta:-1.44,   deltaDir:'down' },
+  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'Avg ★ 4.36/5', delta:+0.10,  deltaDir:'up',  deltaLabel:'★ +0.10' },
+  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',delta: null,   deltaDir:'na'   },
+  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)', delta:-10.61,  deltaDir:'down' },
+  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'Avg ★ 2.50/5', delta: null,  deltaDir:'na'   },
 ];
 
-const responseChannels = ['Mortgage','New Member','Phone','New Loan','NPS'];
-const responseRates    = [83.3,29.5,14.7,9.5,9.1];
-const responseColors   = [GREEN,BLUE,AMBER,'#7C3AED',MUTED];
+const responseChannels = ['NPS','Phone','Digital','Branch','Chat','New Loan','New Member','Mortgage'];
+const responseCounts   = [739,301,106,95,26,15,13,5];
+const responseColors   = [NAVY,AMBER,RED,GREEN,ORANGE,'#00A3E0',BLUE,AMBER];
 
 const journeyChannels = ['New Loan','New Member','Mortgage'];
 const journeyScores   = [100,92.31,80.0];
@@ -1122,37 +1184,56 @@ const barsEl = document.getElementById('channelBars');
 channels.forEach(ch => {
   const row = document.createElement('div');
   row.className = 'ch-row';
+  let deltaHtml;
+  if (ch.deltaDir === 'na' || ch.delta === null) {
+    deltaHtml = `<div class="ch-delta na">—</div>`;
+  } else if (ch.deltaDir === 'flat' || ch.delta === 0) {
+    deltaHtml = `<div class="ch-delta flat">No change</div>`;
+  } else {
+    const lbl = ch.deltaLabel || `${ch.delta > 0 ? '+' : ''}${ch.delta.toFixed(2)} pts`;
+    deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
+  }
+  const pctColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.93)';
+  const scoreColor = ch.color === '#FFC845' ? '#7A5800' : ch.color;
   row.innerHTML = `
     <div class="ch-name">${ch.name}</div>
     <div class="ch-bar-track">
       <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}">
-        <span class="ch-bar-pct">${ch.score.toFixed(1)}%</span>
+        <span class="ch-bar-pct" style="color:${pctColor}">${ch.score.toFixed(1)}%</span>
       </div>
     </div>
-    <div class="ch-score" style="color:${ch.color}">${ch.score.toFixed(1)}%</div>
+    <div class="ch-score" style="color:${scoreColor}">${ch.score.toFixed(1)}%</div>
     ${tierBadgeHtml(ch.tier)}
     <div class="ch-note">${ch.note}</div>
+    ${deltaHtml}
   `;
   barsEl.appendChild(row);
 });
 
-// NPS Chart
+// NPS + MX Score Chart (dual axis, monthly x-axis)
 new Chart(document.getElementById('npsChart').getContext('2d'), {
   type:'line',
   data:{
-    labels:npsLabels,
+    labels:mesLabels,
     datasets:[
       {
-        label:'NPS Score', data:npsScores,
+        label:'NPS Score', data:npsMonthly, yAxisID:'y',
         borderColor:NAVY, backgroundColor:NAVY+'18', borderWidth:2.5,
-        fill:true, tension:0.3,
-        pointRadius: ctx => ctx.dataIndex===14 ? 7 : 3,
-        pointBackgroundColor: ctx => ctx.dataIndex===14 ? BLUE : NAVY,
+        fill:true, tension:0.3, spanGaps:true,
+        pointRadius: ctx => ctx.raw===null ? 0 : (ctx.dataIndex===36 ? 7 : 4),
+        pointBackgroundColor: ctx => ctx.dataIndex===36 ? BLUE : NAVY,
         pointBorderColor:'#fff', pointBorderWidth:2, order:1,
       },
-      { label:'Exceptional', data:npsExceptional, borderColor:GREEN+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:4 },
-      { label:'Exceeds',     data:npsExceeds,     borderColor:BLUE+'60',  borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:3 },
-      { label:'Effective',   data:npsEffective,   borderColor:AMBER+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:2 },
+      {
+        label:'MX Score', data:mesScores, yAxisID:'y2',
+        borderColor:'#B87333', borderWidth:2.5, borderDash:[6,3],
+        fill:false, tension:0.3,
+        pointRadius: ctx => ctx.dataIndex===36 ? 7 : 2,
+        pointBackgroundColor:'#B87333', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
+      },
+      { label:'Exceptional', data:npsExceptional, yAxisID:'y', borderColor:GREEN+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:4 },
+      { label:'Exceeds',     data:npsExceeds,     yAxisID:'y', borderColor:BLUE+'60',  borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:3 },
+      { label:'Effective',   data:npsEffective,   yAxisID:'y', borderColor:AMBER+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:2 },
     ]
   },
   options:{
@@ -1160,64 +1241,20 @@ new Chart(document.getElementById('npsChart').getContext('2d'), {
     interaction:{ mode:'index', intersect:false },
     plugins:{
       legend:{ display:false },
-      tooltip:{ callbacks:{ label: ctx => ctx.dataset.label==='NPS Score' ? ` NPS: ${ctx.parsed.y}` : ` ${ctx.dataset.label}: ${ctx.parsed.y}` } }
+      tooltip:{ callbacks:{ label: ctx => {
+        if (ctx.dataset.label==='NPS Score') return ` NPS: ${ctx.parsed.y}`;
+        if (ctx.dataset.label==='MX Score') return ctx.raw===null ? null : ` MX Score: ${Number(ctx.raw).toFixed(2)}`;
+        return ` ${ctx.dataset.label}: ${ctx.parsed.y}`;
+      }}}
     },
     scales:{
       x:{ grid:{ display:false }, ticks:{ font:{ size:10 }, maxRotation:45, color:MUTED } },
-      y:{ min:50, max:90, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } }
+      y:  { min:50, max:90, position:'left',  grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } },
+      y2: { min:2.0, max:4.5, position:'right', grid:{ display:false }, ticks:{ font:{ size:10 }, color:'#B87333', callback: v => v.toFixed(1) } }
     }
   }
 });
 
-// MES Trend Chart
-const pointColors = mesScores.map((s,i) => {
-  if (i===mesScores.length-1) return BLUE;
-  if (s>=3.76) return GREEN;
-  if (s>=2.76) return AMBER;
-  return RED;
-});
-new Chart(document.getElementById('mesTrendChart').getContext('2d'), {
-  type:'line',
-  data:{
-    labels:mesLabels,
-    datasets:[
-      {
-        label:'MES Score', data:mesScores,
-        borderColor:NAVY,
-        backgroundColor: ctx => {
-          const g = ctx.chart.ctx.createLinearGradient(0,0,0,ctx.chart.height);
-          g.addColorStop(0, NAVY+'25'); g.addColorStop(1, NAVY+'00'); return g;
-        },
-        borderWidth:2, fill:true, tension:0.3,
-        pointRadius: ctx => ctx.dataIndex===mesScores.length-1 ? 7 : 2,
-        pointBackgroundColor:pointColors, pointBorderColor:'#fff', pointBorderWidth:1.5,
-        order:1,
-      },
-      { label:'Exceeds (3.76)',  data:Array(mesScores.length).fill(3.76), borderColor:BLUE+'70',  borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:2 },
-      { label:'Effective (2.76)',data:Array(mesScores.length).fill(2.76), borderColor:AMBER+'70', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:3 },
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    interaction:{ mode:'index', intersect:false },
-    plugins:{
-      legend:{ position:'top', labels:{ usePointStyle:true, font:{ size:10 }, color:MUTED, padding:12 } },
-      tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}` } }
-    },
-    scales:{
-      x:{
-        grid:{ display:false },
-        ticks:{ font:{ size:9 }, color:MUTED, maxRotation:45,
-          callback:(val,idx) => {
-            const l = mesLabels[idx];
-            return (l.includes("'23")||l.includes("'24")||l.includes("'25")||l.includes("'26")) ? l : '';
-          }
-        }
-      },
-      y:{ min:2.2, max:4.3, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED, callback: v => v.toFixed(2) } }
-    }
-  }
-});
 
 // Response Rate Chart
 new Chart(document.getElementById('responseChart').getContext('2d'), {
@@ -1225,7 +1262,7 @@ new Chart(document.getElementById('responseChart').getContext('2d'), {
   data:{
     labels:responseChannels,
     datasets:[{
-      label:'Response Rate', data:responseRates,
+      label:'Responses', data:responseCounts,
       backgroundColor:responseColors.map(c=>c+'CC'),
       borderColor:responseColors, borderWidth:1.5, borderRadius:5,
     }]
@@ -1234,10 +1271,10 @@ new Chart(document.getElementById('responseChart').getContext('2d'), {
     responsive:true, maintainAspectRatio:false, indexAxis:'y',
     plugins:{
       legend:{ display:false },
-      tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x.toFixed(1)}% response rate` } }
+      tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x} responses` } }
     },
     scales:{
-      x:{ min:0, max:100, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED, callback: v => v+'%' } },
+      x:{ min:0, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } },
       y:{ grid:{ display:false }, ticks:{ font:{ size:11 }, color:MUTED } }
     }
   }
@@ -1264,50 +1301,50 @@ new Chart(document.getElementById('responseRateTrendChart').getContext('2d'), {
       {
         label: 'Mortgage (Email)',
         data: rrTrend.mortgage,
-        borderColor: '#15803D', backgroundColor: '#15803D12',
+        borderColor: '#78BE21', backgroundColor: '#78BE2112',
         borderWidth: 2.5, fill: false, tension: 0.35,
         pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#15803D', pointBorderColor:'#fff', pointBorderWidth:2, order:1,
+        pointBackgroundColor: '#78BE21', pointBorderColor:'#fff', pointBorderWidth:2, order:1,
       },
       {
         label: 'New Member (Email)',
         data: rrTrend.newMember,
-        borderColor: '#0891B2', backgroundColor: '#0891B212',
+        borderColor: '#00A3E0', backgroundColor: '#00A3E012',
         borderWidth: 2.5, fill: false, tension: 0.35,
         pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#0891B2', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
+        pointBackgroundColor: '#00A3E0', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
       },
       {
         label: 'Phone (In-call recorded)',
         data: rrTrend.phone,
-        borderColor: '#B45309', backgroundColor: '#B4530912',
+        borderColor: '#FFC845', backgroundColor: '#FFC84512',
         borderWidth: 2.5, fill: false, tension: 0.35,
         pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#B45309', pointBorderColor:'#fff', pointBorderWidth:2, order:3,
+        pointBackgroundColor: '#FFC845', pointBorderColor:'#fff', pointBorderWidth:2, order:3,
       },
       {
         label: 'Branch (Email/Text)',
         data: rrTrend.branch,
-        borderColor: '#1D4ED8', backgroundColor: '#1D4ED812',
+        borderColor: '#004987', backgroundColor: '#00498712',
         borderWidth: 2.5, fill: false, tension: 0.35,
         pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#1D4ED8', pointBorderColor:'#fff', pointBorderWidth:2, order:4,
+        pointBackgroundColor: '#004987', pointBorderColor:'#fff', pointBorderWidth:2, order:4,
       },
       {
         label: 'New Loan (Email)',
         data: rrTrend.newLoan,
-        borderColor: '#6366F1', borderDash: [5,3],
+        borderColor: '#B87333', borderDash: [5,3],
         borderWidth: 2, fill: false, tension: 0.35,
         pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#6366F1', pointBorderColor:'#fff', pointBorderWidth:2, order:5,
+        pointBackgroundColor: '#B87333', pointBorderColor:'#fff', pointBorderWidth:2, order:5,
       },
       {
         label: 'NPS (Email, quarterly)',
         data: rrTrend.nps,
-        borderColor: '#7C3AED', borderDash: [5,3],
+        borderColor: '#545859', borderDash: [5,3],
         borderWidth: 2, fill: false, tension: 0.35,
         pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#7C3AED', pointBorderColor:'#fff', pointBorderWidth:2, order:6,
+        pointBackgroundColor: '#545859', pointBorderColor:'#fff', pointBorderWidth:2, order:6,
       },
     ]
   },
@@ -1357,6 +1394,151 @@ new Chart(document.getElementById('journeyChart').getContext('2d'), {
     }
   }
 });
+
+// ── CHANNEL TIMELINE (TABBED) ───────────────────────────────────────────────
+const channelHistoryData = {
+  nps: {
+    label:'NPS Score', unit:'', color:NAVY, yMin:50, yMax:90,
+    labels:mesLabels, data:npsMonthly,
+    benchmarks:[ {v:80,l:'Exceptional',c:GREEN}, {v:70,l:'Exceeds',c:BLUE}, {v:66,l:'Effective',c:AMBER} ],
+    note:'Quarterly NPS survey — emailed to a randomized 25% of members each quarter. Points plotted at quarter-end months.'
+  },
+  rr: {
+    label:'Response Rate (%)', unit:'%', color:'#00A3E0', yMin:5, yMax:35,
+    labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    data:[16.0,23.0,25.6,20.5,21.11,20.98,22.99,24.0,23.81,21.76,21.79,17.07,20.33,17.33,16.25,13.53,12.09,12.62,13.21,14.58,13.95,15.51,16.48,15.18,26.24],
+    benchmarks:[ {v:30,l:'Exceptional',c:GREEN}, {v:20,l:'Exceeds',c:BLUE}, {v:17,l:'Effective',c:AMBER} ],
+    note:'Overall monthly response rate across all channels. Jan 2026 spike driven by high Mortgage response rate (83.3%).'
+  },
+  loan: {
+    label:'% Happy', unit:'%', color:'#78BE21', yMin:70, yMax:105,
+    labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    data:[100,92.31,100,100,94.74,97.78,97.83,96.67,100,97.83,100,96.43,100,100,100,81.25,89.29,92.11,96.88,96.08,90.32,97.44,100,100,100],
+    benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE}, {v:80,l:'Effective',c:AMBER} ],
+    note:'Email survey sent 1–3 business days after loan funding.'
+  },
+  newmbr: {
+    label:'% Happy', unit:'%', color:BLUE, yMin:40, yMax:105,
+    labels:["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    data:[88.46,50.00,88.24,100,90.91,90.91,96.15,94.44,100,95.45,100,93.75,92.31],
+    benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE}, {v:80,l:'Effective',c:AMBER} ],
+    note:'Email survey sent 3–5 days after account opening. Data available from Jan 2025. Feb 2025 dip (50%) reflects very small sample.'
+  },
+  mortgage: {
+    label:'% Happy (YTD)', unit:'%', color:AMBER, yMin:60, yMax:105,
+    labels:['Jan 2026 YTD'],
+    data:[80],
+    benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE}, {v:80,l:'Effective',c:AMBER} ],
+    note:'Mortgage data is tracked YTD only — monthly trend data is not available. Jan 2026 YTD: 80% (5 responses, 4 happy, 1 neutral).'
+  },
+  chat: {
+    label:'Avg Rating (1–5)', unit:'/5', color:'#545859', yMin:1, yMax:5,
+    labels:["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    datasets:[
+      { label:'Autopilot Chat', color:'#545859',
+        data:[1.91,1.30,null,1.29,1.68,1.19,1.42,1.48,1.86,1.63,1.05,2.00,null] },
+      { label:'Solution Center Agent', color:'#00A3E0',
+        data:[null,null,4.42,3.55,2.67,4.00,4.20,4.20,4.29,4.75,4.75,3.00,null] },
+      { label:"Combined (Jan '26)", color:NAVY,
+        data:[null,null,null,null,null,null,null,null,null,null,null,null,2.50] },
+    ],
+    benchmarks:[ {v:4.51,l:'Exceptional',c:GREEN}, {v:2.76,l:'Effective',c:AMBER} ],
+    note:'2025: Autopilot and Solution Center Agent tracked separately. Jan 2026 combined avg = 2.50/5. Autopilot consistently scores lower, reflecting automated response friction.'
+  },
+  branch: {
+    label:'% Happy', unit:'%', color:'#78BE21', yMin:60, yMax:105,
+    labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    data:[92.31,94.87,100,95.83,100,96.30,93.51,96.67,98.31,96.90,96.30,96.30,97.06,null,null,null,null,null,95.92,97.60,97.79,97.25,95.00,95.00,98.95],
+    benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:85,l:'Exceeds',c:BLUE}, {v:76,l:'Effective',c:AMBER} ],
+    note:'Email/text sent 1 day after branch visit. Nulls in Feb–Jun 2025 indicate months with no recorded data. All months with data have been at Exceptional level since Jan 2024.'
+  },
+  phone: {
+    label:'Avg Rating (1–5)', unit:'/5', color:'#FFC845', yMin:2.5, yMax:5.0,
+    labels:["Jul'24","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    data:[4.33,4.37,4.30,4.65,4.40,4.29,4.53,3.86,4.11,3.63,3.66,4.21,4.37,4.19,4.40,4.42,4.33,4.26,4.36],
+    benchmarks:[ {v:4.51,l:'Exceptional',c:GREEN}, {v:3.76,l:'Exceeds',c:BLUE}, {v:2.76,l:'Effective',c:AMBER} ],
+    note:'Recorded in-call survey via Talkdesk (Solution Center only). Available from Jul 2024. Dip in Q2 2025 (Apr–May) warrants further investigation.'
+  },
+  digital: {
+    label:'% Happy', unit:'%', color:RED, yMin:0, yMax:80,
+    labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
+    data:[66.48,70.95,68.35,68.87,68.55,69.66,72.41,67.43,62.96,61.14,73.39,68.29,68.63,20.25,29.32,40.91,41.18,42.31,53.97,48.28,50.00,50.91,48.39,62.50,51.89],
+    benchmarks:[ {v:75,l:'Exceptional',c:GREEN}, {v:72,l:'Exceeds',c:BLUE}, {v:70,l:'Effective',c:AMBER} ],
+    note:'Pop-up survey on copperstatecu.org, OLB, and mobile app. Sharp drop Feb–Mar 2025 reflects the new digital banking platform launch. Recovery ongoing but not yet back to pre-launch levels.'
+  }
+};
+
+let channelChart = null;
+
+function buildDatasets(ch) {
+  const N = ch.labels.length - 1;
+  // multi-dataset (chat)
+  if (ch.datasets) {
+    const ds = ch.datasets.map(d => ({
+      label: d.label, data: d.data,
+      borderColor: d.color, borderWidth: 2, fill: false, tension: 0.35, spanGaps: true,
+      pointRadius: ctx => ctx.raw===null ? 0 : (ctx.dataIndex===N ? 7 : 2.5),
+      pointBackgroundColor: d.color, pointBorderColor:'#fff', pointBorderWidth:2,
+    }));
+    ds.push(...ch.benchmarks.map(b => ({
+      label: b.l, data: Array(ch.labels.length).fill(b.v),
+      borderColor: b.c+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false,
+    })));
+    return ds;
+  }
+  // single-dataset
+  return [
+    {
+      label: ch.label, data: ch.data,
+      borderColor: ch.color, backgroundColor: ch.color+'18', borderWidth: 2.5,
+      fill: true, tension: 0.35, spanGaps: true,
+      pointRadius: ctx => ctx.raw===null ? 0 : (ctx.dataIndex===N ? 7 : 2.5),
+      pointBackgroundColor: ch.color, pointBorderColor:'#fff', pointBorderWidth:2,
+    },
+    ...ch.benchmarks.map(b => ({
+      label: b.l, data: Array(ch.labels.length).fill(b.v),
+      borderColor: b.c+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false,
+    }))
+  ];
+}
+
+function showChannelTab(key) {
+  const ch = channelHistoryData[key];
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.ch===key));
+  document.getElementById('channelTimelineNote').textContent = ch.note || '';
+  if (channelChart) { channelChart.destroy(); channelChart = null; }
+  channelChart = new Chart(document.getElementById('channelTimelineChart').getContext('2d'), {
+    type: 'line',
+    data: { labels: ch.labels, datasets: buildDatasets(ch) },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: {
+          display: !!(ch.datasets),
+          labels: { font:{ size:10 }, color:MUTED, boxWidth:12, padding:10 }
+        },
+        tooltip: { callbacks: {
+          label: ctx => ctx.raw===null ? null : ` ${ctx.dataset.label}: ${Number(ctx.raw).toFixed(2)}${ch.unit}`
+        }}
+      },
+      scales: {
+        x: { grid:{ display:false }, ticks:{ font:{ size:10 }, maxRotation:45, color:MUTED } },
+        y: {
+          min: ch.yMin, max: ch.yMax,
+          grid:{ color:'#F1F5F9' },
+          ticks:{ font:{ size:10 }, color:MUTED, callback: v => v + ch.unit }
+        }
+      }
+    }
+  });
+}
+
+document.getElementById('channelTabs').addEventListener('click', e => {
+  if (e.target.classList.contains('tab-btn')) showChannelTab(e.target.dataset.ch);
+});
+showChannelTab('nps');
+
 </script>
 </body>
 </html>
