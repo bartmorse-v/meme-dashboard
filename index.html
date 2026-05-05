@@ -1502,7 +1502,7 @@ function buildDatasets(ch) {
     }));
     ds.push(...ch.benchmarks.map(b => ({
       label: b.l, data: Array(ch.labels.length).fill(b.v),
-      borderColor: b.c+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false,
+      borderColor: b.c, borderWidth:2, borderDash:[8,4], pointRadius:0, fill:false,
     })));
     return ds;
   }
@@ -1517,7 +1517,7 @@ function buildDatasets(ch) {
     },
     ...ch.benchmarks.map(b => ({
       label: b.l, data: Array(ch.labels.length).fill(b.v),
-      borderColor: b.c+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false,
+      borderColor: b.c, borderWidth:2, borderDash:[8,4], pointRadius:0, fill:false,
     }))
   ];
   if (ch.hLine !== undefined) {
@@ -1542,8 +1542,8 @@ function showChannelTab(key) {
       interaction: { mode:'index', intersect:false },
       plugins: {
         legend: {
-          display: !!(ch.datasets),
-          labels: { font:{ size:10 }, color:MUTED, boxWidth:12, padding:10 }
+          display: true,
+          labels: { font:{ size:10 }, color:MUTED, boxWidth:20, padding:12 }
         },
         tooltip: { callbacks: {
           label: ctx => ctx.raw===null ? null : ` ${ctx.dataset.label}: ${Number(ctx.raw).toFixed(2)}${ch.unit}`
