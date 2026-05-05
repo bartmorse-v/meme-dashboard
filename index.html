@@ -635,7 +635,8 @@
       <div class="card-title">How has each channel trended over time?</div>
       <div class="card-subtitle">Click a channel tab to see its full score history with benchmark thresholds</div>
       <div class="tab-bar" id="channelTabs">
-        <button class="tab-btn active" data-ch="nps">NPS</button>
+        <button class="tab-btn active" data-ch="all">All</button>
+        <button class="tab-btn" data-ch="nps">NPS</button>
         <button class="tab-btn" data-ch="rr">Response Rate</button>
         <button class="tab-btn" data-ch="loan">Consumer Loan</button>
         <button class="tab-btn" data-ch="newmbr">New Member</button>
@@ -1398,7 +1399,23 @@ new Chart(document.getElementById('journeyChart').getContext('2d'), {
 });
 
 // ── CHANNEL TIMELINE (TABBED) ───────────────────────────────────────────────
+const allLabels13 = ["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"];
+
 const channelHistoryData = {
+  all: {
+    label:'All Channels', unit:'%', yMin:0, yMax:105,
+    labels: allLabels13,
+    benchmarks: [],
+    note: "Jan 2025 – Jan 2026. Phone shown as (avg ★ ÷ 5) × 100 for comparability. NPS shown as-is; points plotted at quarter-end months.",
+    datasets: [
+      { label:'New Loan',   color:GREEN,    data:[100,100,100,81.25,89.29,92.11,96.88,96.08,90.32,97.44,100,100,100] },
+      { label:'Branch',     color:'#4E8010',data:[97.06,null,null,null,null,null,95.92,97.60,97.79,97.25,95.00,95.00,98.95] },
+      { label:'New Member', color:BLUE,     data:[88.46,50.00,88.24,100,90.91,90.91,96.15,94.44,100,95.45,100,93.75,92.31] },
+      { label:'Phone ★×20', color:AMBER,    data:[90.6,77.2,82.2,72.6,73.2,84.2,87.4,83.8,88.0,88.4,86.6,85.2,87.2] },
+      { label:'NPS',        color:NAVY,     data:[null,null,67,null,null,62,null,null,72,null,null,72,74] },
+      { label:'Digital',    color:RED,      data:[68.63,20.25,29.32,40.91,41.18,42.31,53.97,48.28,50.00,50.91,48.39,62.50,51.89] },
+    ],
+  },
   nps: {
     label:'NPS Score', unit:'', color:NAVY, yMin:50, yMax:90,
     labels:mesLabels, data:npsMonthly,
@@ -1428,10 +1445,11 @@ const channelHistoryData = {
   },
   mortgage: {
     label:'% Happy (YTD)', unit:'%', color:AMBER, yMin:60, yMax:105,
-    labels:['Jan 2026 YTD'],
-    data:[80],
-    benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE}, {v:80,l:'Effective',c:AMBER} ],
-    note:'Mortgage data is tracked YTD only — monthly trend data is not available. Jan 2026 YTD: 80% (5 responses, 4 happy, 1 neutral).'
+    labels: allLabels13,
+    data:[null,null,null,null,null,null,null,null,null,null,null,null,80],
+    hLine:80,
+    benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE} ],
+    note:'Mortgage data is tracked YTD only — monthly trend data is not available. Jan 2026 YTD: 80% = Effective threshold (5 responses, 4 happy, 1 neutral).'
   },
   chat: {
     label:'Avg Rating (1–5)', unit:'/5', color:'#545859', yMin:1, yMax:5,
@@ -1489,7 +1507,7 @@ function buildDatasets(ch) {
     return ds;
   }
   // single-dataset
-  return [
+  const ds = [
     {
       label: ch.label, data: ch.data,
       borderColor: ch.color, backgroundColor: ch.color+'18', borderWidth: 2.5,
@@ -1502,6 +1520,13 @@ function buildDatasets(ch) {
       borderColor: b.c+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false,
     }))
   ];
+  if (ch.hLine !== undefined) {
+    ds.push({
+      label:'YTD Score (80%)', data: Array(ch.labels.length).fill(ch.hLine),
+      borderColor: ch.color, borderWidth:2.5, pointRadius:0, fill:false,
+    });
+  }
+  return ds;
 }
 
 function showChannelTab(key) {
@@ -1539,7 +1564,7 @@ function showChannelTab(key) {
 document.getElementById('channelTabs').addEventListener('click', e => {
   if (e.target.classList.contains('tab-btn')) showChannelTab(e.target.dataset.ch);
 });
-showChannelTab('nps');
+showChannelTab('all');
 
 </script>
 </body>
