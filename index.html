@@ -1150,13 +1150,15 @@ const mesScores = [
 ];
 
 const channels = [
-  { name:'New Loan',   score:100.00, tier:'Exceptional', color:GREEN,  note:'% Happy (14/14)',  delta: 0,      deltaDir:'flat' },
-  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',  delta:+3.95,   deltaDir:'up'   },
-  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',  delta:-1.44,   deltaDir:'down' },
-  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'Avg ★ 4.36/5', delta:+0.10,  deltaDir:'up',  deltaLabel:'★ +0.10' },
-  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',delta: null,   deltaDir:'na'   },
-  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)', delta:-10.61,  deltaDir:'down' },
-  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'Avg ★ 2.50/5', delta: null,  deltaDir:'na'   },
+  { name:'NPS',             score:74.56,  tier:'Exceeds',     color:NAVY,    note:'NPS Score (739 responses)',   delta:+2.56,  deltaDir:'up',  deltaLabel:'+2.56 pts', unit:'' },
+  { name:'Response Rate',   score:26.24,  tier:'Exceeds',     color:BLUE,    note:'26.24% across 6 channels',   delta:null,   deltaDir:'na' },
+  { name:'New Loan',        score:100.00, tier:'Exceptional', color:GREEN,   note:'% Happy (14/14)',             delta: 0,     deltaDir:'flat' },
+  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',           delta:-1.44,   deltaDir:'down' },
+  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',         delta: null,   deltaDir:'na'   },
+  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'Avg ★ 2.50/5',          delta: null,   deltaDir:'na'   },
+  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',           delta:+3.95,   deltaDir:'up'   },
+  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'Avg ★ 4.36/5',          delta:+0.10,   deltaDir:'up',  deltaLabel:'★ +0.10' },
+  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)',          delta:-10.61,  deltaDir:'down' },
 ];
 
 const responseChannels = ['NPS','Phone','Digital','Branch','Chat','New Loan','New Member','Mortgage'];
@@ -1193,16 +1195,17 @@ channels.forEach(ch => {
     const lbl = ch.deltaLabel || `${ch.delta > 0 ? '+' : ''}${ch.delta.toFixed(2)} pts`;
     deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
   }
+  const unit = ch.unit !== undefined ? ch.unit : '%';
   const pctColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.93)';
   const scoreColor = ch.color === '#FFC845' ? '#7A5800' : ch.color;
   row.innerHTML = `
     <div class="ch-name">${ch.name}</div>
     <div class="ch-bar-track">
       <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}">
-        <span class="ch-bar-pct" style="color:${pctColor}">${ch.score.toFixed(1)}%</span>
+        <span class="ch-bar-pct" style="color:${pctColor}">${ch.score.toFixed(1)}${unit}</span>
       </div>
     </div>
-    <div class="ch-score" style="color:${scoreColor}">${ch.score.toFixed(1)}%</div>
+    <div class="ch-score" style="color:${scoreColor}">${ch.score.toFixed(1)}${unit}</div>
     ${tierBadgeHtml(ch.tier)}
     <div class="ch-note">${ch.note}</div>
     ${deltaHtml}
