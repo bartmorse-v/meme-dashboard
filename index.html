@@ -287,13 +287,14 @@
     .ch-row { display: flex; align-items: center; gap: 10px; }
     .ch-name { width: 100px; font-size: 12px; font-weight: 600; color: var(--text-2); flex-shrink: 0; text-align: right; }
     .ch-bar-track { flex: 1; background: var(--bg); border-radius: 6px; height: 30px; position: relative; overflow: hidden; }
-    .ch-bar-fill {
-      height: 100%; border-radius: 6px;
-      display: flex; align-items: center; padding-left: 10px;
-      transition: width .9s cubic-bezier(.4,0,.2,1);
+    .ch-bar-fill  { height: 100%; transition: width .9s cubic-bezier(.4,0,.2,1); }
+    .ch-bar-stacked-track { display: flex !important; }
+    .ch-bar-segment { height: 100%; transition: width .9s cubic-bezier(.4,0,.2,1); }
+    .ch-bar-label {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      font-family: 'Montserrat','Trebuchet MS',sans-serif; font-size: 11px; font-weight: 700;
+      white-space: nowrap; pointer-events: none; z-index: 2;
     }
-    .ch-bar-pct { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.93); white-space: nowrap; }
-    .ch-score   { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; width: 54px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
     .ch-badge   { width: 84px; flex-shrink: 0; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-align: center; }
     .ch-note    { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 10px; color: var(--muted); width: 104px; flex-shrink: 0; }
 
@@ -615,7 +616,7 @@
       <div class="channel-bars" id="channelBars"></div>
       <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px;align-items:center;">
         <div style="font-size:11px;color:var(--muted);font-style:italic;flex:1;min-width:200px">
-          * Phone &amp; Chat show average star rating (1&ndash;5). All other channels show % of members marking &ldquo;Happy.&rdquo;
+          Stacked bars: <span style="color:#78BE21;font-weight:700;">&#9632;</span> Happy &nbsp;&nbsp;<span style="color:#CCCCCC;font-weight:700;">&#9632;</span> Neutral &nbsp;&nbsp;<span style="color:#999999;font-weight:700;">&#9632;</span> Unhappy &nbsp;&nbsp;&mdash;&nbsp;&nbsp; NPS and Response Rate show single-score bars.
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <span class="kpi-badge badge-exceptional" style="font-size:10px">Exceptional &ge;95%</span>
@@ -1150,15 +1151,15 @@ const mesScores = [
 ];
 
 const channels = [
-  { name:'NPS',             score:74.56,  tier:'Exceeds',     color:NAVY,    note:'NPS Score (739 responses)',   delta:+2.56,  deltaDir:'up',  deltaLabel:'+2.56 pts', unit:'' },
-  { name:'Response Rate',   score:26.24,  tier:'Exceeds',     color:BLUE,    note:'26.24% across 6 channels',   delta:null,   deltaDir:'na' },
-  { name:'New Loan',        score:100.00, tier:'Exceptional', color:GREEN,   note:'% Happy (14/14)',             delta: 0,     deltaDir:'flat' },
-  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',           delta:-1.44,   deltaDir:'down' },
-  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',         delta: null,   deltaDir:'na'   },
-  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'Avg ★ 2.50/5',          delta: null,   deltaDir:'na'   },
-  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',           delta:+3.95,   deltaDir:'up'   },
-  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'Avg ★ 4.36/5',          delta:+0.10,   deltaDir:'up',  deltaLabel:'★ +0.10' },
-  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)',          delta:-10.61,  deltaDir:'down' },
+  { name:'NPS',           score:74.56,  tier:'Exceeds',     color:NAVY,  note:'NPS Score (739 responses)',          delta:+2.56,  deltaDir:'up',   deltaLabel:'+2.56 pts', unit:'' },
+  { name:'Response Rate', score:26.24,  tier:'Exceeds',     color:BLUE,  note:'26.24% across 6 channels',           delta:null,   deltaDir:'na' },
+  { name:'New Loan',      score:100.00, tier:'Exceptional', color:GREEN, note:'% Happy (14/14)',                     delta: 0,     deltaDir:'flat', stacked:{ happy:100.00, neutral:0,     unhappy:0     } },
+  { name:'New Member',    score:92.31,  tier:'Exceeds',     color:BLUE,  note:'% Happy (12/13)',                     delta:-1.44,  deltaDir:'down', stacked:{ happy:92.31,  neutral:7.69,  unhappy:0     } },
+  { name:'Mortgage',      score:80.00,  tier:'Effective',   color:AMBER, note:'% Happy YTD (4/5)',                   delta: null,  deltaDir:'na',   stacked:{ happy:80.00,  neutral:20.00, unhappy:0     } },
+  { name:'Chat',          score:34.62,  tier:'Off Track',   color:RED,   note:'Avg ★ 2.50/5 — 9 of 26 happy', delta: null,  deltaDir:'na',   stacked:{ happy:34.62,  neutral:7.69,  unhappy:57.69 } },
+  { name:'Branch',        score:98.95,  tier:'Exceptional', color:GREEN, note:'% Happy (94/95)',                     delta:+3.95,  deltaDir:'up',   stacked:{ happy:98.95,  neutral:1.05,  unhappy:0     } },
+  { name:'Phone',         score:82.72,  tier:'Effective',   color:AMBER, note:'Avg ★ 4.36/5 — 249 of 301 happy', delta:+0.10, deltaDir:'up', deltaLabel:'★ +0.10', stacked:{ happy:82.72, neutral:4.32, unhappy:12.95 } },
+  { name:'Digital',       score:51.89,  tier:'Off Track',   color:RED,   note:'% Happy (55/106)',                    delta:-10.61, deltaDir:'down', stacked:{ happy:51.89,  neutral:15.09, unhappy:33.02 } },
 ];
 
 const responseChannels = ['NPS','Phone','Digital','Branch','Chat','New Loan','New Member','Mortgage'];
@@ -1196,16 +1197,30 @@ channels.forEach(ch => {
     deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
   }
   const unit = ch.unit !== undefined ? ch.unit : '%';
-  const pctColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.93)';
-  const scoreColor = ch.color === '#FFC845' ? '#7A5800' : ch.color;
+  const labelColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.95)';
+  const labelShadow = ch.color === '#FFC845' ? 'none' : '0 0 5px rgba(0,0,0,0.6)';
+
+  let barHtml;
+  if (ch.stacked) {
+    const { happy, neutral, unhappy } = ch.stacked;
+    barHtml = `
+      <div class="ch-bar-track ch-bar-stacked-track">
+        <div class="ch-bar-segment" style="width:${happy}%;background:#78BE21"></div>
+        ${neutral > 0 ? `<div class="ch-bar-segment" style="width:${neutral}%;background:#CCCCCC"></div>` : ''}
+        ${unhappy > 0 ? `<div class="ch-bar-segment" style="width:${unhappy}%;background:#999999"></div>` : ''}
+        <span class="ch-bar-label" style="color:rgba(255,255,255,.95);text-shadow:0 0 5px rgba(0,0,0,0.6)">${happy.toFixed(1)}% Happy &nbsp;·&nbsp; ${ch.tier}</span>
+      </div>`;
+  } else {
+    barHtml = `
+      <div class="ch-bar-track">
+        <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}"></div>
+        <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${ch.score.toFixed(1)}${unit} &nbsp;·&nbsp; ${ch.tier}</span>
+      </div>`;
+  }
+
   row.innerHTML = `
     <div class="ch-name">${ch.name}</div>
-    <div class="ch-bar-track">
-      <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}">
-        <span class="ch-bar-pct" style="color:${pctColor}">${ch.score.toFixed(1)}${unit}</span>
-      </div>
-    </div>
-    <div class="ch-score" style="color:${scoreColor}">${ch.score.toFixed(1)}${unit}</div>
+    ${barHtml}
     ${tierBadgeHtml(ch.tier)}
     <div class="ch-note">${ch.note}</div>
     ${deltaHtml}
