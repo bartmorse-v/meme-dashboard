@@ -287,12 +287,12 @@
     .ch-row { display: flex; align-items: center; gap: 10px; }
     .ch-name { width: 100px; font-size: 12px; font-weight: 600; color: var(--text-2); flex-shrink: 0; text-align: right; }
     .ch-bar-track { flex: 1; background: var(--bg); border-radius: 6px; height: 30px; position: relative; overflow: hidden; }
-    .ch-bar-fill {
-      height: 100%; border-radius: 6px;
-      display: flex; align-items: center; padding-left: 10px;
-      transition: width .9s cubic-bezier(.4,0,.2,1);
+    .ch-bar-fill  { height: 100%; border-radius: 6px; transition: width .9s cubic-bezier(.4,0,.2,1); }
+    .ch-bar-label {
+      position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+      font-family: 'Montserrat','Trebuchet MS',sans-serif; font-size: 11px; font-weight: 700;
+      white-space: nowrap; pointer-events: none; z-index: 2;
     }
-    .ch-bar-pct { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 11px; font-weight: 600; color: rgba(255,255,255,.93); white-space: nowrap; }
     .ch-score   { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; width: 54px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
     .ch-badge   { width: 84px; flex-shrink: 0; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-align: center; }
     .ch-note    { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 10px; color: var(--muted); width: 104px; flex-shrink: 0; }
@@ -1196,17 +1196,16 @@ channels.forEach(ch => {
     deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
   }
   const unit = ch.unit !== undefined ? ch.unit : '%';
-  const pctColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.93)';
+  const labelColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.95)';
+  const labelShadow = ch.color === '#FFC845' ? 'none' : '0 0 5px rgba(0,0,0,0.55)';
   const scoreColor = ch.color === '#FFC845' ? '#7A5800' : ch.color;
   row.innerHTML = `
     <div class="ch-name">${ch.name}</div>
     <div class="ch-bar-track">
-      <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}">
-        <span class="ch-bar-pct" style="color:${pctColor}">${ch.score.toFixed(1)}${unit}</span>
-      </div>
+      <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}"></div>
+      <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${ch.score.toFixed(1)}${unit} &nbsp;${ch.tier}</span>
     </div>
     <div class="ch-score" style="color:${scoreColor}">${ch.score.toFixed(1)}${unit}</div>
-    ${tierBadgeHtml(ch.tier)}
     <div class="ch-note">${ch.note}</div>
     ${deltaHtml}
   `;
