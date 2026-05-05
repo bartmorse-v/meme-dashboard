@@ -615,14 +615,14 @@
       <div class="channel-bars" id="channelBars"></div>
       <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px;align-items:center;">
         <div style="font-size:11px;color:var(--muted);font-style:italic;flex:1;min-width:200px">
-          * Phone &amp; Chat show average star rating (1&ndash;5). All other channels show % of members marking &ldquo;Happy.&rdquo;
+          Tiers are based on channel-specific benchmarks from the MEME scorecard. Phone &amp; Chat tiers reflect avg star rating (1&ndash;5); all others reflect % of members marking &ldquo;Happy.&rdquo;
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <span class="kpi-badge badge-exceptional" style="font-size:10px">Exceptional &ge;95%</span>
-          <span class="kpi-badge badge-exceeds"     style="font-size:10px">Exceeds 85&ndash;94%</span>
-          <span class="kpi-badge badge-effective"   style="font-size:10px">Effective 76&ndash;84%</span>
-          <span class="kpi-badge badge-mixed"       style="font-size:10px">Mixed 61&ndash;75%</span>
-          <span class="kpi-badge badge-offtrack"    style="font-size:10px">Off Track &lt;61%</span>
+          <span class="kpi-badge badge-exceptional" style="font-size:10px">Exceptional</span>
+          <span class="kpi-badge badge-exceeds"     style="font-size:10px">Exceeds</span>
+          <span class="kpi-badge badge-effective"   style="font-size:10px">Effective</span>
+          <span class="kpi-badge badge-mixed"       style="font-size:10px">Mixed</span>
+          <span class="kpi-badge badge-offtrack"    style="font-size:10px">Off Track</span>
         </div>
       </div>
     </div>
@@ -1155,9 +1155,9 @@ const channels = [
   { name:'New Loan',        score:100.00, tier:'Exceptional', color:GREEN,   note:'% Happy (14/14)',             delta: 0,     deltaDir:'flat' },
   { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',           delta:-1.44,   deltaDir:'down' },
   { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',         delta: null,   deltaDir:'na'   },
-  { name:'Chat',       score:34.62,  tier:'Off Track',   color:RED,    note:'Avg ★ 2.50/5',          delta: null,   deltaDir:'na'   },
+  { name:'Chat',       score:34.62,  tier:'Mixed',       color:ORANGE, note:'Avg ★ 2.50/5',          delta: null,   deltaDir:'na'   },
   { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',           delta:+3.95,   deltaDir:'up'   },
-  { name:'Phone',      score:82.72,  tier:'Effective',   color:AMBER,  note:'Avg ★ 4.36/5',          delta:+0.10,   deltaDir:'up',  deltaLabel:'★ +0.10' },
+  { name:'Phone',      score:82.72,  tier:'Exceeds',     color:BLUE,   note:'Avg ★ 4.36/5',          delta:+0.10,   deltaDir:'up',  deltaLabel:'★ +0.10' },
   { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)',          delta:-10.61,  deltaDir:'down' },
 ];
 
