@@ -113,6 +113,24 @@
       display: grid; grid-template-columns: 1fr 2fr 1fr;
       gap: var(--gap); margin-bottom: var(--gap);
     }
+    .ai-summary-banner {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      border-left: 4px solid #004987;
+      padding: 14px 20px; margin-bottom: var(--gap);
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .ai-summary-banner .ai-sum-icon {
+      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+      background: linear-gradient(135deg,#004987,#003366);
+      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+    }
+    .ai-summary-banner .ai-sum-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+      color: #004987; margin-bottom: 4px;
+    }
+    .ai-summary-banner .ai-sum-text {
+      font-size: 12.5px; line-height: 1.7; color: var(--text-2);
+    }
     .kpi-card.kpi-thermo { display: flex; flex-direction: column; justify-content: center; }
     .thermo-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; font-weight: 600; margin-bottom: 14px; }
     .thermo-legend { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
@@ -231,6 +249,20 @@
       letter-spacing: .3px; white-space: nowrap;
       display: flex; align-items: center; gap: 5px;
     }
+    .chart-period-select {
+      position: absolute; top: 12px; right: 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 26px 3px 10px;
+      font-size: 10px; font-weight: 600; color: var(--muted);
+      letter-spacing: .3px; white-space: nowrap;
+      font-family: inherit; cursor: pointer; outline: none;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23545859'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 9px center;
+      background-size: 8px 5px;
+    }
+    .chart-period-select:hover { border-color: var(--navy); color: var(--navy); }
+    .chart-period-select:focus { border-color: var(--navy); }
     .chart-wrap { position: relative; }
 
     /* ── LAYOUTS ────────────────────────────────── */
@@ -346,6 +378,139 @@
     .insight-card.pri-positive .insight-action { color: var(--green); }
     .insight-card.pri-info     .insight-action { color: var(--blue);  }
 
+    /* ── CHATBOT ─────────────────────────────────── */
+    .chat-bubble { max-width: 82%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.6; }
+    .chat-bubble.user { background: var(--navy); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-bubble.bot  { background: var(--bg);  color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+    .chat-bubble.typing { color: var(--muted); font-style: italic; }
+
+    /* ── FLOATING CHAT ───────────────────────────── */
+    .float-chat-btn {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 54px; height: 54px; border-radius: 50%;
+      background: #fff; border: none;
+      box-shadow: 0 4px 20px rgba(15,37,64,.22), 0 1px 4px rgba(15,37,64,.10);
+      cursor: pointer; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 150ms ease, box-shadow 150ms ease;
+    }
+    .float-chat-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(15,37,64,.28), 0 2px 6px rgba(15,37,64,.12); }
+    .float-chat-panel {
+      position: fixed; bottom: 90px; right: 24px;
+      width: 360px; max-height: calc(100vh - 120px);
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: 0 8px 40px rgba(15,37,64,.22);
+      border: 1px solid var(--border);
+      z-index: 999; display: flex; flex-direction: column; overflow: hidden;
+      animation: floatChatIn 180ms ease;
+    }
+    @keyframes floatChatIn {
+      from { opacity: 0; transform: translateY(10px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1);    }
+    }
+    .float-chat-header {
+      background: var(--navy); color: #fff;
+      padding: 12px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    }
+    .float-chat-header-info { flex: 1; }
+    .float-chat-header-title { font-size: 13px; font-weight: 700; line-height: 1.2; }
+    .float-chat-header-sub   { font-size: 10px; opacity: .65; margin-top: 1px; }
+    .float-chat-close {
+      background: none; border: none; color: rgba(255,255,255,.65);
+      cursor: pointer; font-size: 20px; line-height: 1; padding: 0 2px;
+      border-radius: 4px; font-family: inherit;
+    }
+    .float-chat-close:hover { color: #fff; background: rgba(255,255,255,.15); }
+    .float-chat-messages {
+      flex: 1; min-height: 0; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 8px;
+      padding: 14px 12px;
+    }
+    .float-chat-foot {
+      border-top: 1px solid var(--border); padding: 10px 12px;
+      display: flex; gap: 8px; flex-shrink: 0;
+    }
+    .float-chat-input {
+      flex: 1; padding: 8px 12px; border: 1px solid var(--border);
+      border-radius: 8px; font-family: inherit; font-size: 12px;
+      color: var(--text); background: var(--bg); outline: none;
+    }
+    .float-chat-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,73,135,.10); }
+    .float-chat-send {
+      padding: 8px 14px; background: var(--navy); color: #fff;
+      border: none; border-radius: 8px; font-family: inherit;
+      font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+    .float-chat-send:hover { background: var(--navy-dark); }
+
+    /* ── ASK AI DEDICATED PAGE ───────────────────── */
+    .ask-ai-layout {
+      display: grid; grid-template-columns: 220px 1fr; gap: var(--gap);
+    }
+    .ask-ai-sidebar { display: flex; flex-direction: column; gap: 10px; }
+    .ask-ai-sidebar-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); margin-bottom: 2px; }
+    .ask-ai-suggestion {
+      padding: 9px 13px; background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 12px; color: var(--text-2);
+      cursor: pointer; text-align: left; font-family: inherit;
+      transition: border-color 150ms, color 150ms;
+      line-height: 1.4;
+    }
+    .ask-ai-suggestion:hover { border-color: var(--navy); color: var(--navy); }
+    .ask-ai-chat-wrap {
+      display: flex; flex-direction: column; height: calc(100vh - 200px); min-height: 480px;
+    }
+    .ask-ai-messages {
+      flex: 1; min-height: 0; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 20px 24px; background: var(--card);
+      border: 1px solid var(--border); border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .ask-ai-input-row {
+      background: var(--card); border: 1px solid var(--border); border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 14px 20px 18px; display: flex; gap: 10px;
+    }
+    .ask-ai-input {
+      flex: 1; padding: 10px 14px; border: 1px solid var(--border);
+      border-radius: 8px; font-family: inherit; font-size: 13px;
+      color: var(--text); background: var(--bg); outline: none;
+    }
+    .ask-ai-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,73,135,.12); }
+    .ask-ai-send {
+      padding: 10px 22px; background: var(--navy); color: #fff;
+      border: none; border-radius: 8px; font-family: inherit;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .ask-ai-send:hover { background: var(--navy-dark); }
+
+    /* ── TOP 10 AI INSIGHTS ─────────────────────── */
+    .top10-list { display: flex; flex-direction: column; }
+    .top10-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .top10-item:last-child { border-bottom: none; }
+    .top10-num {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800;
+    }
+    .top10-num.sig-positive { background: #E6F5CC; color: #3A6B00; }
+    .top10-num.sig-critical { background: #FDE8EA; color: var(--red); }
+    .top10-num.sig-warning  { background: #FFF5CC; color: #7A5800; }
+    .top10-num.sig-info     { background: #CCF0FF; color: #00547A; }
+    .top10-content { flex: 1; min-width: 0; }
+    .top10-header  { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+    .top10-title   { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .top10-body    { font-size: 12px; color: #475569; line-height: 1.6; }
+    .top10-tags    { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-left: auto; }
+    .top10-ch {
+      font-size: 10px; font-weight: 600; padding: 2px 8px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    .top10-period  { font-size: 10px; color: var(--muted); white-space: nowrap; }
+
     /* ── OUTREACH QUEUE ─────────────────────────── */
     .outreach-groups { display: flex; flex-direction: column; gap: 20px; }
     .outreach-group-label {
@@ -416,6 +581,53 @@
       margin: 18px 0;
     }
 
+    /* ── SUB-PAGE CHIPS ─────────────────────────── */
+    .subpage-chips {
+      display: flex; gap: 8px; margin-bottom: var(--gap);
+    }
+    .subpage-chip {
+      padding: 8px 20px; border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--card); color: var(--text-2);
+      font-size: 12px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all 150ms ease;
+      white-space: nowrap;
+    }
+    .subpage-chip:hover { border-color: var(--navy); color: var(--navy); }
+    .subpage-chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+
+    /* ── MEMBER VOICES FULL TABLE ───────────────── */
+    .mv-filter-row {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .mv-chip {
+      padding: 5px 14px; border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--card); color: var(--text-2);
+      font-size: 11px; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all 150ms ease; white-space: nowrap;
+    }
+    .mv-chip:hover  { border-color: var(--navy); color: var(--navy); }
+    .mv-chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .mv-count-label { font-size: 12px; color: var(--muted); margin-left: auto; align-self: center; white-space: nowrap; }
+
+    .mv-table { width: 100%; border-collapse: collapse; }
+    .mv-table thead tr { border-bottom: 2px solid var(--border); }
+    .mv-table thead th {
+      text-align: left; padding: 8px 12px 8px 0;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .6px; color: var(--muted);
+    }
+    .mv-table tbody tr { border-bottom: 1px solid var(--border); }
+    .mv-table tbody tr:last-child { border-bottom: none; }
+    .mv-table tbody tr:hover { background: #F8FAFC; }
+    .mv-table td { padding: 11px 12px 11px 0; vertical-align: top; font-size: 13px; }
+    .mv-table td:last-child { padding-right: 0; }
+    .mv-date-cell { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .mv-member-cell { font-size: 12px; color: var(--text-2); white-space: nowrap; }
+    .mv-quote-cell { font-size: 13px; color: #334155; line-height: 1.6; font-style: italic; }
+    .mv-empty { text-align: center; color: var(--muted); font-size: 13px; padding: 32px 0; }
+
     .outreach-note {
       display: flex; align-items: flex-start; gap: 8px;
       margin-top: 16px; padding: 10px 12px;
@@ -454,6 +666,8 @@
     .voice-channel.chat     { background: var(--red-bg);   color: var(--red);   }
     .voice-channel.mortgage { background: var(--amber-bg); color: var(--amber); }
     .voice-channel.nps      { background: #F3E8FF; color: #004987; }
+    .voice-channel.phone    { background: var(--blue-bg);  color: var(--blue);  }
+    .voice-channel.newmbr   { background: var(--blue-bg);  color: var(--blue);  }
     .voice-name { font-size: 11px; color: var(--muted); }
     .voice-sentiment {
       margin-left: auto; display: flex; align-items: center; gap: 4px;
@@ -478,10 +692,21 @@
     .st-responses { font-size: 11px; color: var(--st-muted, var(--muted)); margin-bottom: 3px; }
     .st-method { font-size: 10px; color: var(--st-muted, var(--muted)); line-height: 1.4; }
     .voices-scroll {
-      max-height: 510px; overflow-y: auto;
-      display: flex; flex-direction: column; gap: 10px; padding-right: 4px;
+      flex: 1; min-height: 0; overflow-y: scroll;
+      display: flex; flex-direction: column; gap: 10px;
+      padding-right: 6px;
     }
     .voices-empty { font-size: 12px; color: var(--muted); font-style: italic; padding: 24px 0; text-align: center; }
+    .voices-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .voices-sort { display: flex; gap: 4px; }
+    .sort-btn {
+      font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: .3px;
+      padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border);
+      background: transparent; color: var(--muted); cursor: pointer;
+      transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    }
+    .sort-btn:hover { background: var(--bg); color: var(--text); }
+    .sort-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
     /* ── CAVEAT BOX ─────────────────────────────── */
     .caveat-box {
@@ -504,7 +729,7 @@
     /* ── RESPONSIVE ─────────────────────────────── */
     @media (max-width: 960px) {
       .kpi-row { grid-template-columns: repeat(2, 1fr); }
-      .kpi-card.kpi-thermo { grid-column: 1 / -1; }
+      .kpi-card.kpi-thermo  { grid-column: 1 / -1; }
       .row-2-1, .row-1-2 { grid-template-columns: 1fr; }
       .insights-grid { grid-template-columns: repeat(2, 1fr); }
       .voices-grid   { grid-template-columns: repeat(2, 1fr); }
@@ -518,10 +743,77 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition: none !important; animation: none !important; }
     }
+    /* ── PASSWORD GATE ──────────────────────────── */
+    .pw-screen {
+      position: fixed; inset: 0; z-index: 9999;
+      background: url('foil-bg.jpg') center/cover no-repeat;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pw-screen::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0, 18, 45, 0.68);
+    }
+    .pw-card {
+      position: relative; z-index: 1;
+      background: #fff; border-radius: 16px;
+      padding: 40px 44px; width: 380px; max-width: calc(100vw - 40px);
+      box-shadow: 0 24px 64px rgba(0,0,0,.35);
+      text-align: center;
+    }
+    .pw-logo-name {
+      font-size: 26px; font-weight: 800; color: var(--navy);
+      letter-spacing: -0.5px; line-height: 1; margin-bottom: 3px;
+    }
+    .pw-logo-name span { color: var(--copper); }
+    .pw-logo-cu {
+      display: inline-block; font-size: 9px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border);
+      padding: 1px 7px; border-radius: 2px; margin-bottom: 20px;
+    }
+    .pw-title {
+      font-size: 13px; font-weight: 700; color: var(--text);
+      margin-bottom: 4px;
+    }
+    .pw-sub {
+      font-size: 11px; color: var(--muted); margin-bottom: 24px;
+    }
+    .pw-input {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-family: inherit; font-size: 14px;
+      color: var(--text); background: var(--bg); outline: none;
+      text-align: center; letter-spacing: 3px; margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .pw-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,73,135,.12); }
+    .pw-btn {
+      width: 100%; padding: 12px; background: var(--navy); color: #fff;
+      border: none; border-radius: 8px; font-family: inherit;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background 150ms;
+    }
+    .pw-btn:hover { background: var(--navy-dark); }
+    .pw-error {
+      margin-top: 10px; font-size: 12px; font-weight: 600;
+      color: var(--red); min-height: 18px;
+    }
   </style>
 </head>
 <body>
-<div class="page">
+<!-- PASSWORD GATE -->
+<div id="pwScreen" class="pw-screen">
+  <div class="pw-card">
+    <div class="pw-logo-name">Copper <span>State</span></div>
+    <div class="pw-logo-cu">Credit Union</div>
+    <div class="pw-title">Member Experience Dashboard</div>
+    <div class="pw-sub">January 2026 &nbsp;&middot;&nbsp; Enter your access code to continue</div>
+    <input id="pwInput" class="pw-input" type="password" placeholder="Password" autocomplete="off" />
+    <button id="pwBtn" class="pw-btn">Enter Dashboard</button>
+    <div id="pwError" class="pw-error"></div>
+  </div>
+</div>
+
+<div class="page" id="mainContent" style="display:none">
 
   <!-- HEADER -->
   <div class="header">
@@ -530,17 +822,29 @@
       <div class="header-title">
         <h1>Member Experience Measurement Engine</h1>
         <nav class="header-nav">
-          <a href="#" class="active">Dashboard</a>
+          <a href="#" data-page="dashboard" class="active">Dashboard</a>
           <span class="header-nav-sep">|</span>
-          <a href="#">Member Follow-Ups</a>
-          <span class="header-nav-sep">|</span>
-          <a href="#">Member Voices</a>
+          <a href="#" data-page="voices">Member Voices</a>
           <span class="header-nav-sep">|</span>
           <a href="#">Financial Insights</a>
           <span class="header-nav-sep">|</span>
-          <a href="#">Ask AI</a>
+          <a href="#" data-page="askai">Ask AI</a>
         </nav>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE: DASHBOARD ═══ -->
+  <div id="page-dashboard" class="page-content">
+
+  <!-- AI SUMMARY BANNER -->
+  <div class="ai-summary-banner">
+    <div class="ai-sum-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    </div>
+    <div>
+      <div class="ai-sum-label">AI Summary &nbsp;&middot;&nbsp; January 2026</div>
+      <p class="ai-sum-text">January was a strong recovery month. The MX Score climbed to 3.56 — the highest since mid-2024 — driven by an all-time NPS high of 74, a perfect 100% on New Loan, and Branch holding Exceptional for the 24th straight month. The two areas that need attention remain Digital (51.89%, still 17 points below its pre-migration baseline) and Chat Autopilot (2.50/5, consistently the weakest touchpoint in the portfolio). If those two channels reach their benchmarks, the overall MX Score could cross 4.00 by mid-2026.</p>
     </div>
   </div>
 
@@ -600,7 +904,12 @@
   <div class="section-label">Would our members recommend us?</div>
   <div class="row-full">
     <div class="card">
-      <span class="chart-period-chip">Q3 '22 – Jan '26</span>
+      <select class="chart-period-select" id="npsPeriodSelect">
+        <option value="all">All Time (2023–2026)</option>
+        <option value="25-26">2025–2026</option>
+        <option value="24">2024 Only</option>
+        <option value="23">2023 Only</option>
+      </select>
       <div class="card-title">Net Promoter Score &amp; MX Score &mdash; Quarterly Trend</div>
       <div class="card-subtitle">NPS tracks likelihood to recommend (left axis, quarterly Q3 2022&ndash;Q1 2026). MX Score is the composite of all 9 Experience Measures (right axis).</div>
       <div class="chart-wrap" style="height:290px">
@@ -633,7 +942,12 @@
   <div class="section-label">Channel Performance &mdash; January 2026</div>
   <div class="row-full">
     <div class="card">
-      <span class="chart-period-chip">January 2026</span>
+      <select class="chart-period-select" id="chanPerfPeriodSelect">
+        <option value="jan26">January 2026</option>
+        <option value="dec25" disabled>December 2025</option>
+        <option value="nov25" disabled>November 2025</option>
+        <option value="oct25" disabled>October 2025</option>
+      </select>
       <div class="card-title">How is each channel performing?</div>
       <div class="card-subtitle">Jan 2026 satisfaction scores &mdash; ranked best to worst. Change column shows shift vs. previous period.</div>
       <div class="channel-bars" id="channelBars"></div>
@@ -652,201 +966,217 @@
     </div>
   </div>
 
-  <!-- CHANNEL TIMELINES -->
-  <div class="section-label">Channel Score History</div>
-  <div class="row-full">
-    <div class="card">
-      <span class="chart-period-chip" id="channelPeriodChip">Jan '25 – Jan '26</span>
-      <div class="card-title">How has each channel trended over time?</div>
-      <div class="card-subtitle">Click a channel tab to see its full score history with benchmark thresholds</div>
-      <div class="tab-bar" id="channelTabs">
-        <button class="tab-btn active" data-ch="all">All</button>
-        <button class="tab-btn" data-ch="nps">NPS</button>
-        <button class="tab-btn" data-ch="rr">Response Rate</button>
-        <button class="tab-btn" data-ch="loan">Consumer Loan</button>
-        <button class="tab-btn" data-ch="newmbr">New Member</button>
-        <button class="tab-btn" data-ch="mortgage">Mortgage</button>
-        <button class="tab-btn" data-ch="chat">Chat</button>
-        <button class="tab-btn" data-ch="branch">Branch</button>
-        <button class="tab-btn" data-ch="phone">Phone</button>
-        <button class="tab-btn" data-ch="digital">Digital</button>
-      </div>
-      <div class="chart-wrap" style="height:300px">
-        <canvas id="channelTimelineChart"></canvas>
-      </div>
-      <p id="channelTimelineNote" class="timeline-note"></p>
-    </div>
-  </div>
-
-  <!-- SURVEY REACH & MEMBER VOICES -->
-  <div class="section-label">Survey Reach &amp; Member Voices</div>
-  <div style="display:grid;grid-template-columns:290px 1fr;gap:var(--gap);margin-bottom:var(--gap);align-items:start">
+  <!-- CHANNEL HISTORY + MEMBER VOICES -->
+  <div class="section-label">Channel Score History &amp; Member Voices</div>
+  <div style="display:grid;grid-template-columns:312px 1fr;gap:var(--gap);margin-bottom:var(--gap);align-items:start">
     <div class="survey-tiles-col" id="surveyTiles"></div>
-    <div class="card">
-      <span class="chart-period-chip">January 2026</span>
-      <div class="card-title">Member Voices</div>
-      <div class="card-subtitle" id="voicesSubtitle">All channels &nbsp;&middot;&nbsp; Click a channel tile to filter</div>
-      <div class="voices-scroll" id="voicesScroll"></div>
+    <div id="channelRightCol" style="display:flex;flex-direction:column;gap:var(--gap);overflow:hidden">
+      <div class="card" style="flex-shrink:0">
+        <select class="chart-period-select" id="chanHistPeriodSelect">
+          <option value="all">All Available</option>
+          <option value="12">Last 12 Months</option>
+          <option value="6">Last 6 Months</option>
+        </select>
+        <div class="card-title">How has each channel trended over time?</div>
+        <div class="card-subtitle">Select a channel tile to explore its score history and benchmark thresholds</div>
+        <div class="chart-wrap" style="height:300px">
+          <canvas id="channelTimelineChart"></canvas>
+        </div>
+        <p id="channelTimelineNote" class="timeline-note"></p>
+      </div>
+      <div class="card" style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden">
+        <span class="chart-period-chip">January 2026</span>
+        <div class="card-title">Member Voices</div>
+        <div class="voices-controls">
+          <div class="card-subtitle" id="voicesSubtitle" style="margin:0">Select a tile to filter</div>
+          <div class="voices-sort">
+            <button class="sort-btn active" data-sort="desc">Newest</button>
+            <button class="sort-btn" data-sort="asc">Oldest</button>
+          </div>
+        </div>
+        <div class="voices-scroll" id="voicesScroll"></div>
+      </div>
     </div>
   </div>
 
-  <!-- AI RESPONSE RATE RECOMMENDATIONS -->
+  <!-- TOP 10 AI INSIGHTS -->
+  <div class="section-label">Top 10 AI Insights</div>
   <div class="row-full">
     <div class="card">
       <div class="ai-header">
-        <div class="ai-icon" style="background:linear-gradient(135deg,#0891B2,#0E7490)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <div class="ai-icon" style="background:linear-gradient(135deg,#004987,#003366)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
         </div>
         <div class="ai-header-text">
-          <h3>How can we increase survey response rates?</h3>
-          <p>AI-generated recommendations per channel &nbsp;&middot;&nbsp; Based on January 2026 data and industry benchmarks for credit unions</p>
+          <h3>Top 10 AI Insights</h3>
+          <p>Cross-channel theme analysis &nbsp;&middot;&nbsp; Updated each reporting period &nbsp;&middot;&nbsp; Based on member comments, scores, and trends through January 2026</p>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
 
-        <div class="insight-card pri-positive">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Mortgage &mdash; 83.3% · Keep &amp; Expand
+      <div class="top10-list">
+
+        <div class="top10-item">
+          <div class="top10-num sig-critical">1</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Autopilot Chat is the most urgent single fix in the entire MEME scorecard</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#F3F4F6;color:#545859">Chat</span>
+                <span class="top10-period">Jan 2025 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Autopilot scored 1.05–2.00/5 across every month of 2025, while human agents scored 3.0–4.75/5 in the same channel. The combined Jan 2026 score of 2.50 masks this split entirely. Autopilot is actively pulling down the overall MX score — and members are telling us why: "no help," "learn AI," "did not help will go to my branch."</div>
           </div>
-          <div class="insight-title">This method is working — replicate it</div>
-          <div class="insight-body">Mortgage achieves 83% because timing is perfect: members just funded and have strong feelings. The email is highly relevant, arrives at a peak moment of engagement, and the sample is small enough that every response counts.</div>
-          <div class="insight-action">&rarr; Apply same timing logic to New Loan (currently only 9.5%). Send within 24 hrs of funding, not 1&ndash;3 days.</div>
         </div>
 
-        <div class="insight-card pri-warning">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Branch &mdash; 11.2% · Underperforming
+        <div class="top10-item">
+          <div class="top10-num sig-critical">2</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Digital platform migration created a satisfaction crater that is still recovering 12 months later</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#FDE8EA;color:#C41E3A">Digital</span>
+                <span class="top10-period">Feb 2025 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Digital dropped from ~69% (Dec 2024) to 20–29% (Feb–Mar 2025) at platform launch and is at 51.89% in January 2026 — still 17 points below pre-migration baseline. At the current recovery rate of ~3 points per month, full recovery will take another 6–12 months. Login failures and the mobile app are the top complaint themes.</div>
           </div>
-          <div class="insight-title">Post-visit email is too easy to ignore</div>
-          <div class="insight-body">Branch interactions generate strong feelings in the moment, but an email the next day loses that emotional urgency. Members move on. The current 11.2% response rate for 845 delivered surveys means 750 opinions are going uncaptured every month.</div>
-          <div class="insight-action">&rarr; Test an in-branch QR code on receipts/printouts. Capture sentiment before the member leaves.</div>
         </div>
 
-        <div class="insight-card pri-warning">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            NPS &mdash; 9.1% · Needs Strategy
+        <div class="top10-item">
+          <div class="top10-num sig-positive">3</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Named employees are the #1 predictor of a positive comment across every channel</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Phone</span>
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">New Loan</span>
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">New Member</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">In January 2026, 14 of 35 member voice comments specifically name an employee — Harmony, Thomas, Carolyn, Skylar, Eileen, Jordon, Yesi, Johanna, Liliana, Anthony, Carol, Stephanie, Sierra, and Gabriela. Every named mention is positive. Channels where staff are named score significantly higher than channels where they aren't.</div>
           </div>
-          <div class="insight-title">Random mass email is the least effective method</div>
-          <div class="insight-body">Sending to 25% of all members quarterly with no trigger event produces a 9.1% rate (739 of 8,083). The score is statistically fragile. Industry benchmark for email NPS surveys is 20&ndash;30% for engaged audiences.</div>
-          <div class="insight-action">&rarr; Segment the send: prioritize recently active members (branch visit, login, loan payment) over completely inactive accounts.</div>
         </div>
 
-        <div class="insight-card pri-info">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Phone &mdash; 14.7% · Good Foundation
+        <div class="top10-item">
+          <div class="top10-num sig-positive">4</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Branch has held Exceptional tier for 24+ consecutive months — it is the operational model</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
+                <span class="top10-period">Jan 2024 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Branch reached 98.95% in January 2026 and has been at or above 95% in every month with recorded data since early 2024. Member comments consistently cite friendly staff, consistency across visits, and employees going above expectations. No other channel has maintained Exceptional tier for this duration.</div>
           </div>
-          <div class="insight-title">In-call capture outperforms post-call email</div>
-          <div class="insight-body">At 14.7%, the recorded in-call survey is already outperforming NPS and New Loan email. The captive audience effect works — the member is already on the line. Solution Center only, so there&rsquo;s room to expand to other call types (collections, loan servicing).</div>
-          <div class="insight-action">&rarr; Expand in-call surveys to all inbound call types. Consider SMS follow-up for members who hang up before the survey plays.</div>
         </div>
 
-        <div class="insight-card pri-info">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            New Member &mdash; 29.5% · Strong
+        <div class="top10-item">
+          <div class="top10-num sig-positive">5</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Speed and ease of process are what loan members care about most</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">New Loan</span>
+                <span class="top10-ch" style="background:#FFF5CC;color:#7A5800">Mortgage</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Words like "quick," "easy," "convenient," and "smooth" appear in 8 of 14 loan and mortgage comments this month. Members who mention processing speed are unanimous in their satisfaction. This is consistently the top theme in loan feedback — operational efficiency is the most actionable lever for loan satisfaction scores.</div>
           </div>
-          <div class="insight-title">Onboarding timing drives engagement</div>
-          <div class="insight-body">New members are the most survey-responsive segment at 29.5%. They&rsquo;re still in &ldquo;relationship evaluation mode&rdquo; — curious, attentive, and forming first impressions. This window is valuable and short.</div>
-          <div class="insight-action">&rarr; Add a 90-day follow-up survey to new members. Catch them again before they become passive. This could double your new member feedback volume.</div>
         </div>
 
-        <div class="insight-card pri-critical">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            All Channels &mdash; Universal Quick Wins
+        <div class="top10-item">
+          <div class="top10-num sig-positive">6</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">NPS hit an all-time high of 74 — and the promoter majority is growing</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCE0F5;color:#004987">NPS</span>
+                <span class="top10-period">Q3 2022 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">NPS has trended 67 → 62 → 72 → 72 → 74 since Q3 2022. Promoters now represent 81% of respondents. The Q2 2024 dip to 62 appears to have been a temporary outlier, not a trend. Crossing 80 (Exceptional tier) is achievable in 2026 if Digital and Chat recover, since dissatisfied members in those channels directly suppress NPS.</div>
           </div>
-          <div class="insight-title">Three tactics that lift all email response rates</div>
-          <div class="insight-body">
-            <strong>1. Subject line:</strong> "Quick question about your recent visit" outperforms generic "We value your feedback" by 30&ndash;50%.<br/><br/>
-            <strong>2. Single question first:</strong> Show the rating scale in the email body before they click. Reduces friction dramatically.<br/><br/>
-            <strong>3. Mobile optimization:</strong> 60%+ of emails are opened on mobile. If the survey isn&rsquo;t thumb-friendly, they abandon it.
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-warning">7</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">The 26.2% overall response rate is a statistical illusion — the real blended rate is ~12%</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Response Rate</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">January's 26.2% headline is boosted by Mortgage's 83.3% response rate on just 6 delivered surveys. Remove Mortgage and the true blended rate across the remaining five channels is approximately 11–12%, consistent with prior months. Tracking response rate as a single aggregate number without channel context is misleading.</div>
           </div>
-          <div class="insight-action">&rarr; A/B test subject lines in HubSpot. Embed the first question directly in the email. Verify survey renders on iPhone.</div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-warning">8</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">New Member scores are highly volatile at current sample sizes — monthly results are unreliable</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">New Member</span>
+                <span class="top10-period">Jan 2025 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Monthly New Member scores range from 50% (Feb 2025, 2 happy out of 4) to 100% (Sep, Nov 2025). With 5–15 responses per month, a single unhappy member shifts the score by 7–20 points. The 12-month trailing average of 92.31% is statistically meaningful; the monthly score is not. Confidence interval is ±15 points at current volume.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-warning">9</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Phone experience had an unexplained Q2 2025 dip that warrants a root cause review</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Phone</span>
+                <span class="top10-period">Apr – May 2025</span>
+              </div>
+            </div>
+            <div class="top10-body">Phone dropped from 4.53/5 in January 2025 to 3.63–3.66/5 in April–May 2025 — a 0.9-point decline — then recovered to 4.36 by January 2026. The cause is unknown. Possible factors include seasonal call volume spikes, staffing changes, or a specific complaint driver. If it recurs in Q2 2026, it becomes a pattern worth escalating.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-info">10</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">The Digital survey is capturing in-branch experiences — creating a contaminated data signal</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#FDE8EA;color:#C41E3A">Digital</span>
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Two of four positive Digital comments in January describe in-person branch visits at the Surprise location and an in-branch account setup — interactions that have nothing to do with the website or app. If this is a recurring pattern in the pop-up survey, Digital's satisfaction score is artificially inflated by branch goodwill, masking the true digital experience quality.</div>
+          </div>
         </div>
 
       </div>
     </div>
   </div>
 
-  <!-- JOURNEY MOMENTS -->
-  <div class="section-label">Journey Moments</div>
-  <div class="row-full">
-    <div class="card">
-      <span class="chart-period-chip">January 2026</span>
-      <div class="card-title">Are members happy at the moments that matter most?</div>
-      <div class="card-subtitle">CSAT satisfaction at key member milestones — January 2026 (% of members marking &ldquo;Happy&rdquo;)</div>
-      <div class="chart-wrap" style="height:200px">
-        <canvas id="journeyChart"></canvas>
-      </div>
-    </div>
+  </div><!-- /page-dashboard -->
+
+  <!-- ═══ PAGE: MEMBER FOLLOW-UPS ═══ -->
+  <div id="page-voices" class="page-content" style="display:none">
+
+  <!-- SUB-PAGE TOGGLE -->
+  <div class="subpage-chips">
+    <button class="subpage-chip active" data-sub="queue">Member Outreach Queue</button>
+    <button class="subpage-chip" data-sub="voices">Member Voices</button>
   </div>
 
-  <!-- AI ANALYSIS -->
-  <div class="section-label">AI Analysis</div>
-  <div class="row-full">
-    <div class="card">
-      <div class="ai-header">
-        <div class="ai-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-          </svg>
-        </div>
-        <div class="ai-header-text">
-          <h3>What should we focus on right now?</h3>
-          <p>AI-generated analysis of January 2026 data &nbsp;&middot;&nbsp; Prioritized by member impact</p>
-        </div>
-      </div>
-      <div class="insights-grid">
-
-        <div class="insight-card pri-critical">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Critical Priority
-          </div>
-          <div class="insight-title">Digital &amp; Chat are in crisis</div>
-          <div class="insight-body">Digital satisfaction is 51.9% — the worst performing channel by far. Chat scores 2.50/5 stars. Both are dragging the overall MX score below the "Exceeds" target. Top complaints: login failures, Autopilot bot being unhelpful, mobile app balance display issues, and too many pop-ups.</div>
-          <div class="insight-action">&rarr; Audit Autopilot chat flows immediately. Fix login/app bugs before next report cycle.</div>
-        </div>
-
-        <div class="insight-card pri-warning">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Watch Closely
-          </div>
-          <div class="insight-title">MX is recovering &mdash; but slowly</div>
-          <div class="insight-body">The score dipped to a low of 2.56 in February 2025 — the only time it fell into "Mixed" territory. The current 3.56 represents a full-year recovery (+0.38 since Dec 2025), but it still sits 0.20 points below the "Exceeds Expectations" target of 3.76. The trend is positive but fragile.</div>
-          <div class="insight-action">&rarr; Investigate root cause of Feb 2025 collapse. Confirm it won't recur.</div>
-        </div>
-
-        <div class="insight-card pri-positive">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Leverage This
-          </div>
-          <div class="insight-title">Branch &amp; Loan are best-in-class</div>
-          <div class="insight-body">Branch satisfaction hit 98.95% in January and New Loan reached 100% — both in the Exceptional band. Verbatim feedback highlights specific staff members by name (Liliana Arvizu, Carole Grady, Debra Baker). These channels represent a proven model of member-facing excellence.</div>
-          <div class="insight-action">&rarr; Document what makes branch/loan exceptional. Apply learnings to digital channels.</div>
-        </div>
-
-        <div class="insight-card pri-info">
-          <div class="insight-pri">
-            <svg width="10" height="10" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Opportunity
-          </div>
-          <div class="insight-title">NPS at all-time high of 74</div>
-          <div class="insight-body">NPS jumped to 74 in Q1 2026 — the highest score in the dataset (since Q3 2022). The Exceeds threshold recently moved up to 70 and Exceptional to 80, making this a strong "Exceeds" result. However, the response rate is only 9.1%, meaning the score reflects a vocal minority (739 respondents).</div>
-          <div class="insight-action">&rarr; Increase NPS survey response rate to improve statistical confidence. Target 15%+.</div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- OUTREACH QUEUE -->
+  <!-- SUB-PAGE: OUTREACH QUEUE -->
+  <div id="sub-queue">
   <div class="section-label">Member Outreach Queue</div>
   <div class="row-full">
     <div class="card">
@@ -1032,7 +1362,80 @@
     </div>
   </div>
 
-  <!-- MEMBER VOICES -->
+  </div><!-- /sub-queue -->
+
+  <!-- SUB-PAGE: MEMBER VOICES TABLE -->
+  <div id="sub-voices" style="display:none">
+  <div class="section-label">Member Voices</div>
+  <div class="row-full">
+    <div class="card">
+      <div class="ai-header">
+        <div class="ai-icon" style="background:linear-gradient(135deg,#004987,#1A6BA0)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="ai-header-text">
+          <h3>All Member Comments &mdash; January 2026</h3>
+          <p>Every survey response with open-text feedback, sorted newest first &nbsp;&middot;&nbsp; Filter by channel below</p>
+        </div>
+      </div>
+      <div class="mv-filter-row" id="mvFilterRow"></div>
+      <table class="mv-table">
+        <thead>
+          <tr>
+            <th style="width:110px">Date</th>
+            <th style="width:110px">Channel</th>
+            <th style="width:150px">Member</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody id="mvTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+  </div><!-- /sub-voices -->
+
+  </div><!-- /page-voices -->
+
+  <!-- ═══ PAGE: ASK AI ═══ -->
+  <div id="page-askai" class="page-content" style="display:none">
+
+  <div class="section-label">Ask AI</div>
+  <div class="ask-ai-layout">
+
+    <!-- Sidebar: suggested questions -->
+    <div class="ask-ai-sidebar">
+      <div class="card" style="padding:18px">
+        <div class="ask-ai-sidebar-label">Suggested Questions</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">
+          <button class="ask-ai-suggestion" data-q="What is the overall MX Score?">What is the overall MX Score?</button>
+          <button class="ask-ai-suggestion" data-q="How is Digital performing?">How is Digital performing?</button>
+          <button class="ask-ai-suggestion" data-q="What's the NPS trend over time?">What's the NPS trend over time?</button>
+          <button class="ask-ai-suggestion" data-q="Which channels are Exceptional?">Which channels are Exceptional?</button>
+          <button class="ask-ai-suggestion" data-q="What are members saying about Branch?">What are members saying about Branch?</button>
+          <button class="ask-ai-suggestion" data-q="Which staff members are mentioned by name?">Which staff are mentioned by name?</button>
+          <button class="ask-ai-suggestion" data-q="What is the branch incentive payout?">What's the branch incentive payout?</button>
+          <button class="ask-ai-suggestion" data-q="What should we focus on to improve the score?">What's the worst-performing channel?</button>
+          <button class="ask-ai-suggestion" data-q="What is the survey response rate?">What is the survey response rate?</button>
+          <button class="ask-ai-suggestion" data-q="What are members saying about Chat?">What are members saying about Chat?</button>
+        </div>
+      </div>
+      <div class="card" style="padding:18px;font-size:11px;color:var(--muted);line-height:1.6">
+        <strong style="color:var(--text-2)">January 2026 data loaded.</strong><br/>
+        Ask about any channel score, trend, member comment, response rate, or staff recognition in this report.
+      </div>
+    </div>
+
+    <!-- Main chat area -->
+    <div class="ask-ai-chat-wrap">
+      <div class="ask-ai-messages" id="pageChatMessages"></div>
+      <div class="ask-ai-input-row">
+        <input id="pageChatInput" class="ask-ai-input" type="text" placeholder="e.g. How is Digital performing? What are members saying about Branch?" />
+        <button id="pageChatSend" class="ask-ai-send">Send</button>
+      </div>
+    </div>
+
+  </div>
+  </div><!-- /page-askai -->
 
   <div class="footer">
     Member Experience Measurement Engine Report &nbsp;&middot;&nbsp; Copper State Credit Union &nbsp;&middot;&nbsp; Data as of January 2026
@@ -1041,7 +1444,60 @@
 
 </div><!-- /page -->
 
+<!-- ═══ FLOATING CHATBOT ═══ -->
+<div id="floatChatPanel" class="float-chat-panel" style="display:none">
+  <div class="float-chat-header">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    <div class="float-chat-header-info">
+      <div class="float-chat-header-title">Ask the Data</div>
+      <div class="float-chat-header-sub">January 2026 MEME data loaded</div>
+    </div>
+    <button class="float-chat-close" id="floatChatClose">&times;</button>
+  </div>
+  <div class="float-chat-messages" id="floatChatMessages"></div>
+  <div class="float-chat-foot">
+    <input id="floatChatInput" class="float-chat-input" type="text" placeholder="Ask about any channel, score, or trend…" />
+    <button id="floatChatSend" class="float-chat-send">Send</button>
+  </div>
+</div>
+<button id="floatChatToggle" class="float-chat-btn" aria-label="Ask the Data" style="display:none">
+  <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 1.5C10.07 1.5 8.5 3.07 8.5 5C8.5 7.76 10.5 10.03 12 12C13.5 10.03 15.5 7.76 15.5 5C15.5 3.07 13.93 1.5 12 1.5Z" fill="#0078D4"/>
+    <path d="M22.5 12C22.5 10.07 20.93 8.5 19 8.5C16.24 8.5 13.97 10.5 12 12C13.97 13.5 16.24 15.5 19 15.5C20.93 15.5 22.5 13.93 22.5 12Z" fill="#50E6FF"/>
+    <path d="M12 22.5C13.93 22.5 15.5 20.93 15.5 19C15.5 16.24 13.5 13.97 12 12C10.5 13.97 8.5 16.24 8.5 19C8.5 20.93 10.07 22.5 12 22.5Z" fill="#FFB900"/>
+    <path d="M1.5 12C1.5 13.93 3.07 15.5 5 15.5C7.76 15.5 10.03 13.5 12 12C10.03 10.5 7.76 8.5 5 8.5C3.07 8.5 1.5 10.07 1.5 12Z" fill="#E74856"/>
+  </svg>
+</button>
+
 <script>
+// ── PASSWORD GATE ────────────────────────────────────────────────────────────
+(function() {
+  function unlock() {
+    document.getElementById('pwScreen').style.display    = 'none';
+    document.getElementById('mainContent').style.display = '';
+    document.getElementById('floatChatToggle').style.display = '';
+    sessionStorage.setItem('memeAuth', '1');
+  }
+  if (sessionStorage.getItem('memeAuth') === '1') { unlock(); return; }
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('pwInput');
+    const btn   = document.getElementById('pwBtn');
+    const err   = document.getElementById('pwError');
+    input.focus();
+    function attempt() {
+      if (input.value.trim().toLowerCase() === 'meme') {
+        unlock();
+      } else {
+        err.textContent = 'Incorrect password — please try again.';
+        input.value = '';
+        input.focus();
+      }
+    }
+    btn.addEventListener('click', attempt);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+  });
+})();
+
 const NAVY   = '#004987';  // Copper State Blue
 const COPPER = '#B87333';  // Copper State Metallic Copper
 const GREEN  = '#78BE21';  // Copper State Green (Brand)
@@ -1081,9 +1537,9 @@ const channels = [
   { name:'New Loan',        score:100.00, tier:'Exceptional', color:GREEN,   note:'% Happy (14/14)',             delta: 0,     deltaDir:'flat' },
   { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',           delta:-1.44,   deltaDir:'down' },
   { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',         delta: null,   deltaDir:'na'   },
-  { name:'Chat',       score:34.62,  tier:'Mixed',       color:ORANGE, note:'Avg ★ 2.50/5',          delta: null,   deltaDir:'na'   },
+  { name:'Chat',       score:2.50,   tier:'Mixed',       color:ORANGE, note:'26 responses · Talkdesk post-chat',  delta: null,  deltaDir:'na',  unit:'/5', barPct:50.0  },
   { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',           delta:+3.95,   deltaDir:'up'   },
-  { name:'Phone',      score:82.72,  tier:'Exceeds',     color:BLUE,   note:'Avg ★ 4.36/5',          delta:+0.10,   deltaDir:'up',  deltaLabel:'★ +0.10' },
+  { name:'Phone',      score:4.36,   tier:'Exceeds',     color:BLUE,   note:'301 responses · Solution Center',    delta:+0.10,  deltaDir:'up',  deltaLabel:'★ +0.10', unit:'/5', barPct:87.2 },
   { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)',          delta:-10.61,  deltaDir:'down' },
 ];
 
@@ -1091,13 +1547,6 @@ const responseChannels = ['NPS','Phone','Digital','Branch','Chat','New Loan','Ne
 const responseCounts   = [739,301,106,95,26,15,13,5];
 const responseColors   = [NAVY,AMBER,RED,GREEN,ORANGE,'#00A3E0',BLUE,AMBER];
 
-const journeyChannels = ['New Loan','New Member','Mortgage'];
-const journeyScores   = [100,92.31,80.0];
-const journeyThresholds = {
-  effective:   [80,80,80],
-  exceeds:     [90,90,90],
-  exceptional: [95,95,95],
-};
 
 function tierBadgeHtml(tier) {
   const map = {
@@ -1121,17 +1570,19 @@ channels.forEach(ch => {
     const lbl = ch.deltaLabel || `${ch.delta > 0 ? '+' : ''}${ch.delta.toFixed(2)} pts`;
     deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
   }
-  const unit = ch.unit !== undefined ? ch.unit : '%';
+  const unit       = ch.unit !== undefined ? ch.unit : '%';
+  const barPct     = ch.barPct !== undefined ? ch.barPct : ch.score;
+  const dispScore  = unit === '/5' ? ch.score.toFixed(2) : ch.score.toFixed(1);
   const labelColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.95)';
   const labelShadow = ch.color === '#FFC845' ? 'none' : '0 0 5px rgba(0,0,0,0.55)';
   const scoreColor = ch.color === '#FFC845' ? '#7A5800' : ch.color;
   row.innerHTML = `
     <div class="ch-name">${ch.name}</div>
     <div class="ch-bar-track">
-      <div class="ch-bar-fill" style="width:${ch.score}%;background:${ch.color}"></div>
-      <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${ch.score.toFixed(1)}${unit} &nbsp;${ch.tier}</span>
+      <div class="ch-bar-fill" style="width:${barPct}%;background:${ch.color}"></div>
+      <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${dispScore}${unit} &nbsp;${ch.tier}</span>
     </div>
-    <div class="ch-score" style="color:${scoreColor}">${ch.score.toFixed(1)}${unit}</div>
+    <div class="ch-score" style="color:${scoreColor}">${dispScore}${unit}</div>
     <div class="ch-note">${ch.note}</div>
     ${deltaHtml}
   `;
@@ -1139,69 +1590,149 @@ channels.forEach(ch => {
 });
 
 // NPS + MX Score Chart (dual axis, monthly x-axis)
-new Chart(document.getElementById('npsChart').getContext('2d'), {
-  type:'line',
-  data:{
-    labels:mesLabels,
-    datasets:[
-      {
-        label:'NPS Score', data:npsMonthly, yAxisID:'y',
-        borderColor:NAVY, backgroundColor:NAVY+'18', borderWidth:2.5,
-        fill:true, tension:0.3, spanGaps:true,
-        pointRadius: ctx => ctx.raw===null ? 0 : (ctx.dataIndex===36 ? 7 : 4),
-        pointBackgroundColor: ctx => ctx.dataIndex===36 ? BLUE : NAVY,
-        pointBorderColor:'#fff', pointBorderWidth:2, order:1,
-      },
-      {
-        label:'MX Score', data:mesScores, yAxisID:'y2',
-        borderColor:'#B87333', borderWidth:2.5, borderDash:[6,3],
-        fill:false, tension:0.3,
-        pointRadius: ctx => ctx.dataIndex===36 ? 7 : 2,
-        pointBackgroundColor:'#B87333', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
-      },
-      { label:'Exceptional', data:npsExceptional, yAxisID:'y', borderColor:GREEN+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:4 },
-      { label:'Exceeds',     data:npsExceeds,     yAxisID:'y', borderColor:BLUE+'60',  borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:3 },
-      { label:'Effective',   data:npsEffective,   yAxisID:'y', borderColor:AMBER+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:2 },
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    interaction:{ mode:'index', intersect:false },
-    plugins:{
-      legend:{ display:false },
-      tooltip:{ callbacks:{ label: ctx => {
-        if (ctx.dataset.label==='NPS Score') return ` NPS: ${ctx.parsed.y}`;
-        if (ctx.dataset.label==='MX Score') return ctx.raw===null ? null : ` MX Score: ${Number(ctx.raw).toFixed(2)}`;
-        return ` ${ctx.dataset.label}: ${ctx.parsed.y}`;
-      }}}
+let npsChart = null;
+const npsRanges = {
+  'all':   { start: 0,  end: 37 },
+  '25-26': { start: 24, end: 37 },
+  '24':    { start: 12, end: 24 },
+  '23':    { start: 0,  end: 12 },
+};
+
+function buildNpsChart(rangeKey) {
+  const r = npsRanges[rangeKey] || npsRanges['all'];
+  const s = r.start, e = r.end;
+  const N = e - s - 1;
+  const labels = mesLabels.slice(s, e);
+  const nps    = npsMonthly.slice(s, e);
+  const mx     = mesScores.slice(s, e);
+  const eff    = npsEffective.slice(s, e);
+  const exc    = npsExceeds.slice(s, e);
+  const excp   = npsExceptional.slice(s, e);
+  if (npsChart) { npsChart.destroy(); npsChart = null; }
+  npsChart = new Chart(document.getElementById('npsChart').getContext('2d'), {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'NPS Score', data:nps, yAxisID:'y',
+          borderColor:NAVY, backgroundColor:NAVY+'18', borderWidth:2.5,
+          fill:true, tension:0.3, spanGaps:true,
+          pointRadius: ctx => ctx.raw===null ? 0 : (ctx.dataIndex===N ? 7 : 4),
+          pointBackgroundColor: ctx => ctx.dataIndex===N ? BLUE : NAVY,
+          pointBorderColor:'#fff', pointBorderWidth:2, order:1,
+        },
+        {
+          label:'MX Score', data:mx, yAxisID:'y2',
+          borderColor:'#B87333', borderWidth:2.5, borderDash:[6,3],
+          fill:false, tension:0.3,
+          pointRadius: ctx => ctx.dataIndex===N ? 7 : 2,
+          pointBackgroundColor:'#B87333', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
+        },
+        { label:'Exceptional', data:excp, yAxisID:'y', borderColor:GREEN+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:4 },
+        { label:'Exceeds',     data:exc,  yAxisID:'y', borderColor:BLUE+'60',  borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:3 },
+        { label:'Effective',   data:eff,  yAxisID:'y', borderColor:AMBER+'60', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false, order:2 },
+      ]
     },
-    scales:{
-      x:{ grid:{ display:false }, ticks:{ font:{ size:10 }, maxRotation:45, color:MUTED } },
-      y:  { min:50, max:90, position:'left',  grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } },
-      y2: { min:2.0, max:4.5, position:'right', grid:{ display:false }, ticks:{ font:{ size:10 }, color:'#B87333', callback: v => v.toFixed(1) } }
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:'index', intersect:false },
+      plugins:{
+        legend:{ display:false },
+        tooltip:{ callbacks:{ label: ctx => {
+          if (ctx.dataset.label==='NPS Score') return ` NPS: ${ctx.parsed.y}`;
+          if (ctx.dataset.label==='MX Score') return ctx.raw===null ? null : ` MX Score: ${Number(ctx.raw).toFixed(2)}`;
+          return ` ${ctx.dataset.label}: ${ctx.parsed.y}`;
+        }}}
+      },
+      scales:{
+        x:{ grid:{ display:false }, ticks:{ font:{ size:10 }, maxRotation:45, color:MUTED } },
+        y:  { min:50, max:90, position:'left',  grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } },
+        y2: { min:2.0, max:4.5, position:'right', grid:{ display:false }, ticks:{ font:{ size:10 }, color:'#B87333', callback: v => v.toFixed(1) } }
+      }
     }
-  }
-});
+  });
+}
+
+buildNpsChart('all');
 
 
 // Response Rate Chart
 // ── SURVEY TILES + MEMBER VOICES ────────────────────────────────────────────
 const surveyTileData = [
-  { key:'mortgage', name:'Mortgage',   responses:5,   rate:'83.3%', method:'Email',           desc:'Sent on receipt of funding list',       color:AMBER, textColor:'#5A3F00', bg:'#FFF5CC' },
-  { key:'newmbr',   name:'New Member', responses:13,  rate:'29.5%', method:'Email',           desc:'Sent 3–5 days after account opening',   color:BLUE,  textColor:'#fff',    bg:'#CCF0FF' },
-  { key:'phone',    name:'Phone',      responses:301, rate:'14.7%', method:'Recorded in-call',desc:'Solution Center only',                  color:BLUE,  textColor:'#fff',    bg:'#CCF0FF' },
-  { key:'branch',   name:'Branch',     responses:95,  rate:'11.2%', method:'Email/Text',      desc:'Sent day after branch visit',           color:GREEN, textColor:'#1a3800', bg:'#E6F5CC' },
-  { key:'loan',     name:'New Loan',   responses:14,  rate:'9.5%',  method:'Email',           desc:'Sent 1–3 days post-funding',            color:GREEN, textColor:'#1a3800', bg:'#E6F5CC' },
-  { key:'nps',      name:'NPS',        responses:739, rate:'9.1%',  method:'Email',           desc:'Quarterly, random 25% of members',      color:NAVY,  textColor:'#fff',    bg:'#CCE0F5' },
+  { key:'nps',      name:'NPS',             responses:739,  rate:'9.1%',  method:'Email',               desc:'Quarterly, random 25% of members',    color:NAVY,   textColor:'#fff',    bg:'#CCE0F5' },
+  { key:'rr',       name:'Response Rate',   responses:1167, rate:'26.2%', method:'6 channels combined', desc:'All survey channels — Jan 2026',       color:BLUE,   textColor:'#fff',    bg:'#CCF0FF' },
+  { key:'loan',     name:'New Loan',        responses:14,   rate:'9.5%',  method:'Email',               desc:'Sent 1–3 days post-funding',           color:GREEN,  textColor:'#1a3800', bg:'#E6F5CC' },
+  { key:'newmbr',   name:'New Member',      responses:13,   rate:'29.5%', method:'Email',               desc:'Sent 3–5 days after account opening',  color:BLUE,   textColor:'#fff',    bg:'#CCF0FF' },
+  { key:'mortgage', name:'Mortgage',        responses:5,    rate:'83.3%', method:'Email',               desc:'Sent on receipt of funding list',      color:AMBER,  textColor:'#5A3F00', bg:'#FFF5CC' },
+  { key:'chat',     name:'Chat',            responses:26,   rate:'—',     method:'Post-chat (Talkdesk)', desc:'Autopilot + agent-fulfilled chats',    color:ORANGE, textColor:'#fff',    bg:'#F3F4F6' },
+  { key:'branch',   name:'Branch',          responses:95,   rate:'11.2%', method:'Email/Text',          desc:'Sent day after branch visit',          color:GREEN,  textColor:'#1a3800', bg:'#E6F5CC' },
+  { key:'phone',    name:'Phone',           responses:301,  rate:'14.7%', method:'Recorded in-call',    desc:'Solution Center only',                 color:BLUE,   textColor:'#fff',    bg:'#CCF0FF' },
+  { key:'digital',  name:'Digital',         responses:106,  rate:'—',     method:'Pop-up / OLB banner', desc:'copperstatecu.org + online banking',   color:RED,    textColor:'#fff',    bg:'#FDE8EA' },
 ];
 
 const memberVoicesData = [
-  { quote:"Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly.", name:"Susan Beauregard", channel:"loan",     date:"Jan 28, 2026" },
-  { quote:"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!", name:"Renee Banke", channel:"newmbr",  date:"Jan 22, 2026" },
-  { quote:"Eric, Mary and the team were very professional, friendly, patient and communicated all of the steps clearly so we could understand everything.", name:"Michaelson Martin", channel:"mortgage", date:"Jan 15, 2026" },
+  // New Loan
+  { quote:"Stephanie and Sierra made it so very easy for us. They were thorough, professional and friendly throughout the entire process.",                                    name:"Member",              channel:"loan",     date:"Jan 30, 2026" },
+  { quote:"Exceptional service from start to finish. Knowledgeable, friendly and very pleasant to work with.",                                                                name:"Member",              channel:"loan",     date:"Jan 27, 2026" },
+  { quote:"Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly.",          name:"Susan Beauregard",    channel:"loan",     date:"Jan 24, 2026" },
+  { quote:"Anthony was very knowledgeable and professional.",                                                                                                                  name:"Member",              channel:"loan",     date:"Jan 22, 2026" },
+  { quote:"Friendly service, quick service and very convenient. Couldn't have asked for better customer service.",                                                            name:"Member",              channel:"loan",     date:"Jan 20, 2026" },
+  { quote:"Carol explained the loan process and guided us through it — easy and quick to fund.",                                                                              name:"Member",              channel:"loan",     date:"Jan 17, 2026" },
+  { quote:"She was very informative, very quick to answer my questions and super nice to work with.",                                                                         name:"Member",              channel:"loan",     date:"Jan 14, 2026" },
+  { quote:"She was personable which made complex topics easier to understand.",                                                                                                name:"Member",              channel:"loan",     date:"Jan 10, 2026" },
+  { quote:"Anthony was great to work with! Very proficient and professional.",                                                                                                 name:"Member",              channel:"loan",     date:"Jan 7, 2026"  },
+  { quote:"I Was Treated Very Well. The Loan Was Processed Very Quickly. Thank You.",                                                                                         name:"Member",              channel:"loan",     date:"Jan 5, 2026"  },
+  { quote:"Pleasant, informative — overall good experience.",                                                                                                                  name:"Member",              channel:"loan",     date:"Jan 3, 2026"  },
+  // New Member
+  { quote:"Yesi Dang went above and beyond to make sure I was well taken care of!",                                                                                           name:"Member",              channel:"newmbr",  date:"Jan 29, 2026" },
+  { quote:"Everyone I spoke with was friendly, helpful, and made it feel like I was not just a number.",                                                                      name:"Member",              channel:"newmbr",  date:"Jan 25, 2026" },
+  { quote:"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!",                                              name:"Renee Banke",         channel:"newmbr",  date:"Jan 22, 2026" },
+  { quote:"Johanna was excellent and explained everything so clearly — I felt confident in every step.",                                                                       name:"Member",              channel:"newmbr",  date:"Jan 20, 2026" },
+  { quote:"The process was quick, efficient, and easy.",                                                                                                                       name:"Member",              channel:"newmbr",  date:"Jan 14, 2026" },
+  { quote:"Customer service was exceptional.",                                                                                                                                  name:"Member",              channel:"newmbr",  date:"Jan 8, 2026"  },
+  // Mortgage
+  { quote:"Eric, Mary and the team were very professional, friendly, patient and communicated all of the steps clearly so we could understand everything.",                   name:"Michaelson Martin",   channel:"mortgage", date:"Jan 28, 2026" },
+  { quote:"I had a great experience refinancing with Copper State Credit Union. My loan officer, Eric, was very responsive and helpful throughout the whole process.",        name:"Member",              channel:"mortgage", date:"Jan 15, 2026" },
+  { quote:"Simple. Good communication with my rep. Great guy.",                                                                                                                name:"Member",              channel:"mortgage", date:"Jan 9, 2026"  },
+  // Branch
+  { quote:"Carolyn is my go-to person at your branch. She is always wonderful to deal with and truly deserves a raise!",                                                      name:"Member",              channel:"branch",  date:"Jan 31, 2026" },
+  { quote:"Skylar is always so helpful and takes care of every detail.",                                                                                                       name:"Member",              channel:"branch",  date:"Jan 26, 2026" },
+  { quote:"Eileen is always so pleasant, helpful, and professional.",                                                                                                          name:"Member",              channel:"branch",  date:"Jan 23, 2026" },
+  { quote:"Great service and everybody's always friendly.",                                                                                                                    name:"Member",              channel:"branch",  date:"Jan 19, 2026" },
+  { quote:"All the staff are awesome! I see them weekly and they are so friendly.",                                                                                            name:"Member",              channel:"branch",  date:"Jan 13, 2026" },
+  { quote:"Jordon was very professional, pleasant, and knowledgeable.",                                                                                                        name:"Member",              channel:"branch",  date:"Jan 6, 2026"  },
+  // Phone
+  { quote:"Thomas was very helpful and resolved my issue quickly — very friendly too.",                                                                                        name:"Member",              channel:"phone",   date:"Jan 28, 2026" },
+  { quote:"Harmony is a delight to work with. She answers my questions every time — thank you so much, Harmony!",                                                             name:"Member",              channel:"phone",   date:"Jan 21, 2026" },
+  { quote:"Representative was very helpful, very knowledgeable, and very pleasant to talk to. Thank you.",                                                                    name:"Member",              channel:"phone",   date:"Jan 16, 2026" },
+  { quote:"Just very nice and professional, like all of them. Thank you.",                                                                                                     name:"Member",              channel:"phone",   date:"Jan 11, 2026" },
+  // Chat
+  { quote:"Able to answer directly what I needed.",                                                                                                                            name:"Member",              channel:"chat",    date:"Jan 18, 2026" },
+  // Digital
+  { quote:"The interfaces to the banking site have improved so much over the years!!",                                                                                         name:"Member",              channel:"digital", date:"Jan 27, 2026" },
+  { quote:"I went into the Surprise location to open a bank account and Johanna was so helpful — she walked me through everything online too.",                               name:"Member",              channel:"digital", date:"Jan 22, 2026" },
+  { quote:"Gabriela helped me reorganize my trust and accounts on January 15th. She did a great job navigating the new system.",                                              name:"Member",              channel:"digital", date:"Jan 15, 2026" },
+  { quote:"Since day 1 — perfect performance.",                                                                                                                                name:"Member",              channel:"digital", date:"Jan 12, 2026" },
 ];
 
-let activeVoiceFilter = null;
+let activeVoiceFilter = 'nps';
+let voiceSortOrder = 'desc';
+
+function selectTile(key) {
+  activeVoiceFilter = key;
+  document.querySelectorAll('.survey-tile').forEach(el => {
+    const td = surveyTileData.find(x => x.key === el.dataset.key);
+    const on = el.dataset.key === key;
+    el.style.background = on ? td.color : '';
+    el.style.color      = on ? td.textColor : '';
+    el.style.setProperty('--st-muted', on
+      ? (td.textColor === '#fff' ? 'rgba(255,255,255,.7)' : 'rgba(0,0,0,.5)')
+      : 'var(--muted)');
+  });
+  if (channelHistoryData[key]) showChannelTab(key);
+  renderVoices();
+}
 
 function renderSurveyTiles() {
   const container = document.getElementById('surveyTiles');
@@ -1215,43 +1746,34 @@ function renderSurveyTiles() {
         <span class="st-name">${t.name}</span>
         <span class="st-rate">${t.rate}</span>
       </div>
-      <div class="st-responses">${t.responses.toLocaleString()} responses</div>
-      <div class="st-method">${t.method} &nbsp;·&nbsp; ${t.desc}</div>
+      <div class="st-responses"><strong>${t.responses.toLocaleString()}</strong> responses</div>
     `;
-    tile.addEventListener('click', () => {
-      if (activeVoiceFilter === t.key) {
-        activeVoiceFilter = null;
-        document.querySelectorAll('.survey-tile').forEach(el => {
-          el.style.background = '';
-          el.style.color = '';
-          el.style.removeProperty('--st-muted');
-        });
-      } else {
-        activeVoiceFilter = t.key;
-        document.querySelectorAll('.survey-tile').forEach(el => {
-          const td = surveyTileData.find(x => x.key === el.dataset.key);
-          const on = el.dataset.key === t.key;
-          el.style.background = on ? t.color : '';
-          el.style.color      = on ? t.textColor : '';
-          el.style.setProperty('--st-muted', on ? (t.textColor === '#fff' ? 'rgba(255,255,255,.7)' : 'rgba(0,0,0,.5)') : 'var(--muted)');
-        });
-      }
-      renderVoices();
-    });
+    tile.addEventListener('click', () => selectTile(t.key));
     container.appendChild(tile);
   });
+}
+
+function parseVoiceDate(dateStr) {
+  return new Date(dateStr).getTime();
 }
 
 function renderVoices() {
   const scroll    = document.getElementById('voicesScroll');
   const subtitle  = document.getElementById('voicesSubtitle');
-  const filtered  = activeVoiceFilter ? memberVoicesData.filter(v => v.channel === activeVoiceFilter) : memberVoicesData;
+  const filtered  = memberVoicesData
+    .filter(v => v.channel === activeVoiceFilter)
+    .slice()
+    .sort((a, b) =>
+      voiceSortOrder === 'desc'
+        ? parseVoiceDate(b.date) - parseVoiceDate(a.date)
+        : parseVoiceDate(a.date) - parseVoiceDate(b.date)
+    );
   const tileInfo  = surveyTileData.find(t => t.key === activeVoiceFilter);
-  const label     = tileInfo ? tileInfo.name : 'All channels';
-  subtitle.textContent = `${label} · ${filtered.length} voice${filtered.length !== 1 ? 's' : ''} · Sorted by most recent`;
+  const label     = tileInfo ? tileInfo.name : '';
+  subtitle.textContent = `${label} · ${filtered.length} voice${filtered.length !== 1 ? 's' : ''}`;
   scroll.innerHTML = '';
   if (!filtered.length) {
-    scroll.innerHTML = '<div class="voices-empty">No member voices on record for this channel.</div>';
+    scroll.innerHTML = '<div class=”voices-empty” style=”grid-column:1/-1”>No member voices on record for this channel.</div>';
     return;
   }
   filtered.forEach(v => {
@@ -1260,50 +1782,26 @@ function renderVoices() {
     card.className = 'voice-card happy';
     card.style.borderLeftColor = ti?.color || '#ccc';
     card.innerHTML = `
-      <div class="voice-quote">“${v.quote}”</div>
-      <div class="voice-meta">
-        <span class="voice-channel loan" style="background:${ti?.bg||'#eee'};color:${ti?.color||'#999'}">${ti?.name||v.channel}</span>
-        <span class="voice-name">${v.name}</span>
-        <span style="font-size:10px;color:var(--muted);margin-left:auto">${v.date}</span>
+      <div class=”voice-quote”>”${v.quote}”</div>
+      <div class=”voice-meta”>
+        <span class=”voice-channel” style=”background:${ti?.bg||'#eee'};color:${ti?.color||'#999'}”>${ti?.name||v.channel}</span>
+        <span class=”voice-name”>${v.name}</span>
+        <span style=”font-size:10px;color:var(--muted);margin-left:auto”>${v.date}</span>
       </div>
     `;
     scroll.appendChild(card);
   });
 }
 
-renderSurveyTiles();
-renderVoices();
-
-// (Response Rate Trend Chart removed — replaced by survey tiles + member voices section)
-
-// Journey Chart
-new Chart(document.getElementById('journeyChart').getContext('2d'), {
-  type:'bar',
-  data:{
-    labels:journeyChannels,
-    datasets:[
-      {
-        label:'Jan 2026 Score', data:journeyScores,
-        backgroundColor:[GREEN+'CC',BLUE+'CC',AMBER+'CC'],
-        borderColor:[GREEN,BLUE,AMBER], borderWidth:2, borderRadius:6, order:2,
-      },
-      { label:'Exceptional (95%)', data:journeyThresholds.exceptional, type:'line', borderColor:GREEN+'80', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:1 },
-      { label:'Exceeds (90%)',     data:journeyThresholds.exceeds,     type:'line', borderColor:BLUE+'80',  borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:1 },
-      { label:'Effective (80%)',   data:journeyThresholds.effective,   type:'line', borderColor:AMBER+'80', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false, order:1 },
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{
-      legend:{ position:'top', labels:{ usePointStyle:true, font:{ size:10 }, color:MUTED, padding:12 } },
-      tooltip:{ callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` } }
-    },
-    scales:{
-      x:{ grid:{ display:false }, ticks:{ font:{ size:12, weight:'600' }, color:MUTED } },
-      y:{ min:60, max:105, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED, callback: v => v+'%' } }
-    }
-  }
+document.querySelectorAll('.sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    voiceSortOrder = btn.dataset.sort;
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderVoices();
+  });
 });
+
 
 // ── CHANNEL TIMELINE (TABBED) ───────────────────────────────────────────────
 const allLabels13 = ["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"];
@@ -1396,6 +1894,7 @@ const channelHistoryData = {
 };
 
 let channelChart = null;
+let channelWindow = 'all';
 
 function buildDatasets(ch) {
   const N = ch.labels.length - 1;
@@ -1438,13 +1937,16 @@ function buildDatasets(ch) {
 
 function showChannelTab(key) {
   const ch = channelHistoryData[key];
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.ch===key));
+  const win = channelWindow === 'all' ? ch.labels.length : parseInt(channelWindow);
+  const start = Math.max(0, ch.labels.length - win);
+  const sliced = { ...ch, labels: ch.labels.slice(start), benchmarks: ch.benchmarks || [] };
+  if (ch.data)     sliced.data     = ch.data.slice(start);
+  if (ch.datasets) sliced.datasets = ch.datasets.map(d => ({ ...d, data: d.data.slice(start) }));
   document.getElementById('channelTimelineNote').textContent = ch.note || '';
-  document.getElementById('channelPeriodChip').textContent = ch.period || '';
   if (channelChart) { channelChart.destroy(); channelChart = null; }
   channelChart = new Chart(document.getElementById('channelTimelineChart').getContext('2d'), {
     type: 'line',
-    data: { labels: ch.labels, datasets: buildDatasets(ch) },
+    data: { labels: sliced.labels, datasets: buildDatasets(sliced) },
     options: {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
@@ -1469,11 +1971,231 @@ function showChannelTab(key) {
   });
 }
 
-document.getElementById('channelTabs').addEventListener('click', e => {
-  if (e.target.classList.contains('tab-btn')) showChannelTab(e.target.dataset.ch);
+renderSurveyTiles();
+requestAnimationFrame(() => {
+  const tilesCol  = document.getElementById('surveyTiles');
+  const rightCol  = document.getElementById('channelRightCol');
+  if (tilesCol && rightCol) {
+    rightCol.style.height = tilesCol.offsetHeight + 'px';
+  }
+  selectTile('nps');
 });
-showChannelTab('all');
 
+// ── CHATBOT ──────────────────────────────────────────────────────────────────
+const chatKB = [
+  { match: /\b(mx|meme|overall|composite|score)\b/i,
+    reply: "The overall MX Score for January 2026 is 3.56/5.00 — rated Effective. That's up +0.38 from December 2025 (3.18) and represents a full year of recovery from the February 2025 low of 2.56. To reach the Exceeds Expectations tier, the score needs to hit 3.76." },
+  { match: /\b(nps|net promoter|recommend)\b/i,
+    reply: "NPS hit an all-time high of 74 in Q1 2026 — rated Exceeds Expectations. 81% of respondents are Promoters and only 6.5% are Detractors. The trend since Q3 2022 is 67 → 62 → 72 → 72 → 74. The Exceptional threshold is 80, which is within reach if Digital and Chat improve." },
+  { match: /\b(digital|website|online banking|mobile app|olb|app)\b/i,
+    reply: "Digital is the lowest-performing channel at 51.89% — rated Off Track. It dropped sharply from ~69% when the new platform launched in early 2025 and is still 17 points below its pre-migration baseline. Top member complaints include login failures, Zelle issues, and the new platform being harder to navigate. At the current recovery rate, it could take another 6–12 months to return to baseline." },
+  { match: /\b(chat|autopilot|talkdesk|bot)\b/i,
+    reply: "Chat scored 2.50/5 in January 2026 — rated Mixed. This combines Autopilot (which scored 1.05–2.00/5 throughout 2025) and human agent chats (which scored 3.0–4.75/5). The Autopilot bot is the core problem — members say it's 'no help' and they abandon it for the branch. Separating Autopilot scores from agent scores would give a clearer picture." },
+  { match: /\b(branch|in-person|branches|location)\b/i,
+    reply: "Branch is the top-performing channel at 98.95% — Exceptional tier. It has held at or above 95% for 24 consecutive months, making it the most consistently excellent touchpoint in the portfolio. Members frequently name specific employees (Carolyn, Skylar, Eileen, Jordon). The branch experience is the operational model for the rest of the credit union." },
+  { match: /\b(phone|call|solution center|call center)\b/i,
+    reply: "Phone scored 4.36/5 in January 2026 — Exceeds Expectations. It dipped to 3.63/5 in Q2 2025 (April–May) but has since recovered. Members frequently name Harmony and Thomas. The in-call survey captures 14.7% of calls, all from the Solution Center. Expanding to other call types would improve data coverage." },
+  { match: /\b(new loan|loan experience|consumer loan)\b/i,
+    reply: "New Loan scored 100% in January 2026 — Exceptional. All 14 responding members said Happy. Member comments emphasize speed and ease: 'quick to fund,' 'easy process,' 'very convenient.' This channel consistently scores at or near Exceptional and is a strong differentiator. Anthony, Carol, Liliana, Stephanie, and Sierra are named positively." },
+  { match: /\b(new member|onboarding|account opening)\b/i,
+    reply: "New Member scored 92.31% in January 2026 — Exceeds Expectations. 12 of 13 respondents said Happy. Yesi Dang, Johanna, and Debbie are named specifically. Note that with only 5–15 responses per month, individual months are statistically volatile (range: 50%–100%). The 12-month trailing average is the more reliable metric." },
+  { match: /\b(mortgage|home loan|refinanc)\b/i,
+    reply: "Mortgage scored 80% YTD in January 2026 — Effective tier. 4 of 5 respondents were Happy. This channel is tracked YTD only, not monthly. The 83.3% response rate (5 of 6 surveys returned) is the highest of any channel and is driven by the survey being sent at a peak emotional moment — right after funding." },
+  { match: /\b(response rate|survey|participation|respond)\b/i,
+    reply: "The overall response rate is 26.2% across 1,167 responses from 11,168 delivered surveys — rated Exceeds Expectations. However, this is skewed by Mortgage's 83.3% rate on just 6 surveys. The true blended rate excluding Mortgage is approximately 11–12%. Individual channel rates: Mortgage 83.3%, New Member 29.5%, Phone 14.7%, Branch 11.2%, New Loan 9.5%, NPS 9.1%." },
+  { match: /\b(staff|employee|name|people|team)\b/i,
+    reply: "Named employees appear in 14 of 35 January 2026 member comments — and every named mention is positive. Employees called out by name: Harmony, Thomas, Carolyn, Skylar, Eileen, Jordon (Branch); Yesi Dang, Johanna, Debbie (New Member); Liliana, Anthony, Carol, Stephanie, Sierra (New Loan); Gabriela (Digital). Channels where members name staff consistently score higher." },
+  { match: /\b(trend|history|over time|past|month|year|2025|2024)\b/i,
+    reply: "Key trends: NPS has risen from 67 (Q3 2022) to 74 (Q1 2026). Digital collapsed from ~69% to 20% in early 2025 at platform launch and is recovering (now 51.89%). Phone dipped in Q2 2025 and recovered. MX Score hit a low of 2.56 in Feb 2025 and has recovered to 3.56. Branch has been at Exceptional tier consistently for 2+ years." },
+  { match: /\b(worst|lowest|bad|problem|issue|off.?track|crisis|concern)\b/i,
+    reply: "The two channels needing the most attention are Digital (51.89%, Off Track — still recovering from the platform migration) and Chat (2.50/5, Mixed — Autopilot is consistently below 2.0/5). Together they are the primary drag on the overall MX Score. Addressing Autopilot and completing the Digital recovery are the highest-leverage actions available." },
+  { match: /\b(best|top|highest|exceptional|strongest|leading)\b/i,
+    reply: "The top-performing channels in January 2026: New Loan (100%, Exceptional), Branch (98.95%, Exceptional), and Phone (4.36/5, Exceeds Expectations). Branch and New Loan are the most consistently excellent channels — Branch has been Exceptional for 24+ consecutive months. NPS at 74 is also at an all-time high." },
+  { match: /\b(incentive|payout|bonus|branch bonus)\b/i,
+    reply: "The Branch Incentive Payout for January 2026 is $125 per employee — the Exceptional tier (≥95% Happy responses). Branch scored 98.95% on 95 responses. The Exceeds tier pays $100 (≥90%) and anything below 80% receives no payout." },
+  { match: /\b(comment|voice|quote|said|feedback|verbatim)\b/i,
+    reply: "January 2026 has 35 member voice comments across 7 channels. Highlights include: 'Stephanie and Sierra made it so very easy for us' (New Loan), 'Yesi Dang went above and beyond' (New Member), 'Carolyn is my go-to person at your branch — she deserves a raise!' (Branch), 'Harmony is a delight to work with' (Phone). The Chat channel has only 1 positive comment; Digital has 4, two of which appear to describe in-branch visits." },
+];
+
+const chatGreeting = "Hi! I have January 2026 MEME data loaded. Ask me about any channel score, member comment themes, trends over time, response rates, or anything else in the report.";
+
+function chatAddMsg(text, role, containerId) {
+  const el = document.createElement('div');
+  el.className = 'chat-bubble ' + role;
+  el.textContent = text;
+  const container = document.getElementById(containerId);
+  container.appendChild(el);
+  container.scrollTop = container.scrollHeight;
+  return el;
+}
+
+function chatRespond(question, containerId) {
+  const typingEl = chatAddMsg('Thinking…', 'bot typing', containerId);
+  setTimeout(() => {
+    const q = question.toLowerCase();
+    const hit = chatKB.find(k => k.match.test(q));
+    typingEl.classList.remove('typing');
+    typingEl.textContent = hit
+      ? hit.reply
+      : "I don't have a specific answer for that in the January 2026 data. Try asking about a specific channel (Branch, Digital, Chat, Phone, NPS, New Loan, New Member, Mortgage), response rates, member comments, or overall trends.";
+    document.getElementById(containerId).scrollTop = 9999;
+  }, 600);
+}
+
+function initChatUI(inputId, btnId, containerId) {
+  chatAddMsg(chatGreeting, 'bot', containerId);
+  const input = document.getElementById(inputId);
+  const btn   = document.getElementById(btnId);
+  if (!input || !btn) return;
+  function send() {
+    const val = input.value.trim();
+    if (!val) return;
+    chatAddMsg(val, 'user', containerId);
+    input.value = '';
+    chatRespond(val, containerId);
+  }
+  btn.addEventListener('click', send);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Floating chat
+  initChatUI('floatChatInput', 'floatChatSend', 'floatChatMessages');
+  // Dedicated Ask AI page
+  initChatUI('pageChatInput', 'pageChatSend', 'pageChatMessages');
+
+  // Float panel toggle
+  const panel  = document.getElementById('floatChatPanel');
+  const toggle = document.getElementById('floatChatToggle');
+  const close  = document.getElementById('floatChatClose');
+  toggle.addEventListener('click', () => {
+    const open = panel.style.display !== 'none';
+    panel.style.display = open ? 'none' : '';
+    if (!open) document.getElementById('floatChatInput').focus();
+  });
+  close.addEventListener('click', () => { panel.style.display = 'none'; });
+
+  // Suggested question chips on Ask AI page
+  document.querySelectorAll('.ask-ai-suggestion').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.dataset.q;
+      chatAddMsg(q, 'user', 'pageChatMessages');
+      chatRespond(q, 'pageChatMessages');
+    });
+  });
+});
+
+// ── PAGE NAVIGATION ─────────────────────────────────────────────────────────
+document.querySelectorAll('.header-nav a[data-page]').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const page = e.currentTarget.dataset.page;
+    document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+    document.getElementById('page-' + page).style.display = '';
+    document.querySelectorAll('.header-nav a[data-page]').forEach(a => a.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    const floatBtn   = document.getElementById('floatChatToggle');
+    const floatPanel = document.getElementById('floatChatPanel');
+    if (page === 'askai') {
+      floatBtn.style.display   = 'none';
+      floatPanel.style.display = 'none';
+    } else {
+      floatBtn.style.display = '';
+    }
+  });
+});
+
+/* ── PERIOD DROPDOWNS ────────────────────────────────── */
+document.getElementById('npsPeriodSelect').addEventListener('change', e => {
+  buildNpsChart(e.target.value);
+});
+
+document.getElementById('chanHistPeriodSelect').addEventListener('change', e => {
+  channelWindow = e.target.value;
+  if (channelHistoryData[activeVoiceFilter]) showChannelTab(activeVoiceFilter);
+});
+
+/* ── SUB-PAGE CHIPS (Outreach Queue / Member Voices) ─── */
+document.querySelectorAll('.subpage-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.subpage-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const sub = chip.dataset.sub;
+    document.getElementById('sub-queue').style.display  = sub === 'queue'  ? '' : 'none';
+    document.getElementById('sub-voices').style.display = sub === 'voices' ? '' : 'none';
+    if (sub === 'voices') renderMVComments();
+  });
+});
+
+/* ── MEMBER VOICES FULL TABLE ─────────────────────────── */
+const mvChannels = [
+  { key: 'all',      label: 'All Channels' },
+  { key: 'loan',     label: 'New Loan'     },
+  { key: 'newmbr',   label: 'New Member'   },
+  { key: 'mortgage', label: 'Mortgage'     },
+  { key: 'branch',   label: 'Branch'       },
+  { key: 'phone',    label: 'Phone'        },
+  { key: 'chat',     label: 'Chat'         },
+  { key: 'digital',  label: 'Digital'      },
+];
+
+const mvChannelLabels = {
+  loan:     'New Loan',
+  newmbr:   'New Member',
+  mortgage: 'Mortgage',
+  branch:   'Branch',
+  phone:    'Phone',
+  chat:     'Chat',
+  digital:  'Digital',
+};
+
+let mvActiveChannel = 'all';
+
+function buildMVFilterChips() {
+  const row = document.getElementById('mvFilterRow');
+  if (!row || row.children.length) return;
+  mvChannels.forEach(ch => {
+    const btn = document.createElement('button');
+    btn.className = 'mv-chip' + (ch.key === 'all' ? ' active' : '');
+    btn.dataset.channel = ch.key;
+    btn.textContent = ch.label;
+    btn.addEventListener('click', () => {
+      mvActiveChannel = ch.key;
+      document.querySelectorAll('.mv-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderMVComments();
+    });
+    row.appendChild(btn);
+  });
+}
+
+function renderMVComments() {
+  buildMVFilterChips();
+  const tbody = document.getElementById('mvTableBody');
+  if (!tbody) return;
+
+  const data = memberVoicesData
+    .filter(v => mvActiveChannel === 'all' || v.channel === mvActiveChannel)
+    .slice()
+    .sort((a, b) => parseVoiceDate(b.date) - parseVoiceDate(a.date));
+
+  tbody.innerHTML = '';
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="mv-empty">No comments for this channel.</td></tr>';
+    return;
+  }
+  data.forEach(v => {
+    const label = mvChannelLabels[v.channel] || v.channel;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="mv-date-cell">${v.date}</td>
+      <td><span class="voice-channel ${v.channel}">${label}</span></td>
+      <td class="mv-member-cell">${v.name}</td>
+      <td class="mv-quote-cell">${v.quote}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
 </script>
 </body>
 </html>
