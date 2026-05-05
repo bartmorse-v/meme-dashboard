@@ -219,10 +219,18 @@
     /* ── CARD ───────────────────────────────────── */
     .card {
       background: var(--card); border-radius: var(--radius); padding: 22px 24px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow); position: relative;
     }
     .card-title    { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; line-height: 1.3; }
     .card-subtitle { font-size: 11px; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+    .chart-period-chip {
+      position: absolute; top: 14px; right: 16px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 10px;
+      font-size: 10px; font-weight: 600; color: var(--muted);
+      letter-spacing: .3px; white-space: nowrap;
+      display: flex; align-items: center; gap: 5px;
+    }
     .chart-wrap { position: relative; }
 
     /* ── LAYOUTS ────────────────────────────────── */
@@ -514,12 +522,6 @@
         </nav>
       </div>
     </div>
-    <div class="header-right">
-      <span class="period-badge">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        January 2026
-      </span>
-    </div>
   </div>
 
   <!-- KPI CARDS -->
@@ -578,6 +580,7 @@
   <div class="section-label">Would our members recommend us?</div>
   <div class="row-full">
     <div class="card">
+      <span class="chart-period-chip">Q3 '22 – Jan '26</span>
       <div class="card-title">Net Promoter Score &amp; MX Score &mdash; Quarterly Trend</div>
       <div class="card-subtitle">NPS tracks likelihood to recommend (left axis, quarterly Q3 2022&ndash;Q1 2026). MX Score is the composite of all 9 Experience Measures (right axis).</div>
       <div class="chart-wrap" style="height:290px">
@@ -610,6 +613,7 @@
   <div class="section-label">Channel Performance &mdash; January 2026</div>
   <div class="row-full">
     <div class="card">
+      <span class="chart-period-chip">January 2026</span>
       <div class="card-title">How is each channel performing?</div>
       <div class="card-subtitle">Jan 2026 satisfaction scores &mdash; ranked best to worst. Change column shows shift vs. previous period.</div>
       <div class="channel-bars" id="channelBars"></div>
@@ -632,6 +636,7 @@
   <div class="section-label">Channel Score History</div>
   <div class="row-full">
     <div class="card">
+      <span class="chart-period-chip" id="channelPeriodChip">Jan '25 – Jan '26</span>
       <div class="card-title">How has each channel trended over time?</div>
       <div class="card-subtitle">Click a channel tab to see its full score history with benchmark thresholds</div>
       <div class="tab-bar" id="channelTabs">
@@ -657,6 +662,7 @@
   <div class="section-label">Survey Health</div>
   <div style="display:grid;grid-template-columns:1fr 2fr;gap:var(--gap);margin-bottom:var(--gap);align-items:start">
     <div class="card">
+      <span class="chart-period-chip">January 2026</span>
       <div class="card-title">Are our surveys reaching members?</div>
       <div class="card-subtitle">Responses received by channel — January 2026</div>
       <div class="chart-wrap" style="height:240px">
@@ -664,6 +670,7 @@
       </div>
     </div>
     <div class="card">
+      <span class="chart-period-chip">Q1 '23 – Q1 '26</span>
       <div class="card-title">How is participation trending by channel and collection method?</div>
       <div class="card-subtitle">Response rate per survey channel — quarterly, Q1 2023 through Q1 2026 &nbsp;&middot;&nbsp; Color groups indicate collection method</div>
       <div class="chart-wrap" style="height:260px">
@@ -812,6 +819,7 @@
   <div class="section-label">Journey Moments</div>
   <div class="row-full">
     <div class="card">
+      <span class="chart-period-chip">January 2026</span>
       <div class="card-title">Are members happy at the moments that matter most?</div>
       <div class="card-subtitle">CSAT satisfaction at key member milestones — January 2026 (% of members marking &ldquo;Happy&rdquo;)</div>
       <div class="chart-wrap" style="height:200px">
@@ -1404,7 +1412,7 @@ const allLabels13 = ["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","O
 const channelHistoryData = {
   all: {
     label:'All Channels', unit:'%', yMin:0, yMax:105,
-    labels: allLabels13,
+    labels: allLabels13, period:"Jan '25 – Jan '26",
     benchmarks: [],
     note: "Jan 2025 – Jan 2026. Phone shown as (avg ★ ÷ 5) × 100 for comparability. NPS shown as-is; points plotted at quarter-end months.",
     datasets: [
@@ -1417,34 +1425,34 @@ const channelHistoryData = {
     ],
   },
   nps: {
-    label:'NPS Score', unit:'', color:NAVY, yMin:50, yMax:90,
+    label:'NPS Score', unit:'', color:NAVY, yMin:50, yMax:90, period:"Q3 '22 – Jan '26",
     labels:mesLabels, data:npsMonthly,
     benchmarks:[ {v:80,l:'Exceptional',c:GREEN}, {v:70,l:'Exceeds',c:BLUE}, {v:66,l:'Effective',c:AMBER} ],
     note:'Quarterly NPS survey — emailed to a randomized 25% of members each quarter. Points plotted at quarter-end months.'
   },
   rr: {
-    label:'Response Rate (%)', unit:'%', color:'#00A3E0', yMin:5, yMax:35,
+    label:'Response Rate (%)', unit:'%', color:'#00A3E0', yMin:5, yMax:35, period:"Jan '24 – Jan '26",
     labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     data:[16.0,23.0,25.6,20.5,21.11,20.98,22.99,24.0,23.81,21.76,21.79,17.07,20.33,17.33,16.25,13.53,12.09,12.62,13.21,14.58,13.95,15.51,16.48,15.18,26.24],
     benchmarks:[ {v:30,l:'Exceptional',c:GREEN}, {v:20,l:'Exceeds',c:BLUE}, {v:17,l:'Effective',c:AMBER} ],
     note:'Overall monthly response rate across all channels. Jan 2026 spike driven by high Mortgage response rate (83.3%).'
   },
   loan: {
-    label:'% Happy', unit:'%', color:'#78BE21', yMin:70, yMax:105,
+    label:'% Happy', unit:'%', color:'#78BE21', yMin:70, yMax:105, period:"Jan '24 – Jan '26",
     labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     data:[100,92.31,100,100,94.74,97.78,97.83,96.67,100,97.83,100,96.43,100,100,100,81.25,89.29,92.11,96.88,96.08,90.32,97.44,100,100,100],
     benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE}, {v:80,l:'Effective',c:AMBER} ],
     note:'Email survey sent 1–3 business days after loan funding.'
   },
   newmbr: {
-    label:'% Happy', unit:'%', color:BLUE, yMin:40, yMax:105,
+    label:'% Happy', unit:'%', color:BLUE, yMin:40, yMax:105, period:"Jan '25 – Jan '26",
     labels:["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     data:[88.46,50.00,88.24,100,90.91,90.91,96.15,94.44,100,95.45,100,93.75,92.31],
     benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:90,l:'Exceeds',c:BLUE}, {v:80,l:'Effective',c:AMBER} ],
     note:'Email survey sent 3–5 days after account opening. Data available from Jan 2025. Feb 2025 dip (50%) reflects very small sample.'
   },
   mortgage: {
-    label:'% Happy (YTD)', unit:'%', color:AMBER, yMin:60, yMax:105,
+    label:'% Happy (YTD)', unit:'%', color:AMBER, yMin:60, yMax:105, period:"Jan 2026 YTD",
     labels: allLabels13,
     data:[null,null,null,null,null,null,null,null,null,null,null,null,80],
     hLine:80,
@@ -1452,7 +1460,7 @@ const channelHistoryData = {
     note:'Mortgage data is tracked YTD only — monthly trend data is not available. Jan 2026 YTD: 80% = Effective threshold (5 responses, 4 happy, 1 neutral).'
   },
   chat: {
-    label:'Avg Rating (1–5)', unit:'/5', color:'#545859', yMin:1, yMax:5,
+    label:'Avg Rating (1–5)', unit:'/5', color:'#545859', yMin:1, yMax:5, period:"Jan '25 – Jan '26",
     labels:["Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     datasets:[
       { label:'Autopilot Chat', color:'#545859',
@@ -1466,21 +1474,21 @@ const channelHistoryData = {
     note:'2025: Autopilot and Solution Center Agent tracked separately. Jan 2026 combined avg = 2.50/5. Autopilot consistently scores lower, reflecting automated response friction.'
   },
   branch: {
-    label:'% Happy', unit:'%', color:'#78BE21', yMin:60, yMax:105,
+    label:'% Happy', unit:'%', color:'#78BE21', yMin:60, yMax:105, period:"Jan '24 – Jan '26",
     labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     data:[92.31,94.87,100,95.83,100,96.30,93.51,96.67,98.31,96.90,96.30,96.30,97.06,null,null,null,null,null,95.92,97.60,97.79,97.25,95.00,95.00,98.95],
     benchmarks:[ {v:95,l:'Exceptional',c:GREEN}, {v:85,l:'Exceeds',c:BLUE}, {v:76,l:'Effective',c:AMBER} ],
     note:'Email/text sent 1 day after branch visit. Nulls in Feb–Jun 2025 indicate months with no recorded data. All months with data have been at Exceptional level since Jan 2024.'
   },
   phone: {
-    label:'Avg Rating (1–5)', unit:'/5', color:'#FFC845', yMin:2.5, yMax:5.0,
+    label:'Avg Rating (1–5)', unit:'/5', color:'#FFC845', yMin:2.5, yMax:5.0, period:"Jul '24 – Jan '26",
     labels:["Jul'24","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     data:[4.33,4.37,4.30,4.65,4.40,4.29,4.53,3.86,4.11,3.63,3.66,4.21,4.37,4.19,4.40,4.42,4.33,4.26,4.36],
     benchmarks:[ {v:4.51,l:'Exceptional',c:GREEN}, {v:3.76,l:'Exceeds',c:BLUE}, {v:2.76,l:'Effective',c:AMBER} ],
     note:'Recorded in-call survey via Talkdesk (Solution Center only). Available from Jul 2024. Dip in Q2 2025 (Apr–May) warrants further investigation.'
   },
   digital: {
-    label:'% Happy', unit:'%', color:RED, yMin:0, yMax:80,
+    label:'% Happy', unit:'%', color:RED, yMin:0, yMax:80, period:"Jan '24 – Jan '26",
     labels:["Jan'24","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'24","Jan'25","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec'25","Jan'26"],
     data:[66.48,70.95,68.35,68.87,68.55,69.66,72.41,67.43,62.96,61.14,73.39,68.29,68.63,20.25,29.32,40.91,41.18,42.31,53.97,48.28,50.00,50.91,48.39,62.50,51.89],
     benchmarks:[ {v:75,l:'Exceptional',c:GREEN}, {v:72,l:'Exceeds',c:BLUE}, {v:70,l:'Effective',c:AMBER} ],
@@ -1533,6 +1541,7 @@ function showChannelTab(key) {
   const ch = channelHistoryData[key];
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.ch===key));
   document.getElementById('channelTimelineNote').textContent = ch.note || '';
+  document.getElementById('channelPeriodChip').textContent = ch.period || '';
   if (channelChart) { channelChart.destroy(); channelChart = null; }
   channelChart = new Chart(document.getElementById('channelTimelineChart').getContext('2d'), {
     type: 'line',
