@@ -463,6 +463,26 @@
     .voice-sentiment.neutral { color: var(--amber); }
     .voice-sentiment.unhappy { color: var(--red);   }
 
+    /* ── SURVEY TILES + VOICES ──────────────────── */
+    .survey-tiles-col { display: flex; flex-direction: column; gap: 8px; }
+    .survey-tile {
+      background: var(--card); border-radius: var(--radius);
+      padding: 14px 16px; border-left: 4px solid #ccc;
+      box-shadow: var(--shadow-sm); cursor: pointer;
+      transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease, color 150ms ease;
+    }
+    .survey-tile:hover { transform: translateX(3px); box-shadow: var(--shadow); }
+    .st-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+    .st-name { font-size: 13px; font-weight: 700; }
+    .st-rate { font-size: 19px; font-weight: 800; }
+    .st-responses { font-size: 11px; color: var(--st-muted, var(--muted)); margin-bottom: 3px; }
+    .st-method { font-size: 10px; color: var(--st-muted, var(--muted)); line-height: 1.4; }
+    .voices-scroll {
+      max-height: 510px; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 10px; padding-right: 4px;
+    }
+    .voices-empty { font-size: 12px; color: var(--muted); font-style: italic; padding: 24px 0; text-align: center; }
+
     /* ── CAVEAT BOX ─────────────────────────────── */
     .caveat-box {
       display: flex; align-items: flex-start; gap: 8px;
@@ -658,78 +678,15 @@
     </div>
   </div>
 
-  <!-- SURVEY HEALTH -->
-  <div class="section-label">Survey Health</div>
-  <div style="display:grid;grid-template-columns:1fr 2fr;gap:var(--gap);margin-bottom:var(--gap);align-items:start">
+  <!-- SURVEY REACH & MEMBER VOICES -->
+  <div class="section-label">Survey Reach &amp; Member Voices</div>
+  <div style="display:grid;grid-template-columns:290px 1fr;gap:var(--gap);margin-bottom:var(--gap);align-items:start">
+    <div class="survey-tiles-col" id="surveyTiles"></div>
     <div class="card">
       <span class="chart-period-chip">January 2026</span>
-      <div class="card-title">Are our surveys reaching members?</div>
-      <div class="card-subtitle">Responses received by channel — January 2026</div>
-      <div class="chart-wrap" style="height:240px">
-        <canvas id="responseChart"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <span class="chart-period-chip">Q1 '23 – Q1 '26</span>
-      <div class="card-title">How is participation trending by channel and collection method?</div>
-      <div class="card-subtitle">Response rate per survey channel — quarterly, Q1 2023 through Q1 2026 &nbsp;&middot;&nbsp; Color groups indicate collection method</div>
-      <div class="chart-wrap" style="height:260px">
-        <canvas id="responseRateTrendChart"></canvas>
-      </div>
-
-      <!-- Method key -->
-      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:10px">Collection method key</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#78BE21;border-radius:2px;flex-shrink:0"></div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text)">Mortgage &mdash; 83.3%</div>
-              <div style="font-size:10px;color:var(--muted)">Email · sent on receipt of funding list</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#00A3E0;border-radius:2px;flex-shrink:0"></div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text)">New Member &mdash; 29.5%</div>
-              <div style="font-size:10px;color:var(--muted)">Email · sent 3&ndash;5 days after account opening</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#FFC845;border-radius:2px;flex-shrink:0"></div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text)">Phone &mdash; 14.7%</div>
-              <div style="font-size:10px;color:var(--muted)">Recorded in-call · Solution Center only</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:3px;background:#004987;border-radius:2px;flex-shrink:0"></div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text)">Branch &mdash; 11.2%</div>
-              <div style="font-size:10px;color:var(--muted)">Email/Text · sent day after branch visit</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:0;border-top:2.5px dashed #B87333;flex-shrink:0;width:20px;height:0"></div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text)">New Loan &mdash; 9.5%</div>
-              <div style="font-size:10px;color:var(--muted)">Email · sent 1&ndash;3 days post-funding</div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;">
-            <div style="width:20px;height:0;border-top:2.5px dashed #545859;flex-shrink:0;width:20px;height:0"></div>
-            <div>
-              <div style="font-size:11px;font-weight:700;color:var(--text)">NPS &mdash; 9.1%</div>
-              <div style="font-size:10px;color:var(--muted)">Email · quarterly, random 25% of members</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:8px 10px;background:#D0E8F8;border-radius:6px;border-left:3px solid #00A3E0;font-size:11px;color:#003366;line-height:1.5">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;margin-top:1px" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        <div><strong>Historical data note:</strong> Quarterly figures prior to Q1 2026 are estimated. Replace the <code>rrTrend</code> object in the script with verified values from prior MEME reports.</div>
-      </div>
+      <div class="card-title">Member Voices</div>
+      <div class="card-subtitle" id="voicesSubtitle">All channels &nbsp;&middot;&nbsp; Click a channel tile to filter</div>
+      <div class="voices-scroll" id="voicesScroll"></div>
     </div>
   </div>
 
@@ -1076,46 +1033,6 @@
   </div>
 
   <!-- MEMBER VOICES -->
-  <div class="section-label">Member Voices &mdash; January 2026</div>
-  <div class="voices-grid">
-
-    <div class="voice-card happy">
-      <div class="voice-quote">"Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly."</div>
-      <div class="voice-meta">
-        <span class="voice-channel loan">New Loan</span>
-        <span class="voice-name">Susan Beauregard</span>
-        <span class="voice-sentiment happy">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          Happy
-        </span>
-      </div>
-    </div>
-
-    <div class="voice-card happy">
-      <div class="voice-quote">"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!"</div>
-      <div class="voice-meta">
-        <span class="voice-channel branch">New Member</span>
-        <span class="voice-name">Renee Banke</span>
-        <span class="voice-sentiment happy">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          Happy
-        </span>
-      </div>
-    </div>
-
-    <div class="voice-card happy">
-      <div class="voice-quote">"Eric, Mary and the team were very professional, friendly, patient and communicated all of the steps clearly so we could understand everything."</div>
-      <div class="voice-meta">
-        <span class="voice-channel mortgage">Mortgage</span>
-        <span class="voice-name">Michaelson Martin</span>
-        <span class="voice-sentiment happy">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          Happy
-        </span>
-      </div>
-    </div>
-
-  </div>
 
   <div class="footer">
     Member Experience Measurement Engine Report &nbsp;&middot;&nbsp; Copper State Credit Union &nbsp;&middot;&nbsp; Data as of January 2026
@@ -1268,114 +1185,96 @@ new Chart(document.getElementById('npsChart').getContext('2d'), {
 
 
 // Response Rate Chart
-new Chart(document.getElementById('responseChart').getContext('2d'), {
-  type:'bar',
-  data:{
-    labels:responseChannels,
-    datasets:[{
-      label:'Responses', data:responseCounts,
-      backgroundColor:responseColors.map(c=>c+'CC'),
-      borderColor:responseColors, borderWidth:1.5, borderRadius:5,
-    }]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false, indexAxis:'y',
-    plugins:{
-      legend:{ display:false },
-      tooltip:{ callbacks:{ label: ctx => ` ${ctx.parsed.x} responses` } }
-    },
-    scales:{
-      x:{ min:0, grid:{ color:'#F1F5F9' }, ticks:{ font:{ size:10 }, color:MUTED } },
-      y:{ grid:{ display:false }, ticks:{ font:{ size:11 }, color:MUTED } }
-    }
-  }
-});
+// ── SURVEY TILES + MEMBER VOICES ────────────────────────────────────────────
+const surveyTileData = [
+  { key:'mortgage', name:'Mortgage',   responses:5,   rate:'83.3%', method:'Email',           desc:'Sent on receipt of funding list',       color:AMBER, textColor:'#5A3F00', bg:'#FFF5CC' },
+  { key:'newmbr',   name:'New Member', responses:13,  rate:'29.5%', method:'Email',           desc:'Sent 3–5 days after account opening',   color:BLUE,  textColor:'#fff',    bg:'#CCF0FF' },
+  { key:'phone',    name:'Phone',      responses:301, rate:'14.7%', method:'Recorded in-call',desc:'Solution Center only',                  color:BLUE,  textColor:'#fff',    bg:'#CCF0FF' },
+  { key:'branch',   name:'Branch',     responses:95,  rate:'11.2%', method:'Email/Text',      desc:'Sent day after branch visit',           color:GREEN, textColor:'#1a3800', bg:'#E6F5CC' },
+  { key:'loan',     name:'New Loan',   responses:14,  rate:'9.5%',  method:'Email',           desc:'Sent 1–3 days post-funding',            color:GREEN, textColor:'#1a3800', bg:'#E6F5CC' },
+  { key:'nps',      name:'NPS',        responses:739, rate:'9.1%',  method:'Email',           desc:'Quarterly, random 25% of members',      color:NAVY,  textColor:'#fff',    bg:'#CCE0F5' },
+];
 
-// Response Rate Trend Chart — per channel, color-coded by collection method
-// ⚠ Replace rrTrend values with verified figures from prior MEME reports (Jan 2026 values are confirmed from CSV)
-const rrLabels = ['Q1 \'23','Q2 \'23','Q3 \'23','Q4 \'23','Q1 \'24','Q2 \'24','Q3 \'24','Q4 \'24','Q1 \'25','Q2 \'25','Q3 \'25','Q4 \'25','Q1 \'26'];
-const rrTrend = {
-  mortgage:  [78.3, 80.0, 75.0, 81.2, 82.4, 79.2, 77.0, 80.5, 72.1, 75.0, 78.3, 79.4, 83.3],  // Email · post-funding
-  newMember: [27.8, 26.5, 25.3, 29.0, 31.2, 30.4, 27.1, 28.4, 24.2, 22.1, 26.3, 27.5, 29.5],  // Email · post-opening
-  phone:     [12.8, 12.0, 11.4, 13.2, 14.0, 13.3, 13.0, 14.1, 12.2, 11.4, 13.0, 13.5, 14.7],  // Recorded in-call
-  branch:    [11.9, 11.1, 10.3, 12.0, 13.1, 12.4, 11.2, 12.0,  9.4,  8.5, 10.2, 10.6, 11.2],  // Email/Text · post-visit
-  newLoan:   [10.2,  9.5,  8.8, 10.1, 11.0, 10.4,  9.6, 10.2,  8.3,  7.6,  9.1,  9.3,  9.5],  // Email · post-funding
-  nps:       [10.8,  9.9,  9.2, 10.1, 11.4, 10.7,  9.8,  9.3,  8.1,  7.4,  8.0,  8.5,  9.1],  // Email · quarterly random
-};
-const N = rrLabels.length - 1;
-const mkPoint = (color) => (ctx) => ctx.dataIndex === N ? color : color;
-new Chart(document.getElementById('responseRateTrendChart').getContext('2d'), {
-  type: 'line',
-  data: {
-    labels: rrLabels,
-    datasets: [
-      {
-        label: 'Mortgage (Email)',
-        data: rrTrend.mortgage,
-        borderColor: '#78BE21', backgroundColor: '#78BE2112',
-        borderWidth: 2.5, fill: false, tension: 0.35,
-        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#78BE21', pointBorderColor:'#fff', pointBorderWidth:2, order:1,
-      },
-      {
-        label: 'New Member (Email)',
-        data: rrTrend.newMember,
-        borderColor: '#00A3E0', backgroundColor: '#00A3E012',
-        borderWidth: 2.5, fill: false, tension: 0.35,
-        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#00A3E0', pointBorderColor:'#fff', pointBorderWidth:2, order:2,
-      },
-      {
-        label: 'Phone (In-call recorded)',
-        data: rrTrend.phone,
-        borderColor: '#FFC845', backgroundColor: '#FFC84512',
-        borderWidth: 2.5, fill: false, tension: 0.35,
-        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#FFC845', pointBorderColor:'#fff', pointBorderWidth:2, order:3,
-      },
-      {
-        label: 'Branch (Email/Text)',
-        data: rrTrend.branch,
-        borderColor: '#004987', backgroundColor: '#00498712',
-        borderWidth: 2.5, fill: false, tension: 0.35,
-        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#004987', pointBorderColor:'#fff', pointBorderWidth:2, order:4,
-      },
-      {
-        label: 'New Loan (Email)',
-        data: rrTrend.newLoan,
-        borderColor: '#B87333', borderDash: [5,3],
-        borderWidth: 2, fill: false, tension: 0.35,
-        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#B87333', pointBorderColor:'#fff', pointBorderWidth:2, order:5,
-      },
-      {
-        label: 'NPS (Email, quarterly)',
-        data: rrTrend.nps,
-        borderColor: '#545859', borderDash: [5,3],
-        borderWidth: 2, fill: false, tension: 0.35,
-        pointRadius: ctx => ctx.dataIndex===N ? 7 : 2.5,
-        pointBackgroundColor: '#545859', pointBorderColor:'#fff', pointBorderWidth:2, order:6,
-      },
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` } }
-    },
-    scales: {
-      x: { grid:{ display:false }, ticks:{ font:{ size:10 }, color:MUTED } },
-      y: {
-        min: 0, max: 90,
-        grid: { color:'#F1F5F9' },
-        ticks: { font:{ size:10 }, color:MUTED, callback: v => v+'%' }
+const memberVoicesData = [
+  { quote:"Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly.", name:"Susan Beauregard", channel:"loan",     date:"Jan 28, 2026" },
+  { quote:"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!", name:"Renee Banke", channel:"newmbr",  date:"Jan 22, 2026" },
+  { quote:"Eric, Mary and the team were very professional, friendly, patient and communicated all of the steps clearly so we could understand everything.", name:"Michaelson Martin", channel:"mortgage", date:"Jan 15, 2026" },
+];
+
+let activeVoiceFilter = null;
+
+function renderSurveyTiles() {
+  const container = document.getElementById('surveyTiles');
+  surveyTileData.forEach(t => {
+    const tile = document.createElement('div');
+    tile.className = 'survey-tile';
+    tile.dataset.key = t.key;
+    tile.style.borderLeftColor = t.color;
+    tile.innerHTML = `
+      <div class="st-top">
+        <span class="st-name">${t.name}</span>
+        <span class="st-rate">${t.rate}</span>
+      </div>
+      <div class="st-responses">${t.responses.toLocaleString()} responses</div>
+      <div class="st-method">${t.method} &nbsp;·&nbsp; ${t.desc}</div>
+    `;
+    tile.addEventListener('click', () => {
+      if (activeVoiceFilter === t.key) {
+        activeVoiceFilter = null;
+        document.querySelectorAll('.survey-tile').forEach(el => {
+          el.style.background = '';
+          el.style.color = '';
+          el.style.removeProperty('--st-muted');
+        });
+      } else {
+        activeVoiceFilter = t.key;
+        document.querySelectorAll('.survey-tile').forEach(el => {
+          const td = surveyTileData.find(x => x.key === el.dataset.key);
+          const on = el.dataset.key === t.key;
+          el.style.background = on ? t.color : '';
+          el.style.color      = on ? t.textColor : '';
+          el.style.setProperty('--st-muted', on ? (t.textColor === '#fff' ? 'rgba(255,255,255,.7)' : 'rgba(0,0,0,.5)') : 'var(--muted)');
+        });
       }
-    }
+      renderVoices();
+    });
+    container.appendChild(tile);
+  });
+}
+
+function renderVoices() {
+  const scroll    = document.getElementById('voicesScroll');
+  const subtitle  = document.getElementById('voicesSubtitle');
+  const filtered  = activeVoiceFilter ? memberVoicesData.filter(v => v.channel === activeVoiceFilter) : memberVoicesData;
+  const tileInfo  = surveyTileData.find(t => t.key === activeVoiceFilter);
+  const label     = tileInfo ? tileInfo.name : 'All channels';
+  subtitle.textContent = `${label} · ${filtered.length} voice${filtered.length !== 1 ? 's' : ''} · Sorted by most recent`;
+  scroll.innerHTML = '';
+  if (!filtered.length) {
+    scroll.innerHTML = '<div class="voices-empty">No member voices on record for this channel.</div>';
+    return;
   }
-});
+  filtered.forEach(v => {
+    const ti = surveyTileData.find(t => t.key === v.channel);
+    const card = document.createElement('div');
+    card.className = 'voice-card happy';
+    card.style.borderLeftColor = ti?.color || '#ccc';
+    card.innerHTML = `
+      <div class="voice-quote">“${v.quote}”</div>
+      <div class="voice-meta">
+        <span class="voice-channel loan" style="background:${ti?.bg||'#eee'};color:${ti?.color||'#999'}">${ti?.name||v.channel}</span>
+        <span class="voice-name">${v.name}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:auto">${v.date}</span>
+      </div>
+    `;
+    scroll.appendChild(card);
+  });
+}
+
+renderSurveyTiles();
+renderVoices();
+
+// (Response Rate Trend Chart removed — replaced by survey tiles + member voices section)
 
 // Journey Chart
 new Chart(document.getElementById('journeyChart').getContext('2d'), {
