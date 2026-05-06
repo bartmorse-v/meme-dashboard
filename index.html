@@ -101,6 +101,22 @@
     .header-title h1 { font-size: 18px; font-weight: 700; line-height: 1.2; letter-spacing: -0.2px; }
     .header-title p  { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 3px; }
     .header-right { display: flex; align-items: center; gap: 12px; }
+    .header-period-select {
+      background: rgba(255,255,255,.15);
+      border: 1.5px solid rgba(255,255,255,.35);
+      border-radius: 20px;
+      padding: 6px 30px 6px 14px;
+      font-size: 12px; font-weight: 700;
+      color: #fff; font-family: inherit;
+      cursor: pointer; outline: none;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 11px center;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
+    .header-period-select:hover { background-color: rgba(255,255,255,.25); border-color: rgba(255,255,255,.6); }
+    .header-period-select option { background: var(--navy); color: #fff; font-weight: 600; }
     .period-badge {
       background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
       border-radius: 20px; padding: 7px 14px;
@@ -893,6 +909,18 @@
         </nav>
       </div>
     </div>
+    <div class="header-right">
+      <select class="header-period-select" id="reportPeriodSelect">
+        <option value="2026-01" selected>Jan 2026</option>
+        <option value="2025-12" disabled>Dec 2025</option>
+        <option value="2025-11" disabled>Nov 2025</option>
+        <option value="2025-10" disabled>Oct 2025</option>
+        <option value="2025-09" disabled>Sep 2025</option>
+        <option value="2025-08" disabled>Aug 2025</option>
+        <option value="2025-07" disabled>Jul 2025</option>
+        <option value="2025-06" disabled>Jun 2025</option>
+      </select>
+    </div>
   </div>
 
   <!-- ═══ PAGE: DASHBOARD ═══ -->
@@ -917,7 +945,6 @@
         <div class="kpi-value">3.56<span class="kpi-denom">/5.00</span></div>
         <span class="kpi-delta up">&#9650; +0.38</span>
       </div>
-      <div class="kpi-sub">vs. 3.18 in Dec 2025</div>
       <span class="kpi-badge badge-effective">Effective</span>
     </div>
     <div class="kpi-card tier-effective kpi-thermo">
@@ -956,7 +983,6 @@
         <div class="kpi-value">74</div>
         <span class="kpi-delta up">&#9650; +2 pts</span>
       </div>
-      <div class="kpi-sub">vs. 72 in Q4 2025 &nbsp;&middot;&nbsp; Q1 2026</div>
       <span class="kpi-badge badge-exceeds">Exceeds Expectations</span>
     </div>
   </div>
