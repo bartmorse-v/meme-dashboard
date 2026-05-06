@@ -201,7 +201,7 @@
     .tab-btn:hover:not(.active) { border-color: var(--navy); color: var(--navy); }
 
     /* ── BAR DELTA ───────────────────────────────── */
-    .ch-delta { font-family:'Montserrat','Trebuchet MS',sans-serif; width:86px; font-size:11px; font-weight:700; flex-shrink:0; text-align:right; }
+    .ch-delta { font-family:'Montserrat','Trebuchet MS',sans-serif; width:92px; font-size:11px; font-weight:700; flex-shrink:0; text-align:right; }
     .ch-delta.up   { color: var(--green);  }
     .ch-delta.down { color: var(--red);    }
     .ch-delta.flat { color: var(--muted);  }
@@ -349,9 +349,8 @@
       font-family: 'Montserrat','Trebuchet MS',sans-serif; font-size: 11px; font-weight: 700;
       white-space: nowrap; pointer-events: none; z-index: 2;
     }
-    .ch-score   { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; width: 54px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+    .ch-score   { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; width: 58px; font-size: 12px; font-weight: 700; flex-shrink: 0; text-align: right; }
     .ch-badge   { width: 84px; flex-shrink: 0; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-align: center; }
-    .ch-note    { font-family: 'Montserrat', 'Trebuchet MS', sans-serif; font-size: 10px; color: var(--muted); width: 104px; flex-shrink: 0; }
 
     /* ── AI INSIGHTS ────────────────────────────── */
     .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
@@ -1864,15 +1863,15 @@ const mesScores = [
 ];
 
 const channels = [
-  { name:'NPS',             score:74.56,  tier:'Exceeds',     color:NAVY,    note:'NPS Score (739 responses)',   delta:+2.56,  deltaDir:'up',  deltaLabel:'+2.56 pts', unit:'' },
-  { name:'Response Rate',   score:26.24,  tier:'Exceeds',     color:BLUE,    note:'26.24% across 6 channels',   delta:null,   deltaDir:'na' },
-  { name:'New Loan',        score:100.00, tier:'Exceptional', color:GREEN,   note:'% Happy (14/14)',             delta: 0,     deltaDir:'flat' },
-  { name:'New Member', score:92.31,  tier:'Exceeds',     color:BLUE,   note:'% Happy (12/13)',           delta:-1.44,   deltaDir:'down' },
-  { name:'Mortgage',   score:80.00,  tier:'Effective',   color:AMBER,  note:'% Happy YTD (4/5)',         delta: null,   deltaDir:'na'   },
-  { name:'Chat',       score:2.50,   tier:'Mixed',       color:ORANGE, note:'26 responses · Talkdesk post-chat',  delta: null,  deltaDir:'na',  unit:'/5', barPct:50.0  },
-  { name:'Branch',     score:98.95,  tier:'Exceptional', color:GREEN,  note:'% Happy (94/95)',           delta:+3.95,   deltaDir:'up'   },
-  { name:'Phone',      score:4.36,   tier:'Exceeds',     color:BLUE,   note:'301 responses · Solution Center',    delta:+0.10,  deltaDir:'up',  deltaLabel:'★ +0.10', unit:'/5', barPct:87.2 },
-  { name:'Digital',    score:51.89,  tier:'Off Track',   color:RED,    note:'% Happy (55/106)',          delta:-10.61,  deltaDir:'down' },
+  { name:'NPS',           score:74.56,  tier:'Exceeds',     color:BLUE,   responses:739,   delta:+2.56,  deltaDir:'up'                                   },
+  { name:'Response Rate', score:26.24,  tier:'Exceeds',     color:BLUE,   responses:1167,  delta:null,   deltaDir:'na'                                   },
+  { name:'New Loan',      score:100.00, tier:'Exceptional', color:GREEN,  responses:15,    delta: 0,     deltaDir:'flat'                                 },
+  { name:'New Member',    score:92.31,  tier:'Exceeds',     color:BLUE,   responses:13,    delta:-1.44,  deltaDir:'down'                                 },
+  { name:'Mortgage',      score:80.00,  tier:'Effective',   color:AMBER,  responses:5,     delta: null,  deltaDir:'na'                                   },
+  { name:'Chat',          score:2.50,   tier:'Mixed',       color:ORANGE, responses:26,    delta: null,  deltaDir:'na',  unit:'/5', barPct:50.0           },
+  { name:'Branch',        score:98.95,  tier:'Exceptional', color:GREEN,  responses:95,    delta:+3.95,  deltaDir:'up'                                   },
+  { name:'Phone',         score:4.36,   tier:'Exceeds',     color:BLUE,   responses:301,   delta:+0.10,  deltaDir:'up',  deltaLabel:'★ +0.10', unit:'/5', barPct:87.2 },
+  { name:'Digital',       score:51.89,  tier:'Off Track',   color:RED,    responses:106,   delta:-10.61, deltaDir:'down'                                 },
 ];
 
 const responseChannels = ['NPS','Phone','Digital','Branch','Chat','New Loan','New Member','Mortgage'];
@@ -1895,27 +1894,27 @@ channels.forEach(ch => {
   row.className = 'ch-row';
   let deltaHtml;
   if (ch.deltaDir === 'na' || ch.delta === null) {
-    deltaHtml = `<div class="ch-delta na">—</div>`;
+    deltaHtml = `<div class="ch-delta na">No change</div>`;
   } else if (ch.deltaDir === 'flat' || ch.delta === 0) {
     deltaHtml = `<div class="ch-delta flat">No change</div>`;
   } else {
-    const lbl = ch.deltaLabel || `${ch.delta > 0 ? '+' : ''}${ch.delta.toFixed(2)} pts`;
+    const lbl = ch.deltaLabel || `${ch.delta > 0 ? '+' : ''}${ch.delta.toFixed(2)}%`;
     deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
   }
-  const unit       = ch.unit !== undefined ? ch.unit : '%';
-  const barPct     = ch.barPct !== undefined ? ch.barPct : ch.score;
-  const dispScore  = unit === '/5' ? ch.score.toFixed(2) : ch.score.toFixed(1);
-  const labelColor = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.95)';
+  const unit        = ch.unit !== undefined ? ch.unit : '%';
+  const barPct      = ch.barPct !== undefined ? ch.barPct : ch.score;
+  const dispScore   = unit === '/5' ? ch.score.toFixed(2) : ch.score.toFixed(1);
+  const labelColor  = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.95)';
   const labelShadow = ch.color === '#FFC845' ? 'none' : '0 0 5px rgba(0,0,0,0.55)';
-  const scoreColor = ch.color === '#FFC845' ? '#7A5800' : ch.color;
+  const respColor   = ch.color === '#FFC845' ? '#7A5800' : ch.color;
+  const respDisp    = ch.responses !== undefined ? ch.responses.toLocaleString() : '—';
   row.innerHTML = `
     <div class="ch-name">${ch.name}</div>
     <div class="ch-bar-track">
       <div class="ch-bar-fill" style="width:${barPct}%;background:${ch.color}"></div>
       <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${dispScore}${unit} &nbsp;${ch.tier}</span>
     </div>
-    <div class="ch-score" style="color:${scoreColor}">${dispScore}${unit}</div>
-    <div class="ch-note">${ch.note}</div>
+    <div class="ch-score" style="color:${respColor}">${respDisp}</div>
     ${deltaHtml}
   `;
   barsEl.appendChild(row);
