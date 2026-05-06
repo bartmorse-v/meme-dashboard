@@ -460,26 +460,44 @@
 
     /* ── ASK AI DEDICATED PAGE ───────────────────── */
     .ask-ai-layout {
-      display: grid; grid-template-columns: 220px 1fr; gap: var(--gap);
+      display: grid; grid-template-columns: 340px 1fr; gap: var(--gap); align-items: start;
     }
-    .ask-ai-sidebar { display: flex; flex-direction: column; gap: 10px; }
-    .ask-ai-sidebar-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--muted); margin-bottom: 2px; }
+    .ask-ai-insights-panel {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      padding: 18px 20px;
+      max-height: calc(100vh - 180px); overflow-y: auto;
+    }
+    .ask-ai-insights-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+      color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .ask-ai-suggestions-top {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 12px 18px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .ask-ai-suggestions-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .ask-ai-suggestions-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .ask-ai-suggestion {
-      padding: 9px 13px; background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); font-size: 12px; color: var(--text-2);
-      cursor: pointer; text-align: left; font-family: inherit;
-      transition: border-color 150ms, color 150ms;
-      line-height: 1.4;
+      padding: 5px 12px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 20px; font-size: 11px; color: var(--text-2);
+      cursor: pointer; font-family: inherit;
+      transition: border-color 150ms, color 150ms, background 150ms;
+      white-space: nowrap;
     }
-    .ask-ai-suggestion:hover { border-color: var(--navy); color: var(--navy); }
+    .ask-ai-suggestion:hover { border-color: var(--navy); color: var(--navy); background: #EEF4FF; }
     .ask-ai-chat-wrap {
-      display: flex; flex-direction: column; height: calc(100vh - 200px); min-height: 480px;
+      display: flex; flex-direction: column; height: calc(100vh - 180px); min-height: 480px;
     }
     .ask-ai-messages {
       flex: 1; min-height: 0; overflow-y: auto;
       display: flex; flex-direction: column; gap: 10px;
       padding: 20px 24px; background: var(--card);
-      border: 1px solid var(--border); border-radius: var(--radius) var(--radius) 0 0;
+      border: 1px solid var(--border); border-top: none; border-radius: 0;
     }
     .ask-ai-input-row {
       background: var(--card); border: 1px solid var(--border); border-top: none;
@@ -902,9 +920,9 @@
           <span class="header-nav-sep">|</span>
           <a href="#" data-page="voices">Member Voices</a>
           <span class="header-nav-sep">|</span>
-          <a href="#">Financial Insights</a>
-          <span class="header-nav-sep">|</span>
           <a href="#" data-page="askai">Ask AI</a>
+          <span class="header-nav-sep">|</span>
+          <a href="#">Financial Insights</a>
         </nav>
       </div>
     </div>
@@ -1085,170 +1103,6 @@
     </div>
   </div>
 
-  <!-- TOP 10 AI INSIGHTS -->
-  <div class="section-label">Top 10 AI Insights</div>
-  <div class="row-full">
-    <div class="card">
-      <div class="ai-header">
-        <div class="ai-icon" style="background:linear-gradient(135deg,#004987,#003366)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        </div>
-        <div class="ai-header-text">
-          <h3>Top 10 AI Insights</h3>
-          <p>Cross-channel theme analysis &nbsp;&middot;&nbsp; Updated each reporting period &nbsp;&middot;&nbsp; Based on member comments, scores, and trends through January 2026</p>
-        </div>
-      </div>
-
-      <div class="top10-list">
-
-        <div class="top10-item">
-          <div class="top10-num sig-critical">1</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">Autopilot Chat is the most urgent single fix in the entire MEME scorecard</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#F3F4F6;color:#545859">Chat</span>
-                <span class="top10-period">Jan 2025 – Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">Autopilot scored 1.05–2.00/5 across every month of 2025, while human agents scored 3.0–4.75/5 in the same channel. The combined Jan 2026 score of 2.50 masks this split entirely. Autopilot is actively pulling down the overall MX score — and members are telling us why: "no help," "learn AI," "did not help will go to my branch."</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-critical">2</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">Digital platform migration created a satisfaction crater that is still recovering 12 months later</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#FDE8EA;color:#C41E3A">Digital</span>
-                <span class="top10-period">Feb 2025 – Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">Digital dropped from ~69% (Dec 2024) to 20–29% (Feb–Mar 2025) at platform launch and is at 51.89% in January 2026 — still 17 points below pre-migration baseline. At the current recovery rate of ~3 points per month, full recovery will take another 6–12 months. Login failures and the mobile app are the top complaint themes.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-positive">3</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">Named employees are the #1 predictor of a positive comment across every channel</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
-                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Phone</span>
-                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">New Loan</span>
-                <span class="top10-ch" style="background:#CCF0FF;color:#004987">New Member</span>
-                <span class="top10-period">Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">In January 2026, 14 of 35 member voice comments specifically name an employee — Harmony, Thomas, Carolyn, Skylar, Eileen, Jordon, Yesi, Johanna, Liliana, Anthony, Carol, Stephanie, Sierra, and Gabriela. Every named mention is positive. Channels where staff are named score significantly higher than channels where they aren't.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-positive">4</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">Branch has held Exceptional tier for 24+ consecutive months — it is the operational model</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
-                <span class="top10-period">Jan 2024 – Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">Branch reached 98.95% in January 2026 and has been at or above 95% in every month with recorded data since early 2024. Member comments consistently cite friendly staff, consistency across visits, and employees going above expectations. No other channel has maintained Exceptional tier for this duration.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-positive">5</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">Speed and ease of process are what loan members care about most</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">New Loan</span>
-                <span class="top10-ch" style="background:#FFF5CC;color:#7A5800">Mortgage</span>
-                <span class="top10-period">Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">Words like "quick," "easy," "convenient," and "smooth" appear in 8 of 14 loan and mortgage comments this month. Members who mention processing speed are unanimous in their satisfaction. This is consistently the top theme in loan feedback — operational efficiency is the most actionable lever for loan satisfaction scores.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-positive">6</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">NPS hit an all-time high of 74 — and the promoter majority is growing</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#CCE0F5;color:#004987">NPS</span>
-                <span class="top10-period">Q3 2022 – Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">NPS has trended 67 → 62 → 72 → 72 → 74 since Q3 2022. Promoters now represent 81% of respondents. The Q2 2024 dip to 62 appears to have been a temporary outlier, not a trend. Crossing 80 (Exceptional tier) is achievable in 2026 if Digital and Chat recover, since dissatisfied members in those channels directly suppress NPS.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-warning">7</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">The 26.2% overall response rate is a statistical illusion — the real blended rate is ~12%</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Response Rate</span>
-                <span class="top10-period">Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">January's 26.2% headline is boosted by Mortgage's 83.3% response rate on just 6 delivered surveys. Remove Mortgage and the true blended rate across the remaining five channels is approximately 11–12%, consistent with prior months. Tracking response rate as a single aggregate number without channel context is misleading.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-warning">8</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">New Member scores are highly volatile at current sample sizes — monthly results are unreliable</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#CCF0FF;color:#004987">New Member</span>
-                <span class="top10-period">Jan 2025 – Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">Monthly New Member scores range from 50% (Feb 2025, 2 happy out of 4) to 100% (Sep, Nov 2025). With 5–15 responses per month, a single unhappy member shifts the score by 7–20 points. The 12-month trailing average of 92.31% is statistically meaningful; the monthly score is not. Confidence interval is ±15 points at current volume.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-warning">9</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">Phone experience had an unexplained Q2 2025 dip that warrants a root cause review</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Phone</span>
-                <span class="top10-period">Apr – May 2025</span>
-              </div>
-            </div>
-            <div class="top10-body">Phone dropped from 4.53/5 in January 2025 to 3.63–3.66/5 in April–May 2025 — a 0.9-point decline — then recovered to 4.36 by January 2026. The cause is unknown. Possible factors include seasonal call volume spikes, staffing changes, or a specific complaint driver. If it recurs in Q2 2026, it becomes a pattern worth escalating.</div>
-          </div>
-        </div>
-
-        <div class="top10-item">
-          <div class="top10-num sig-info">10</div>
-          <div class="top10-content">
-            <div class="top10-header">
-              <span class="top10-title">The Digital survey is capturing in-branch experiences — creating a contaminated data signal</span>
-              <div class="top10-tags">
-                <span class="top10-ch" style="background:#FDE8EA;color:#C41E3A">Digital</span>
-                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
-                <span class="top10-period">Jan 2026</span>
-              </div>
-            </div>
-            <div class="top10-body">Two of four positive Digital comments in January describe in-person branch visits at the Surprise location and an in-branch account setup — interactions that have nothing to do with the website or app. If this is a recurring pattern in the pop-up survey, Digital's satisfaction score is artificially inflated by branch goodwill, masking the true digital experience quality.</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
   </div><!-- /page-dashboard -->
 
@@ -1734,39 +1588,194 @@
   <!-- ═══ PAGE: ASK AI ═══ -->
   <div id="page-askai" class="page-content" style="display:none">
 
-  <div class="section-label">Ask AI</div>
+  <div class="section-label">Ask AI &nbsp;&middot;&nbsp; January 2026</div>
   <div class="ask-ai-layout">
 
-    <!-- Sidebar: suggested questions -->
-    <div class="ask-ai-sidebar">
-      <div class="card" style="padding:18px">
-        <div class="ask-ai-sidebar-label">Suggested Questions</div>
-        <div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">
-          <button class="ask-ai-suggestion" data-q="What is the overall MX Score?">What is the overall MX Score?</button>
-          <button class="ask-ai-suggestion" data-q="How is Digital performing?">How is Digital performing?</button>
-          <button class="ask-ai-suggestion" data-q="What's the NPS trend over time?">What's the NPS trend over time?</button>
-          <button class="ask-ai-suggestion" data-q="Which channels are Exceptional?">Which channels are Exceptional?</button>
-          <button class="ask-ai-suggestion" data-q="What are members saying about Branch?">What are members saying about Branch?</button>
-          <button class="ask-ai-suggestion" data-q="Which staff members are mentioned by name?">Which staff are mentioned by name?</button>
-          <button class="ask-ai-suggestion" data-q="What is the branch incentive payout?">What's the branch incentive payout?</button>
-          <button class="ask-ai-suggestion" data-q="What should we focus on to improve the score?">What's the worst-performing channel?</button>
-          <button class="ask-ai-suggestion" data-q="What is the survey response rate?">What is the survey response rate?</button>
-          <button class="ask-ai-suggestion" data-q="What are members saying about Chat?">What are members saying about Chat?</button>
-        </div>
+    <!-- Left: AI Insights list -->
+    <div class="ask-ai-insights-panel">
+      <div class="ask-ai-insights-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Top 10 AI Insights
       </div>
-      <div class="card" style="padding:18px;font-size:11px;color:var(--muted);line-height:1.6">
-        <strong style="color:var(--text-2)">January 2026 data loaded.</strong><br/>
-        Ask about any channel score, trend, member comment, response rate, or staff recognition in this report.
+      <div class="top10-list">
+
+        <div class="top10-item">
+          <div class="top10-num sig-critical">1</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Autopilot Chat is the most urgent single fix in the entire MEME scorecard</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#F3F4F6;color:#545859">Chat</span>
+                <span class="top10-period">Jan 2025 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Autopilot scored 1.05–2.00/5 across every month of 2025, while human agents scored 3.0–4.75/5 in the same channel. The combined Jan 2026 score of 2.50 masks this split entirely. Autopilot is actively pulling down the overall MX score — and members are telling us why: "no help," "learn AI," "did not help will go to my branch."</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-critical">2</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Digital platform migration created a satisfaction crater that is still recovering 12 months later</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#FDE8EA;color:#C41E3A">Digital</span>
+                <span class="top10-period">Feb 2025 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Digital dropped from ~69% (Dec 2024) to 20–29% (Feb–Mar 2025) at platform launch and is at 51.89% in January 2026 — still 17 points below pre-migration baseline. At the current recovery rate of ~3 points per month, full recovery will take another 6–12 months. Login failures and the mobile app are the top complaint themes.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-positive">3</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Named employees are the #1 predictor of a positive comment across every channel</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Phone</span>
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">New Loan</span>
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">New Member</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">In January 2026, 14 of 35 member voice comments specifically name an employee — Harmony, Thomas, Carolyn, Skylar, Eileen, Jordon, Yesi, Johanna, Liliana, Anthony, Carol, Stephanie, Sierra, and Gabriela. Every named mention is positive. Channels where staff are named score significantly higher than channels where they aren't.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-positive">4</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Branch has held Exceptional tier for 24+ consecutive months — it is the operational model</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
+                <span class="top10-period">Jan 2024 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Branch reached 98.95% in January 2026 and has been at or above 95% in every month with recorded data since early 2024. Member comments consistently cite friendly staff, consistency across visits, and employees going above expectations. No other channel has maintained Exceptional tier for this duration.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-positive">5</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Speed and ease of process are what loan members care about most</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">New Loan</span>
+                <span class="top10-ch" style="background:#FFF5CC;color:#7A5800">Mortgage</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Words like "quick," "easy," "convenient," and "smooth" appear in 8 of 14 loan and mortgage comments this month. Members who mention processing speed are unanimous in their satisfaction. This is consistently the top theme in loan feedback — operational efficiency is the most actionable lever for loan satisfaction scores.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-positive">6</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">NPS hit an all-time high of 74 — and the promoter majority is growing</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCE0F5;color:#004987">NPS</span>
+                <span class="top10-period">Q3 2022 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">NPS has trended 67 → 62 → 72 → 72 → 74 since Q3 2022. Promoters now represent 81% of respondents. The Q2 2024 dip to 62 appears to have been a temporary outlier, not a trend. Crossing 80 (Exceptional tier) is achievable in 2026 if Digital and Chat recover, since dissatisfied members in those channels directly suppress NPS.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-warning">7</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">The 26.2% overall response rate is a statistical illusion — the real blended rate is ~12%</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Response Rate</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">January's 26.2% headline is boosted by Mortgage's 83.3% response rate on just 6 delivered surveys. Remove Mortgage and the true blended rate across the remaining five channels is approximately 11–12%, consistent with prior months. Tracking response rate as a single aggregate number without channel context is misleading.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-warning">8</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">New Member scores are highly volatile at current sample sizes — monthly results are unreliable</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">New Member</span>
+                <span class="top10-period">Jan 2025 – Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Monthly New Member scores range from 50% (Feb 2025, 2 happy out of 4) to 100% (Sep, Nov 2025). With 5–15 responses per month, a single unhappy member shifts the score by 7–20 points. The 12-month trailing average of 92.31% is statistically meaningful; the monthly score is not. Confidence interval is ±15 points at current volume.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-warning">9</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">Phone experience had an unexplained Q2 2025 dip that warrants a root cause review</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#CCF0FF;color:#004987">Phone</span>
+                <span class="top10-period">Apr – May 2025</span>
+              </div>
+            </div>
+            <div class="top10-body">Phone dropped from 4.53/5 in January 2025 to 3.63–3.66/5 in April–May 2025 — a 0.9-point decline — then recovered to 4.36 by January 2026. The cause is unknown. Possible factors include seasonal call volume spikes, staffing changes, or a specific complaint driver. If it recurs in Q2 2026, it becomes a pattern worth escalating.</div>
+          </div>
+        </div>
+
+        <div class="top10-item">
+          <div class="top10-num sig-info">10</div>
+          <div class="top10-content">
+            <div class="top10-header">
+              <span class="top10-title">The Digital survey is capturing in-branch experiences — creating a contaminated data signal</span>
+              <div class="top10-tags">
+                <span class="top10-ch" style="background:#FDE8EA;color:#C41E3A">Digital</span>
+                <span class="top10-ch" style="background:#E6F5CC;color:#3A6B00">Branch</span>
+                <span class="top10-period">Jan 2026</span>
+              </div>
+            </div>
+            <div class="top10-body">Two of four positive Digital comments in January describe in-person branch visits at the Surprise location and an in-branch account setup — interactions that have nothing to do with the website or app. If this is a recurring pattern in the pop-up survey, Digital's satisfaction score is artificially inflated by branch goodwill, masking the true digital experience quality.</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <!-- Main chat area -->
+    <!-- Right: chat with suggestions above -->
     <div class="ask-ai-chat-wrap">
+
+      <!-- Suggested question chips -->
+      <div class="ask-ai-suggestions-top">
+        <div class="ask-ai-suggestions-label">Suggested Questions</div>
+        <div class="ask-ai-suggestions-chips">
+          <button class="ask-ai-suggestion" data-q="What is the overall MX Score?">Overall MX Score?</button>
+          <button class="ask-ai-suggestion" data-q="How is Digital performing?">Digital performance?</button>
+          <button class="ask-ai-suggestion" data-q="What's the NPS trend over time?">NPS trend?</button>
+          <button class="ask-ai-suggestion" data-q="Which channels are Exceptional?">Exceptional channels?</button>
+          <button class="ask-ai-suggestion" data-q="What are members saying about Branch?">Branch feedback?</button>
+          <button class="ask-ai-suggestion" data-q="Which staff members are mentioned by name?">Staff mentions?</button>
+          <button class="ask-ai-suggestion" data-q="What is the branch incentive payout?">Branch payout?</button>
+          <button class="ask-ai-suggestion" data-q="What should we focus on to improve the score?">Worst channel?</button>
+          <button class="ask-ai-suggestion" data-q="What is the survey response rate?">Response rate?</button>
+          <button class="ask-ai-suggestion" data-q="What are members saying about Chat?">Chat feedback?</button>
+        </div>
+      </div>
+
+      <!-- Messages -->
       <div class="ask-ai-messages" id="pageChatMessages"></div>
+
+      <!-- Input -->
       <div class="ask-ai-input-row">
-        <input id="pageChatInput" class="ask-ai-input" type="text" placeholder="e.g. How is Digital performing? What are members saying about Branch?" />
+        <input id="pageChatInput" class="ask-ai-input" type="text" placeholder="Ask about any channel, trend, member comment, or score…" />
         <button id="pageChatSend" class="ask-ai-send">Send</button>
       </div>
+
     </div>
 
   </div>
