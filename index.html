@@ -596,6 +596,68 @@
     .subpage-chip:hover { border-color: var(--navy); color: var(--navy); }
     .subpage-chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
 
+    /* ── MEMBER VOICE ANALYSIS ──────────────────── */
+    .mva-intro {
+      font-size: 13px; color: var(--text-2); line-height: 1.7;
+      margin-bottom: 20px; max-width: 860px;
+    }
+    .mva-stats {
+      display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px;
+    }
+    .mva-stat {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      padding: 12px 18px; display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 140px;
+    }
+    .mva-stat-num { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1; }
+    .mva-stat-lbl { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .mva-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    @media (max-width: 900px) { .mva-grid { grid-template-columns: 1fr; } }
+    .mva-card {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      border-left: 4px solid var(--border); padding: 18px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .mva-card.risk     { border-left-color: var(--red); }
+    .mva-card.strength { border-left-color: var(--green); }
+    .mva-card.watch    { border-left-color: var(--amber); }
+    .mva-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .mva-card-tags { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; flex-shrink: 0; }
+    .mva-type {
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      padding: 2px 8px; border-radius: 10px;
+    }
+    .mva-type.risk     { background: var(--red-bg);   color: var(--red);   }
+    .mva-type.strength { background: var(--green-bg); color: var(--green); }
+    .mva-type.watch    { background: var(--amber-bg); color: var(--amber); }
+    .mva-channel-tag {
+      font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px;
+      padding: 2px 7px; border-radius: 10px;
+      background: #EEF2FF; color: #004987;
+    }
+    .mva-impact {
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+      padding: 2px 8px; border-radius: 10px;
+    }
+    .mva-impact.high   { background: #004987; color: #fff; }
+    .mva-impact.medium { background: var(--border); color: var(--text-2); }
+    .mva-title {
+      font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.35;
+    }
+    .mva-body {
+      font-size: 12px; color: var(--text-2); line-height: 1.7; flex: 1;
+    }
+    .mva-voice {
+      font-size: 11px; font-style: italic; color: var(--muted);
+      border-left: 2px solid var(--border); padding-left: 10px; margin-top: 2px;
+    }
+    .mva-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 10px; border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--muted);
+    }
+
     /* ── MEMBER VOICES FULL TABLE ───────────────── */
     .mv-filter-row {
       display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
@@ -1172,6 +1234,7 @@
   <div class="subpage-chips">
     <button class="subpage-chip active" data-sub="queue">Member Outreach Queue</button>
     <button class="subpage-chip" data-sub="voices">Member Voices</button>
+    <button class="subpage-chip" data-sub="analysis">Member Voice Analysis</button>
   </div>
 
   <!-- SUB-PAGE: OUTREACH QUEUE -->
@@ -1392,6 +1455,254 @@
     </div>
   </div>
   </div><!-- /sub-voices -->
+
+  <!-- SUB-PAGE: MEMBER VOICE ANALYSIS -->
+  <div id="sub-analysis" style="display:none">
+  <p class="mva-intro">The following insights were derived from analysis of <strong>514 NPS survey responses</strong> collected in January 2026, supplemented by CSAT data across all nine Experience Measures. Each insight is framed for a credit union leadership team pursuing aggressive growth over the next five years. Themes are weighted by frequency, member impact, and competitive exposure.</p>
+
+  <div class="mva-stats">
+    <div class="mva-stat"><span class="mva-stat-num">514</span><span class="mva-stat-lbl">NPS Comments Analyzed</span></div>
+    <div class="mva-stat"><span class="mva-stat-num">30</span><span class="mva-stat-lbl">Detractor Voices</span></div>
+    <div class="mva-stat"><span class="mva-stat-num">32</span><span class="mva-stat-lbl">Passive Voices</span></div>
+    <div class="mva-stat"><span class="mva-stat-num">452</span><span class="mva-stat-lbl">Promoter Voices</span></div>
+    <div class="mva-stat"><span class="mva-stat-num">9</span><span class="mva-stat-lbl">Experience Channels</span></div>
+  </div>
+
+  <div class="mva-grid">
+
+    <!-- 1 -->
+    <div class="mva-card strength">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type strength">Strength</span>
+          <span class="mva-channel-tag">Branch</span>
+          <span class="mva-channel-tag">Phone</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Staff Relationship Quality Is the Core Brand Differentiator</div>
+      <div class="mva-body">An extraordinary share of promoter comments name specific employees — Eileen, Carolyn, Debbie, Thomas, Erika, Taylor, Victor — and use words like "family," "know me by name," and "hometown." No other single attribute comes close in frequency. This relational capital is the moat that separates Copper State from national banks and fintech competitors.<br><br>For aggressive growth, this asset must be systematically protected, measured by employee, and replicated at scale as new branches open. Staff recognition programs and incentive structures tied to named member feedback are immediately actionable.</div>
+      <div class="mva-voice">"I feel like I am a cared for customer with you folks." · "Everyone at the branch has been wonderful. Best bank I have had in all my years!"</div>
+      <div class="mva-footer"><span>Branch CSAT: 98.95% · 95 responses</span><span>Top theme in 60%+ of promoter comments</span></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="mva-card risk">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Risk</span>
+          <span class="mva-channel-tag">Phone</span>
+          <span class="mva-channel-tag">Chat</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Phone Wait Times Are Actively Driving Members to Competitors</div>
+      <div class="mva-body">At least seven detractor comments in January alone cite multi-hour hold times, inability to reach anyone across multiple days, confusing IVR routing, and inability to connect directly to a local branch. Several members state they would not recommend the credit union specifically because of phone access. For a CU whose brand promise is personal service, this is a direct contradiction.<br><br>Phone is the highest-volume service channel for members 40+, which is Copper State's current membership core. Reducing average wait time below 3 minutes is a measurable, achievable retention lever.</div>
+      <div class="mva-voice">"Telephone lines always busy, sat on hold for several hours and never got through to anyone. Tried for several days." · "Actually have somebody that picks up the phone when someone calls."</div>
+      <div class="mva-footer"><span>Phone Avg Rating: 4.36/5 · 301 responses</span><span>~7 explicit detractor mentions this month</span></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="mva-card risk">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Risk</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Digital Experience Is a Growth Ceiling, Not Just a Low Score</div>
+      <div class="mva-body">Digital Experience scored 51.89% — Off Track and the single lowest-rated channel in the January report. Member comments describe the website as "awful," "confusing," "forced upon us," and not user-friendly. The mobile app is missing card lock/unlock, has slow check deposit, and requires repeated re-authentication for Zelle. These are standard features at competing institutions.<br><br>For aggressive five-year growth, digital is the primary acquisition channel for members under 40. A substandard digital product makes it nearly impossible to grow in the millennial and Gen Z segments, which represent the largest generational wealth transfer in history.</div>
+      <div class="mva-voice">"Your website is awful. I have mentioned it so many times. It's not that hard to have a user friendly easy website — it's 2026." · "Allow members to shut off their card through the app."</div>
+      <div class="mva-footer"><span>Digital CSAT: 51.89% · 106 responses</span><span>Only channel rated Off Track (raw score: 1)</span></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="mva-card risk">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Risk</span>
+          <span class="mva-channel-tag">Chat</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Autopilot Chat Is Eroding Trust in the Digital Channel</div>
+      <div class="mva-body">Chat scored 2.50/5 in January (Mixed), but the underlying data reveals that Autopilot (AI bot) scores 1.05–2.00/5 while human agents score 3.0–4.75/5. The combined score masks a severe automation failure. Members are explicitly telling the survey they received "no help" and are redirecting to branches — the highest-cost service channel.<br><br>At scale, a poorly performing AI chatbot does not save cost; it transfers cost to branches while actively damaging satisfaction. A human-first chat routing model with AI assist — rather than AI-first deflection — would immediately improve scores and protect branch capacity as the member base grows.</div>
+      <div class="mva-voice">"No help." · "Did not help — will go to my branch." · "Learn AI."</div>
+      <div class="mva-footer"><span>Chat Score: 2.50/5 · 26 responses</span><span>Autopilot vs. human agent gap is significant</span></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="mva-card watch">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type watch">Watch</span>
+          <span class="mva-channel-tag">Branch</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Geographic Footprint Is Capping Referral Growth</div>
+      <div class="mva-body">Multiple promoters and passives explicitly state they would have scored higher — or do not recommend — because Copper State has no presence in the East Valley (Scottsdale, Tempe, Mesa, Fountain Hills, Chandler). One member drives 25 minutes to the Surprise branch for cash withdrawals and uses Desert Financial on Saturdays instead. Another member noted family can't join because they are not Arizona-eligible.<br><br>The East Valley represents approximately 40% of the Phoenix metro population and is the fastest-growing submarket. Members who are already loyal are blocked from referring their networks. Each new branch in underserved areas unlocks a referral multiplier from the existing member base.</div>
+      <div class="mva-voice">"It would be a 10 if you had branches in the east valley." · "Have an office on the east side of the valley for convenience to people in Scottsdale, Fountain Hills, Tempe, Mesa."</div>
+      <div class="mva-footer"><span>Branch CSAT: 98.95%</span><span>Location cited in ~10% of non-10 scores</span></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="mva-card watch">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type watch">Watch</span>
+          <span class="mva-channel-tag">Branch</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Weekend and Extended Hour Gaps Are Preventing Primary Account Capture</div>
+      <div class="mva-body">At least six detractor and passive comments cite weekend closures or early weekday closures as the explicit reason they cannot use Copper State as their primary financial institution. One member deposits tip income at Desert Financial on Saturdays because she cannot get to a branch on weekdays. Another member gave a 4 rating specifically because Saturday access is unavailable.<br><br>For members in service, retail, or hourly-wage industries — a substantial portion of Arizona's working population — M-F banking hours mean CSCU is structurally ineligible to be their primary bank. Saturday hours at select high-traffic locations would directly increase primary account penetration without requiring new branches.</div>
+      <div class="mva-voice">"I don't use you as my main banking place because I work M-F and I live all the way in North Surprise." · "Be open on Saturdays. Be open later."</div>
+      <div class="mva-footer"><span>Cited by 6+ NPS respondents this month</span><span>Direct primary account barrier</span></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="mva-card risk">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Risk</span>
+          <span class="mva-channel-tag">Phone</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Fraud Response Failures Create the Highest-Risk Churn Moments</div>
+      <div class="mva-body">Three distinct fraud-related member complaints appear in January: one member lost $6,500 when the fraud department refused to speak with her by phone; another reports card replacement after fraud detection takes "way, way too long"; a third was told nothing could be done about CSCU phone numbers being spoofed by scammers. In banking, a poor fraud response is one of the strongest predictors of immediate account closure and negative word-of-mouth.<br><br>For a credit union competing on trust versus megabanks, a faster and more empathetic fraud response is a direct competitive advantage. Same-day card replacement and accessible fraud intake are table-stakes for growth-oriented institutions.</div>
+      <div class="mva-voice">"I was scammed out of $6,500 because your fraud dept refused to speak to me on the phone." · "It takes way, way too long to get a replacement card."</div>
+      <div class="mva-footer"><span>Phone + Digital channels</span><span>Fraud response = #1 trust-critical moment</span></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="mva-card strength">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type strength">Strength</span>
+          <span class="mva-channel-tag">All Channels</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Multi-Generational Loyalty Is an Underutilized Growth Engine</div>
+      <div class="mva-body">Dozens of promoter comments reference membership tenure of 20, 30, 40, or 50+ years — dating back to Deer Valley FCU, Grand Canyon CU, SAFCO, and DES Credit Union. Members explicitly name their children and grandchildren as fellow members. This depth of generational loyalty is exceptional in financial services and represents a built-in referral network that is currently informal and unsystematized.<br><br>A structured member-get-member program with incentives tied to household growth would convert passive loyalty into active acquisition. Long-tenure members are also the most credible advocates during new product launches or rate campaigns.</div>
+      <div class="mva-voice">"Been with you for over 50 years." · "I've been a member since 1981. I guided my family and friends there!" · "Me and my family have been using for a while."</div>
+      <div class="mva-footer"><span>Mentioned in 40%+ of 10-rated responses</span><span>Referral program ROI typically 3–5× paid acquisition</span></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="mva-card watch">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type watch">Watch</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+        <span class="mva-impact medium">Medium Impact</span>
+      </div>
+      <div class="mva-title">Technology Transition Friction Is Creating Avoidable Attrition</div>
+      <div class="mva-body">Multiple comments reference confusion and frustration stemming from the rollout of the new online banking interface "about a year ago." One long-term member (46 years) describes the new website as "NOT-user-friendly." Another 70-year-old member credits a patient branch employee for walking him through everything. The pattern suggests that system migrations are proceeding without adequate member change management programs.<br><br>Dedicated onboarding support — digital tutorials, proactive call outreach to long-tenure members, and in-branch help sessions — during system transitions protects retention among the older member segment, which represents a significant share of Copper State's deposit base.</div>
+      <div class="mva-voice">"Understand I am 71 and not very good on the computer. They walked me through everything." · "The new very complicated NOT-user-friendly online customer website."</div>
+      <div class="mva-footer"><span>Digital channel</span><span>Long-tenure members at highest transition risk</span></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="mva-card watch">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type watch">Watch</span>
+          <span class="mva-channel-tag">All Channels</span>
+        </div>
+        <span class="mva-impact medium">Medium Impact</span>
+      </div>
+      <div class="mva-title">Rate Competitiveness Is a Threshold Attribute — Silent Attrition Risk</div>
+      <div class="mva-body">Several passives and detractors dropped their NPS score specifically because of rate changes: one stopped using his CSCU credit card after an unexplained 4%+ rate increase and switched to OneAZ; another now gets lower auto rates and higher savings rates from a competing credit union; a third moved his mortgage elsewhere. Importantly, some promoters chose CSCU because rates were the best — meaning rate positioning drives both acquisition and retention.<br><br>The pattern of unexplained rate increases is more damaging than the increases themselves. Members tolerate rate changes when communicated proactively with context. A rate change communication strategy — brief, transparent, ahead of implementation — is a low-cost trust investment with measurable NPS impact.</div>
+      <div class="mva-voice">"My credit card rate was raised over 4% with no explanation. I stopped using it." · "I used to get the lowest rates through you. Lately I've been getting lower auto rates through another local credit union."</div>
+      <div class="mva-footer"><span>Cross-channel product issue</span><span>Proactive communication reduces detractor conversion</span></div>
+    </div>
+
+    <!-- 11 -->
+    <div class="mva-card risk">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Risk</span>
+          <span class="mva-channel-tag">Branch</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+        <span class="mva-impact medium">Medium Impact</span>
+      </div>
+      <div class="mva-title">Physical Infrastructure Reliability Undermines the In-Branch Experience</div>
+      <div class="mva-body">Specific infrastructure failures appear repeatedly: a drive-thru machine that is "always down," a drive-thru call button inaccessible from standard vehicles at the Dysart branch, an ATM placement that forces large vehicles to exit their car, and debit cards that fail at point-of-sale. Each failure is minor in isolation but cumulative in perception. Members who cite these issues are already advocates (scores of 7–8) who are being held below promoter status by preventable operational gaps.<br><br>A systematic audit of physical touch-point reliability — ATMs, drive-thrus, card authorization rates — with branch-level SLAs would directly convert passives to promoters. These fixes tend to have high NPS ROI relative to cost.</div>
+      <div class="mva-voice">"Your drive-thru machine is always down." · "The drive-up call button is in a position that neither my car nor truck can access without getting out." · "I constantly have to use another card because yours does not work."</div>
+      <div class="mva-footer"><span>Branch CSAT: 98.95% (infrastructure not in CSAT scope)</span><span>Passive→Promoter conversion opportunity</span></div>
+    </div>
+
+    <!-- 12 -->
+    <div class="mva-card strength">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type strength">Strength</span>
+          <span class="mva-channel-tag">Digital</span>
+          <span class="mva-channel-tag">Branch</span>
+        </div>
+        <span class="mva-impact medium">Medium Impact</span>
+      </div>
+      <div class="mva-title">Shared Branching and Co-Op Network Is an Undermarketed Competitive Advantage</div>
+      <div class="mva-body">Several members explicitly credit shared branching as a reason they maintain membership while living in other states or traveling. One member in Oregon cites digital access and co-op ATM coverage as the reason he kept his account after moving. Another values the Hawaii Law Enforcement FCU connection. This network directly addresses the geographic footprint complaints that hold multiple promoters below a 10 rating.<br><br>Shared branching is a powerful counter-narrative to "you don't have a location near me" — but it must be actively marketed. Embedding co-op branch/ATM locator tools in the app and website, and scripting the benefit into frontline conversations, would reduce location-based detraction without capital expenditure.</div>
+      <div class="mva-voice">"I live in Oregon and still use them as my primary bank. Excellent online services and easy co-op ATM access." · "Shared branching is a must for me."</div>
+      <div class="mva-footer"><span>Geographic reach without new branches</span><span>Strong retention tool for relocated members</span></div>
+    </div>
+
+    <!-- 13 -->
+    <div class="mva-card watch">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type watch">Watch</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+        <span class="mva-impact medium">Medium Impact</span>
+      </div>
+      <div class="mva-title">Remote and Out-of-State Members Signal Demand for a Digital-First Membership Tier</div>
+      <div class="mva-body">Multiple members flag that they have moved out of Arizona but retained their Copper State accounts due to loyalty, digital access, or co-op coverage. One member explicitly notes that the GCU/Copper State partnership created members who cannot recommend the CU because their family and friends are not Arizona-eligible. Current membership eligibility requirements cap the addressable market.<br><br>A digital-first or SEG-expanded membership offering — potentially marketed to Arizona transplants, military families, or national employer groups — could unlock a growth channel outside the physical branch footprint. This is one of the highest-upside, lowest-cost growth options for institutions with strong digital infrastructure.</div>
+      <div class="mva-voice">"Although I moved to the East Coast, I am still a member in good standing." · "Being that I am not local to Arizona, I wouldn't recommend to personal family and friends as they're not eligible."</div>
+      <div class="mva-footer"><span>Digital channel dependency</span><span>National growth requires eligibility expansion</span></div>
+    </div>
+
+    <!-- 14 -->
+    <div class="mva-card watch">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type watch">Watch</span>
+          <span class="mva-channel-tag">Branch</span>
+        </div>
+        <span class="mva-impact medium">Medium Impact</span>
+      </div>
+      <div class="mva-title">Small Fee and Policy Friction Points Are Converting Promoters to Passives</div>
+      <div class="mva-body">Inactivity fees, coin counter charges, the elimination of free cashier's checks, and restrictions on cash withdrawals without advance notice appear as specific irritants in comments from members who otherwise have positive relationships. One member with a $180k balance was refused a $3–5k cash withdrawal without pre-scheduling — a policy that led to a near-defection. Another is reconsidering membership over a $10 inactivity fee.<br><br>These are low-revenue, high-friction policies. Members are not price-sensitive about relationship banking — but they are highly sensitive to policies that signal distrust or bureaucratic indifference. Revisiting fees and cash access policies with a "member-first" lens would produce measurable NPS gains at minimal revenue cost.</div>
+      <div class="mva-voice">"Branch was not allowing me to take out $3k–$5k without scheduling the withdrawal in advance with a $180k balance." · "I have a $10 inactive fee charged — this causes me to think about moving."</div>
+      <div class="mva-footer"><span>Branch + Loan channels</span><span>Policy review: high NPS yield, low revenue impact</span></div>
+    </div>
+
+    <!-- 15 -->
+    <div class="mva-card strength">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type strength">Strength</span>
+          <span class="mva-channel-tag">New Loan</span>
+          <span class="mva-channel-tag">Mortgage</span>
+        </div>
+        <span class="mva-impact high">High Impact</span>
+      </div>
+      <div class="mva-title">Loan Experience Is a Proven Acquisition and Retention Engine</div>
+      <div class="mva-body">Consumer Loan CSAT hit 100% in January (15 responses) and Mortgage reached 80% YTD. Member comments across NPS data frequently cite auto loans, HELOCs, and mortgages as the reason they originally joined or why they stayed — sometimes 20–30 years later. Multiple members reference 3, 4, or 5 auto loans over their membership. The loan experience is not just a product line; it is the primary acquisition event for a large share of the membership.<br><br>A loan-to-full-relationship conversion strategy — systematically offering checking, savings, and digital enrollment at loan origination — would significantly increase wallet share per acquired member. The trust is already established at the loan moment; conversion is a process design problem, not a relationship problem.</div>
+      <div class="mva-voice">"I've had 3 auto loans with Copper State — every single one has been extremely easy in comparison to other lenders." · "Copper State approved my HELOC quickly and were excellent to work with."</div>
+      <div class="mva-footer"><span>Consumer Loan: 100% · Mortgage YTD: 80%</span><span>Loan origination = highest-intent onboarding moment</span></div>
+    </div>
+
+  </div><!-- /mva-grid -->
+  </div><!-- /sub-analysis -->
 
   </div><!-- /page-voices -->
 
@@ -2637,8 +2948,9 @@ document.querySelectorAll('.subpage-chip').forEach(chip => {
     document.querySelectorAll('.subpage-chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     const sub = chip.dataset.sub;
-    document.getElementById('sub-queue').style.display  = sub === 'queue'  ? '' : 'none';
-    document.getElementById('sub-voices').style.display = sub === 'voices' ? '' : 'none';
+    document.getElementById('sub-queue').style.display    = sub === 'queue'    ? '' : 'none';
+    document.getElementById('sub-voices').style.display   = sub === 'voices'   ? '' : 'none';
+    document.getElementById('sub-analysis').style.display = sub === 'analysis' ? '' : 'none';
     if (sub === 'voices') renderMVComments();
   });
 });
