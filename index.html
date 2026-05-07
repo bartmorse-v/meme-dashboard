@@ -1092,6 +1092,9 @@
           </div>
         </div>
         <div class="voices-scroll" id="voicesScroll"></div>
+        <div style="padding:10px 0 2px;text-align:right">
+          <button id="dashSeeAllVoices" style="background:none;border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit;">See All</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2957,6 +2960,19 @@ document.querySelectorAll('.header-nav a[data-page]').forEach(link => {
       floatBtn.style.display = '';
     }
   });
+});
+
+document.getElementById('dashSeeAllVoices').addEventListener('click', () => {
+  document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+  document.getElementById('page-voices').style.display = '';
+  document.querySelectorAll('.header-nav a[data-page]').forEach(a => a.classList.remove('active'));
+  document.querySelector('.header-nav a[data-page="voices"]').classList.add('active');
+  document.querySelectorAll('.subpage-chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('.subpage-chip[data-sub="voices"]').classList.add('active');
+  document.getElementById('sub-queue').style.display    = 'none';
+  document.getElementById('sub-voices').style.display   = '';
+  document.getElementById('sub-analysis').style.display = 'none';
+  renderMVComments();
 });
 
 /* ── PERIOD DROPDOWNS ────────────────────────────────── */
