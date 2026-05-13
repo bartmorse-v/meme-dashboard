@@ -900,6 +900,69 @@
       background: rgba(0,0,0,.12); border-radius: 10px; padding: 1px 8px;
       font-size: 11px; font-weight: 700;
     }
+  
+    /* ── OUTREACH QUEUE KANBAN ────────────────────────────────────── */
+    .oq-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: start; }
+    .oq-col   { display: flex; flex-direction: column; gap: 10px; }
+    .oq-col-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px;
+      margin-bottom: 2px;
+    }
+    .oq-col-count { background: rgba(0,0,0,.13); border-radius: 10px; padding: 1px 8px; font-size: 11px; font-weight: 700; }
+    .oq-empty { text-align: center; padding: 28px 16px; color: var(--muted); font-size: 12px; border: 1.5px dashed var(--border); border-radius: var(--radius); }
+    .oq-card {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm);
+      padding: 14px 16px; border-left: 4px solid transparent;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .oq-card.immediate   { border-left-color: var(--red);   }
+    .oq-card.systemic    { border-left-color: var(--amber); }
+    .oq-card.recognition { border-left-color: var(--green); }
+    .oq-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .oq-badges   { display: flex; gap: 5px; flex-wrap: wrap; }
+    .oq-priority { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 2px 8px; border-radius: 10px; }
+    .oq-priority.immediate   { background: var(--red-bg);   color: var(--red);   }
+    .oq-priority.systemic    { background: var(--amber-bg); color: var(--amber); }
+    .oq-priority.recognition { background: var(--green-bg); color: var(--green); }
+    .oq-ch { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; padding: 2px 8px; border-radius: 10px; }
+    .oq-ch.mortgage { background: #F3EEFF; color: #6B3FB5; }
+    .oq-ch.digital  { background: var(--red-bg); color: var(--red); }
+    .oq-ch.chat     { background: #F3F4F6; color: #545859; }
+    .oq-ch.loan     { background: var(--green-bg); color: var(--green); }
+    .oq-ch.newmbr   { background: #CCE0F5; color: var(--navy); }
+    .oq-expand-btn {
+      background: none; border: 1px solid var(--border); border-radius: 6px;
+      padding: 3px 7px; cursor: pointer; color: var(--muted); line-height: 0;
+      flex-shrink: 0; transition: transform 200ms, background 150ms;
+    }
+    .oq-expand-btn:hover { background: var(--bg); }
+    .oq-expand-btn.open { transform: rotate(180deg); }
+    .oq-member-name  { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .oq-quote-preview { font-size: 11px; color: var(--text-2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .oq-card-footer  { display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+    .oq-issue-tag    { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+    .oq-branch-tag   { font-size: 10px; color: var(--muted); }
+    .oq-detail       { border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .oq-detail-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+    .oq-detail-item  { display: flex; flex-direction: column; gap: 2px; }
+    .oq-dl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
+    .oq-dv { font-size: 11px; color: var(--text); }
+    .oq-full-quote   { font-size: 11px; color: var(--text-2); line-height: 1.6; font-style: italic; padding: 8px 10px; background: var(--bg); border-radius: 6px; border-left: 3px solid var(--border); }
+    .oq-action-block { background: #EEF4FF; border-radius: 6px; padding: 8px 10px; }
+    .oq-action-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--navy); margin-bottom: 4px; }
+    .oq-action-text  { font-size: 11px; color: var(--text); line-height: 1.5; }
+    .oq-move-row     { display: flex; gap: 6px; padding-top: 6px; border-top: 1px solid var(--border); }
+    .oq-move-btn {
+      flex: 1; padding: 5px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;
+      cursor: pointer; font-family: inherit; border: 1px solid var(--border);
+      background: var(--bg); color: var(--text-2); transition: background 150ms, color 150ms, border-color 150ms;
+    }
+    .oq-move-btn:hover     { background: #CCE0F5; color: var(--navy); border-color: var(--navy); }
+    .oq-move-btn.grn:hover { background: var(--green-bg); color: var(--green); border-color: var(--green); }
+    .oq-move-btn.back      { color: var(--muted); }
+
   </style>
 </head>
 <body>
@@ -1129,190 +1192,211 @@
   <!-- SUB-PAGE: OUTREACH QUEUE -->
   <div id="sub-queue">
   <div class="section-label">Member Outreach Queue</div>
-  <div class="row-full">
-    <div class="card">
-      <div class="ai-header">
-        <div class="ai-icon" style="background:linear-gradient(135deg,#B91C1C,#991B1B)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.69A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-        </div>
-        <div class="ai-header-text">
-          <h3>Who needs a personal follow-up?</h3>
-          <p>Members identified from January 2026 survey feedback &nbsp;&middot;&nbsp; Prioritized by urgency and action type</p>
-        </div>
+
+  <div class="oq-board">
+
+    <!-- UNRESOLVED -->
+    <div class="oq-col" id="oqCol-unresolved">
+      <div class="oq-col-header" style="background:var(--red-bg);color:var(--red)">
+        <span>Unresolved</span>
+        <span class="oq-col-count" id="oqCount-unresolved">6</span>
       </div>
 
-      <div class="outreach-groups">
-
-        <!-- IMMEDIATE ACTION -->
-        <div class="outreach-group grp-immediate">
-          <div class="outreach-group-label">
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Immediate Outreach &mdash; Unhappy or Neutral Members
-            <span class="group-count">1 member</span>
-          </div>
-          <table class="outreach-table">
-            <thead>
-              <tr>
-                <th style="width:160px">Member</th>
-                <th style="width:100px">Priority</th>
-                <th>What they said</th>
-                <th style="width:80px">Issue</th>
-                <th style="width:220px">Recommended action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="outreach-name">David Demers</div>
-                  <span class="outreach-channel mortgage">Mortgage</span>
-                </td>
-                <td><span class="priority-pill immediate">
-                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-                  Immediate
-                </span></td>
-                <td><div class="outreach-quote">"When you say I should select the mortgage option to set up my mortgage, it's a good thing to provide the link. It isn't there. Your customer service on mortgage loans also needs a lot of improvement."</div></td>
-                <td><span class="outreach-issue" style="background:var(--amber-bg);color:var(--amber)">Broken UX</span></td>
-                <td class="outreach-action">
-                  <strong>Call or email within 48 hrs.</strong> Apologize for the missing link. Confirm his mortgage setup is complete. Log for IT to fix portal navigation.
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="oq-card immediate" data-id="demers">
+      <div class="oq-card-top">
+        <div class="oq-badges">
+          <span class="oq-priority immediate">Immediate</span>
+          <span class="oq-ch mortgage">Mortgage</span>
         </div>
-
-        <hr class="outreach-divider"/>
-
-        <!-- SYSTEMIC / ANONYMOUS -->
-        <div class="outreach-group grp-systemic">
-          <div class="outreach-group-label">
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Service Recovery &mdash; Anonymous or Multi-Member Complaints
-            <span class="group-count">2 issues</span>
-          </div>
-          <table class="outreach-table">
-            <thead>
-              <tr>
-                <th style="width:160px">Source</th>
-                <th style="width:100px">Priority</th>
-                <th>What they said</th>
-                <th style="width:80px">Issue</th>
-                <th style="width:220px">Recommended action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="outreach-name">Anonymous Member</div>
-                  <span class="outreach-channel digital">Digital</span>
-                </td>
-                <td><span class="priority-pill systemic">
-                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-                  No contact
-                </span></td>
-                <td><div class="outreach-quote">"ALLOW A SIGNON TO BE COMPLETED...NOT JUST AN OOPS SOMETHING WENT WRONG."</div></td>
-                <td><span class="outreach-issue" style="background:var(--red-bg);color:var(--red)">Login bug</span></td>
-                <td class="outreach-action">
-                  <strong>Escalate to IT/digital team immediately.</strong> Cannot contact individually. Log as P1 bug &mdash; login failure is directly causing Digital&rsquo;s 51.9% score.
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="outreach-name">Multiple Members</div>
-                  <span class="outreach-channel chat">Chat</span>
-                </td>
-                <td><span class="priority-pill systemic">
-                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-                  No contact
-                </span></td>
-                <td><div class="outreach-quote">"You&rsquo;re no help as automated chat, learn AI!! ... did not help will go to my branch."</div></td>
-                <td><span class="outreach-issue" style="background:var(--red-bg);color:var(--red)">Bot failure</span></td>
-                <td class="outreach-action">
-                  <strong>Audit Autopilot chat flows.</strong> Cannot contact individually. Map common failure paths and escalate to vendor. Chat scored 2.50/5 &mdash; lowest rated channel.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <hr class="outreach-divider"/>
-
-        <!-- RECOGNITION -->
-        <div class="outreach-group grp-recognition">
-          <div class="outreach-group-label">
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-            Recognition Opportunity &mdash; Staff Named by Members
-            <span class="group-count">3 members</span>
-          </div>
-          <table class="outreach-table">
-            <thead>
-              <tr>
-                <th style="width:160px">Member</th>
-                <th style="width:100px">Priority</th>
-                <th>What they said</th>
-                <th style="width:80px">Staff</th>
-                <th style="width:220px">Recommended action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="outreach-name">Susan Beauregard</div>
-                  <span class="outreach-channel loan">New Loan</span>
-                </td>
-                <td><span class="priority-pill recognize">
-                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-                  Recognition
-                </span></td>
-                <td><div class="outreach-quote">"Liliana was very attentive in answering all questions. Handled quickly and efficiently. Positive and friendly."</div></td>
-                <td><span class="outreach-issue" style="background:var(--green-bg);color:var(--green)">Liliana A.</span></td>
-                <td class="outreach-action">
-                  <strong>Share feedback with Liliana&rsquo;s manager.</strong> Consider a thank-you note to Susan. Strong candidate for an NPS referral ask.
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="outreach-name">Renee Banke</div>
-                  <span class="outreach-channel branch">New Member</span>
-                </td>
-                <td><span class="priority-pill recognize">
-                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-                  Recognition
-                </span></td>
-                <td><div class="outreach-quote">"Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State!"</div></td>
-                <td><span class="outreach-issue" style="background:var(--green-bg);color:var(--green)">Debbie B.</span></td>
-                <td class="outreach-action">
-                  <strong>Share feedback with Debbie&rsquo;s branch manager.</strong> Consider a welcome card from leadership to Renee as a new member.
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="outreach-name">Michaelson Martin</div>
-                  <span class="outreach-channel mortgage">Mortgage</span>
-                </td>
-                <td><span class="priority-pill recognize">
-                  <svg width="8" height="8" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="6" fill="currentColor"/></svg>
-                  Recognition
-                </span></td>
-                <td><div class="outreach-quote">"Eric, Mary and the team were very professional, friendly, patient and communicated all steps clearly."</div></td>
-                <td><span class="outreach-issue" style="background:var(--green-bg);color:var(--green)">Eric &amp; Mary</span></td>
-                <td class="outreach-action">
-                  <strong>Share with mortgage team leadership.</strong> Document as a model for the digital channels that are underperforming.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div><!-- /outreach-groups -->
-
-      <div class="outreach-note">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        <div>This queue is based on the 6 member comments included in this report. For a complete outreach list, export full verbatim responses from HubSpot — each survey response tied to a member record can be loaded here automatically. Ask your technical team about connecting the HubSpot API.</div>
+        <button class="oq-expand-btn" onclick="toggleOQCard('demers')" title="Show details">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
       </div>
-
+      <div class="oq-member-name">David Demers</div>
+      <div class="oq-quote-preview">&ldquo;When you say I should select the mortgage option to set up my mortgage, it&rsquo;s a good thing to provide the link. It isn&rsquo;t there.&rdquo;</div>
+      <div class="oq-card-footer">
+        <span class="oq-issue-tag" style="background:var(--amber-bg);color:var(--amber)">Broken UX</span>
+        <span class="oq-branch-tag">Anthem Branch</span>
+      </div>
+      <div class="oq-detail" id="oqDetail-demers" style="display:none">
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Anthem Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Mortgage CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">ddemers@gmail.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(602) 555-4821</span></div></div>
+        <div class="oq-full-quote">&ldquo;When you say I should select the mortgage option to set up my mortgage, it&rsquo;s a good thing to provide the link. It isn&rsquo;t there. Your customer service on mortgage loans also needs a lot of improvement.&rdquo;</div>
+        <div class="oq-action-block">
+          <div class="oq-action-label">Recommended Action</div>
+          <div class="oq-action-text">Call or email within 48 hrs. Apologize for the missing link. Confirm his mortgage setup is complete. Log for IT to fix portal navigation.</div>
+        </div>
+      </div>
+      <div class="oq-move-row" id="oqMoves-demers">
+        <button class="oq-move-btn" onclick="moveOQCard('demers','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn grn" onclick="moveOQCard('demers','resolved')">&#8594; Resolved</button>
+      </div>
     </div>
-  </div>
+    <div class="oq-card systemic" data-id="anon-digital">
+      <div class="oq-card-top">
+        <div class="oq-badges">
+          <span class="oq-priority systemic">No Contact</span>
+          <span class="oq-ch digital">Digital</span>
+        </div>
+        <button class="oq-expand-btn" onclick="toggleOQCard('anon-digital')" title="Show details">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="oq-member-name">Anonymous Member</div>
+      <div class="oq-quote-preview">&ldquo;ALLOW A SIGNON TO BE COMPLETED&hellip;NOT JUST AN OOPS SOMETHING WENT WRONG.&rdquo;</div>
+      <div class="oq-card-footer">
+        <span class="oq-issue-tag" style="background:var(--red-bg);color:var(--red)">Login Bug</span>
+        <span class="oq-branch-tag">Online / OLB</span>
+      </div>
+      <div class="oq-detail" id="oqDetail-anon-digital" style="display:none">
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">N/A &mdash; Online</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Digital / OLB Pop-up</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">Anonymous &mdash; unavailable</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">Anonymous &mdash; unavailable</span></div></div>
+        <div class="oq-full-quote">&ldquo;ALLOW A SIGNON TO BE COMPLETED&hellip;NOT JUST AN OOPS SOMETHING WENT WRONG.&rdquo;</div>
+        <div class="oq-action-block">
+          <div class="oq-action-label">Recommended Action</div>
+          <div class="oq-action-text">Escalate to IT/digital team immediately. Cannot contact individually. Log as P1 bug &mdash; login failure is directly causing Digital&rsquo;s 51.9% score.</div>
+        </div>
+      </div>
+      <div class="oq-move-row" id="oqMoves-anon-digital">
+        <button class="oq-move-btn" onclick="moveOQCard('anon-digital','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn grn" onclick="moveOQCard('anon-digital','resolved')">&#8594; Resolved</button>
+      </div>
+    </div>
+    <div class="oq-card systemic" data-id="chat-multi">
+      <div class="oq-card-top">
+        <div class="oq-badges">
+          <span class="oq-priority systemic">No Contact</span>
+          <span class="oq-ch chat">Chat</span>
+        </div>
+        <button class="oq-expand-btn" onclick="toggleOQCard('chat-multi')" title="Show details">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="oq-member-name">Multiple Members</div>
+      <div class="oq-quote-preview">&ldquo;You&rsquo;re no help as automated chat, learn AI!! &hellip;did not help will go to my branch.&rdquo;</div>
+      <div class="oq-card-footer">
+        <span class="oq-issue-tag" style="background:var(--red-bg);color:var(--red)">Bot Failure</span>
+        <span class="oq-branch-tag">Solution Center</span>
+      </div>
+      <div class="oq-detail" id="oqDetail-chat-multi" style="display:none">
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Channel</span><span class="oq-dv">Post-Chat (Talkdesk)</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Chat CSAT (1&ndash;5)</span></div><div class="oq-detail-item"><span class="oq-dl">Interaction IDs</span><span class="oq-dv">CHT-0114-7823, CHT-0122-4401</span></div><div class="oq-detail-item"><span class="oq-dl">Contact</span><span class="oq-dv">Anonymous &mdash; unavailable</span></div></div>
+        <div class="oq-full-quote">&ldquo;You&rsquo;re no help as automated chat, learn AI!! &hellip;did not help will go to my branch.&rdquo;</div>
+        <div class="oq-action-block">
+          <div class="oq-action-label">Recommended Action</div>
+          <div class="oq-action-text">Audit Autopilot chat flows. Cannot contact individually. Map common failure paths and escalate to vendor. Chat scored 2.50/5 &mdash; lowest rated channel.</div>
+        </div>
+      </div>
+      <div class="oq-move-row" id="oqMoves-chat-multi">
+        <button class="oq-move-btn" onclick="moveOQCard('chat-multi','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn grn" onclick="moveOQCard('chat-multi','resolved')">&#8594; Resolved</button>
+      </div>
+    </div>
+    <div class="oq-card recognition" data-id="beauregard">
+      <div class="oq-card-top">
+        <div class="oq-badges">
+          <span class="oq-priority recognition">Recognition</span>
+          <span class="oq-ch loan">New Loan</span>
+        </div>
+        <button class="oq-expand-btn" onclick="toggleOQCard('beauregard')" title="Show details">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="oq-member-name">Susan Beauregard</div>
+      <div class="oq-quote-preview">&ldquo;Liliana was very attentive in answering all questions. Handled quickly and efficiently. Positive and friendly.&rdquo;</div>
+      <div class="oq-card-footer">
+        <span class="oq-issue-tag" style="background:var(--green-bg);color:var(--green)">Liliana A.</span>
+        <span class="oq-branch-tag">Peoria Branch</span>
+      </div>
+      <div class="oq-detail" id="oqDetail-beauregard" style="display:none">
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Peoria Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Consumer Loan CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">sbeauregard@outlook.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(623) 555-7734</span></div></div>
+        <div class="oq-full-quote">&ldquo;Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly.&rdquo;</div>
+        <div class="oq-action-block">
+          <div class="oq-action-label">Recommended Action</div>
+          <div class="oq-action-text">Share feedback with Liliana&rsquo;s manager. Consider a thank-you note to Susan. Strong candidate for an NPS referral ask.</div>
+        </div>
+      </div>
+      <div class="oq-move-row" id="oqMoves-beauregard">
+        <button class="oq-move-btn" onclick="moveOQCard('beauregard','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn grn" onclick="moveOQCard('beauregard','resolved')">&#8594; Resolved</button>
+      </div>
+    </div>
+    <div class="oq-card recognition" data-id="banke">
+      <div class="oq-card-top">
+        <div class="oq-badges">
+          <span class="oq-priority recognition">Recognition</span>
+          <span class="oq-ch newmbr">New Member</span>
+        </div>
+        <button class="oq-expand-btn" onclick="toggleOQCard('banke')" title="Show details">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="oq-member-name">Renee Banke</div>
+      <div class="oq-quote-preview">&ldquo;Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State!&rdquo;</div>
+      <div class="oq-card-footer">
+        <span class="oq-issue-tag" style="background:var(--green-bg);color:var(--green)">Debbie B.</span>
+        <span class="oq-branch-tag">Glendale Branch</span>
+      </div>
+      <div class="oq-detail" id="oqDetail-banke" style="display:none">
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Glendale Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">New Member CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">renee.banke@gmail.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(480) 555-2291</span></div></div>
+        <div class="oq-full-quote">&ldquo;Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!&rdquo;</div>
+        <div class="oq-action-block">
+          <div class="oq-action-label">Recommended Action</div>
+          <div class="oq-action-text">Share feedback with Debbie&rsquo;s branch manager. Consider a welcome card from leadership to Renee as a new member.</div>
+        </div>
+      </div>
+      <div class="oq-move-row" id="oqMoves-banke">
+        <button class="oq-move-btn" onclick="moveOQCard('banke','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn grn" onclick="moveOQCard('banke','resolved')">&#8594; Resolved</button>
+      </div>
+    </div>
+    <div class="oq-card recognition" data-id="martin">
+      <div class="oq-card-top">
+        <div class="oq-badges">
+          <span class="oq-priority recognition">Recognition</span>
+          <span class="oq-ch mortgage">Mortgage</span>
+        </div>
+        <button class="oq-expand-btn" onclick="toggleOQCard('martin')" title="Show details">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      <div class="oq-member-name">Michaelson Martin</div>
+      <div class="oq-quote-preview">&ldquo;Eric, Mary and the team were very professional, friendly, patient and communicated all steps clearly.&rdquo;</div>
+      <div class="oq-card-footer">
+        <span class="oq-issue-tag" style="background:var(--green-bg);color:var(--green)">Eric &amp; Mary</span>
+        <span class="oq-branch-tag">Deer Valley Branch</span>
+      </div>
+      <div class="oq-detail" id="oqDetail-martin" style="display:none">
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Deer Valley Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Mortgage CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">mmartin@yahoo.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(602) 555-8847</span></div></div>
+        <div class="oq-full-quote">&ldquo;Eric, Mary and the team were very professional, friendly, patient and communicated all steps clearly.&rdquo;</div>
+        <div class="oq-action-block">
+          <div class="oq-action-label">Recommended Action</div>
+          <div class="oq-action-text">Share with mortgage team leadership. Document as a model for the digital channels that are underperforming.</div>
+        </div>
+      </div>
+      <div class="oq-move-row" id="oqMoves-martin">
+        <button class="oq-move-btn" onclick="moveOQCard('martin','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn grn" onclick="moveOQCard('martin','resolved')">&#8594; Resolved</button>
+      </div>
+    </div>
+    </div>
 
+    <!-- IN PROGRESS -->
+    <div class="oq-col" id="oqCol-in-progress">
+      <div class="oq-col-header" style="background:#CCE0F5;color:var(--navy)">
+        <span>In Progress</span>
+        <span class="oq-col-count" id="oqCount-in-progress">0</span>
+      </div>
+      <div class="oq-empty" id="oqEmpty-in-progress">No items in progress</div>
+    </div>
+
+    <!-- RESOLVED -->
+    <div class="oq-col" id="oqCol-resolved">
+      <div class="oq-col-header" style="background:var(--green-bg);color:var(--green)">
+        <span>Resolved</span>
+        <span class="oq-col-count" id="oqCount-resolved">0</span>
+      </div>
+      <div class="oq-empty" id="oqEmpty-resolved">No resolved items yet</div>
+    </div>
+
+  </div><!-- /oq-board -->
   </div><!-- /sub-queue -->
 
   <!-- SUB-PAGE: MEMBER VOICES TABLE -->
@@ -3085,6 +3169,41 @@ function renderMVComments() {
     tbody.appendChild(tr);
   });
 }
+
+function toggleOQCard(id) {
+  const detail = document.getElementById('oqDetail-' + id);
+  const btn    = document.querySelector('.oq-card[data-id="' + id + '"] .oq-expand-btn');
+  const isOpen = detail.style.display !== 'none';
+  detail.style.display = isOpen ? 'none' : 'flex';
+  if (btn) btn.classList.toggle('open', !isOpen);
+}
+
+function moveOQCard(id, targetCol) {
+  const card    = document.querySelector('.oq-card[data-id="' + id + '"]');
+  const fromCol = card.closest('.oq-col').id.replace('oqCol-', '');
+  const toColEl = document.getElementById('oqCol-' + targetCol);
+  toColEl.appendChild(card);
+
+  const moveRow = document.getElementById('oqMoves-' + id);
+  if (targetCol === 'unresolved') {
+    moveRow.innerHTML = `<button class="oq-move-btn" onclick="moveOQCard('${id}','in-progress')">&#8594; In Progress</button>
+      <button class="oq-move-btn grn" onclick="moveOQCard('${id}','resolved')">&#8594; Resolved</button>`;
+  } else if (targetCol === 'in-progress') {
+    moveRow.innerHTML = `<button class="oq-move-btn back" onclick="moveOQCard('${id}','unresolved')">&#8592; Unresolved</button>
+      <button class="oq-move-btn grn" onclick="moveOQCard('${id}','resolved')">&#8594; Resolved</button>`;
+  } else {
+    moveRow.innerHTML = `<button class="oq-move-btn back" onclick="moveOQCard('${id}','unresolved')">&#8592; Reopen</button>`;
+  }
+
+  ['unresolved','in-progress','resolved'].forEach(col => {
+    const cards   = document.querySelectorAll('#oqCol-' + col + ' .oq-card');
+    const emptyEl = document.getElementById('oqEmpty-' + col);
+    if (emptyEl) emptyEl.style.display = cards.length === 0 ? '' : 'none';
+    const countEl = document.getElementById('oqCount-' + col);
+    if (countEl) countEl.textContent = cards.length;
+  });
+}
+
 </script>
 </body>
 </html>
