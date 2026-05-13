@@ -962,6 +962,8 @@
     .oq-move-btn:hover     { background: #CCE0F5; color: var(--navy); border-color: var(--navy); }
     .oq-move-btn.grn:hover { background: var(--green-bg); color: var(--green); border-color: var(--green); }
     .oq-move-btn.back      { color: var(--muted); }
+    .oq-move-btn.dismiss { color: var(--red); }
+    .oq-move-btn.dismiss:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
 
   </style>
 </head>
@@ -1198,7 +1200,7 @@
     <!-- UNRESOLVED -->
     <div class="oq-col" id="oqCol-unresolved">
       <div class="oq-col-header" style="background:var(--red-bg);color:var(--red)">
-        <span>Unresolved</span>
+        <span>New</span>
         <span class="oq-col-count" id="oqCount-unresolved">6</span>
       </div>
 
@@ -1227,7 +1229,7 @@
         </div>
       </div>
       <div class="oq-move-row" id="oqMoves-demers">
-        <button class="oq-move-btn" onclick="moveOQCard('demers','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn" onclick="moveOQCard('demers','active')">&#8594; In Progress</button>
         <button class="oq-move-btn grn" onclick="moveOQCard('demers','resolved')">&#8594; Resolved</button>
       </div>
     </div>
@@ -1256,7 +1258,7 @@
         </div>
       </div>
       <div class="oq-move-row" id="oqMoves-anon-digital">
-        <button class="oq-move-btn" onclick="moveOQCard('anon-digital','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn" onclick="moveOQCard('anon-digital','active')">&#8594; In Progress</button>
         <button class="oq-move-btn grn" onclick="moveOQCard('anon-digital','resolved')">&#8594; Resolved</button>
       </div>
     </div>
@@ -1285,7 +1287,7 @@
         </div>
       </div>
       <div class="oq-move-row" id="oqMoves-chat-multi">
-        <button class="oq-move-btn" onclick="moveOQCard('chat-multi','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn" onclick="moveOQCard('chat-multi','active')">&#8594; In Progress</button>
         <button class="oq-move-btn grn" onclick="moveOQCard('chat-multi','resolved')">&#8594; Resolved</button>
       </div>
     </div>
@@ -1314,7 +1316,7 @@
         </div>
       </div>
       <div class="oq-move-row" id="oqMoves-beauregard">
-        <button class="oq-move-btn" onclick="moveOQCard('beauregard','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn" onclick="moveOQCard('beauregard','active')">&#8594; In Progress</button>
         <button class="oq-move-btn grn" onclick="moveOQCard('beauregard','resolved')">&#8594; Resolved</button>
       </div>
     </div>
@@ -1343,7 +1345,7 @@
         </div>
       </div>
       <div class="oq-move-row" id="oqMoves-banke">
-        <button class="oq-move-btn" onclick="moveOQCard('banke','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn" onclick="moveOQCard('banke','active')">&#8594; In Progress</button>
         <button class="oq-move-btn grn" onclick="moveOQCard('banke','resolved')">&#8594; Resolved</button>
       </div>
     </div>
@@ -1372,19 +1374,19 @@
         </div>
       </div>
       <div class="oq-move-row" id="oqMoves-martin">
-        <button class="oq-move-btn" onclick="moveOQCard('martin','in-progress')">&#8594; In Progress</button>
+        <button class="oq-move-btn" onclick="moveOQCard('martin','active')">&#8594; In Progress</button>
         <button class="oq-move-btn grn" onclick="moveOQCard('martin','resolved')">&#8594; Resolved</button>
       </div>
     </div>
     </div>
 
     <!-- IN PROGRESS -->
-    <div class="oq-col" id="oqCol-in-progress">
+    <div class="oq-col" id="oqCol-active">
       <div class="oq-col-header" style="background:#CCE0F5;color:var(--navy)">
-        <span>In Progress</span>
-        <span class="oq-col-count" id="oqCount-in-progress">0</span>
+        <span>Active</span>
+        <span class="oq-col-count" id="oqCount-active">0</span>
       </div>
-      <div class="oq-empty" id="oqEmpty-in-progress">No items in progress</div>
+      <div class="oq-empty" id="oqEmpty-active">No active items</div>
     </div>
 
     <!-- RESOLVED -->
@@ -3170,6 +3172,23 @@ function renderMVComments() {
   });
 }
 
+function dismissOQCard(id) {
+  const card = document.querySelector('.oq-card[data-id="' + id + '"]');
+  card.style.transition = 'opacity 250ms, transform 250ms';
+  card.style.opacity = '0';
+  card.style.transform = 'scale(0.95)';
+  setTimeout(() => {
+    card.remove();
+    ['unresolved','active','resolved'].forEach(col => {
+      const cards   = document.querySelectorAll('#oqCol-' + col + ' .oq-card');
+      const emptyEl = document.getElementById('oqEmpty-' + col);
+      if (emptyEl) emptyEl.style.display = cards.length === 0 ? '' : 'none';
+      const countEl = document.getElementById('oqCount-' + col);
+      if (countEl) countEl.textContent = cards.length;
+    });
+  }, 260);
+}
+
 function toggleOQCard(id) {
   const detail = document.getElementById('oqDetail-' + id);
   const btn    = document.querySelector('.oq-card[data-id="' + id + '"] .oq-expand-btn');
@@ -3186,16 +3205,17 @@ function moveOQCard(id, targetCol) {
 
   const moveRow = document.getElementById('oqMoves-' + id);
   if (targetCol === 'unresolved') {
-    moveRow.innerHTML = `<button class="oq-move-btn" onclick="moveOQCard('${id}','in-progress')">&#8594; In Progress</button>
+    moveRow.innerHTML = `<button class="oq-move-btn" onclick="moveOQCard('${id}','active')">&#8594; Active</button>
       <button class="oq-move-btn grn" onclick="moveOQCard('${id}','resolved')">&#8594; Resolved</button>`;
-  } else if (targetCol === 'in-progress') {
-    moveRow.innerHTML = `<button class="oq-move-btn back" onclick="moveOQCard('${id}','unresolved')">&#8592; Unresolved</button>
+  } else if (targetCol === 'active') {
+    moveRow.innerHTML = `<button class="oq-move-btn back" onclick="moveOQCard('${id}','unresolved')">&#8592; New</button>
       <button class="oq-move-btn grn" onclick="moveOQCard('${id}','resolved')">&#8594; Resolved</button>`;
   } else {
-    moveRow.innerHTML = `<button class="oq-move-btn back" onclick="moveOQCard('${id}','unresolved')">&#8592; Reopen</button>`;
+    moveRow.innerHTML = `<button class="oq-move-btn back" onclick="moveOQCard('${id}','unresolved')">&#8592; Reopen</button>
+      <button class="oq-move-btn dismiss" onclick="dismissOQCard('${id}')">&#10005; Dismiss</button>`;
   }
 
-  ['unresolved','in-progress','resolved'].forEach(col => {
+  ['unresolved','active','resolved'].forEach(col => {
     const cards   = document.querySelectorAll('#oqCol-' + col + ' .oq-card');
     const emptyEl = document.getElementById('oqEmpty-' + col);
     if (emptyEl) emptyEl.style.display = cards.length === 0 ? '' : 'none';
