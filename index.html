@@ -970,6 +970,29 @@
     .oq-move-btn.dismiss { color: var(--red); }
     .oq-move-btn.dismiss:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
 
+  
+    .oq-filter-bar   { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .oq-filter-group { position: relative; }
+    .oq-filter-btn   {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 7px 14px; font-size: 12px; font-weight: 600; font-family: inherit;
+      color: var(--text-2); cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: border-color 150ms, color 150ms;
+    }
+    .oq-filter-btn:hover, .oq-filter-btn.active { border-color: var(--navy); color: var(--navy); }
+    .oq-caret { font-size: 9px; opacity: .6; }
+    .oq-filter-dropdown {
+      position: absolute; top: calc(100% + 6px); left: 0; z-index: 50;
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,.12); padding: 8px 0; min-width: 260px;
+    }
+    .oq-filter-opt {
+      display: flex; align-items: center; gap: 8px; padding: 6px 14px;
+      font-size: 12px; color: var(--text); cursor: pointer; user-select: none;
+    }
+    .oq-filter-opt:hover { background: var(--bg); }
+    .oq-filter-opt input[type=checkbox] { accent-color: var(--navy); cursor: pointer; }
+
   </style>
 </head>
 <body>
@@ -1195,6 +1218,41 @@
   <div id="sub-queue">
   <div class="section-label">Member Outreach Queue</div>
 
+  <div class="oq-filter-bar">
+    <div class="oq-filter-group" id="oqBranchFilter">
+      <button class="oq-filter-btn" onclick="toggleOQFilter('branch')">
+        <span id="oqBranchLabel">All Branches</span> <span class="oq-caret">&#9660;</span>
+      </button>
+      <div class="oq-filter-dropdown" id="oqBranchDropdown" style="display:none">
+        <label class="oq-filter-opt"><input type="checkbox" value="__all__" checked onchange="oqFilterAll(this,'branch')"> All Branches</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Encanto Branch" onchange="oqFilterChange('branch')"> Encanto Branch at 17th Ave &amp; Thomas Rd</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Anthem Branch" onchange="oqFilterChange('branch')"> Anthem Branch at Gavilan Peak Pkwy &amp; Anthem Way</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Arrowhead Branch" onchange="oqFilterChange('branch')"> Arrowhead Branch at 59th Ave &amp; Union Hills</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Bell Branch" onchange="oqFilterChange('branch')"> Bell Branch at I-17 &amp; Bell Rd</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Goodyear Branch" onchange="oqFilterChange('branch')"> Goodyear Branch at Dysart Rd &amp; I-10</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Payson Branch" onchange="oqFilterChange('branch')"> Payson Branch at 254 AZ-260</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="Surprise Branch" onchange="oqFilterChange('branch')"> Surprise Branch at Reems Rd &amp; Bell Rd</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="online" onchange="oqFilterChange('branch')"> Online / Solution Center</label>
+      </div>
+    </div>
+    <div class="oq-filter-group" id="oqChannelFilter">
+      <button class="oq-filter-btn" onclick="toggleOQFilter('channel')">
+        <span id="oqChannelLabel">All Channels</span> <span class="oq-caret">&#9660;</span>
+      </button>
+      <div class="oq-filter-dropdown" id="oqChannelDropdown" style="display:none">
+        <label class="oq-filter-opt"><input type="checkbox" value="__all__" checked onchange="oqFilterAll(this,'channel')"> All Channels</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="nps"      onchange="oqFilterChange('channel')"> NPS</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="loan"     onchange="oqFilterChange('channel')"> New Loan</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="newmbr"   onchange="oqFilterChange('channel')"> New Member</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="mortgage" onchange="oqFilterChange('channel')"> Mortgage</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="chat"     onchange="oqFilterChange('channel')"> Chat</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="branch"   onchange="oqFilterChange('channel')"> Branch</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="phone"    onchange="oqFilterChange('channel')"> Phone</label>
+        <label class="oq-filter-opt"><input type="checkbox" value="digital"  onchange="oqFilterChange('channel')"> Digital</label>
+      </div>
+    </div>
+  </div>
+
   <div class="oq-board">
 
     <!-- UNRESOLVED -->
@@ -1204,7 +1262,7 @@
         <span class="oq-col-count" id="oqCount-unresolved">6</span>
       </div>
 
-    <div class="oq-card immediate" data-id="demers">
+    <div class="oq-card immediate" data-id="demers" data-branch="Anthem Branch" data-channel="mortgage">
       <div class="oq-card-top">
         <div class="oq-badges">
           <span class="oq-priority immediate">Immediate</span>
@@ -1221,7 +1279,7 @@
         <span class="oq-branch-tag">Anthem Branch</span>
       </div>
       <div class="oq-detail" id="oqDetail-demers" style="display:flex">
-        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Anthem Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Mortgage CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">ddemers@gmail.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(602) 555-4821</span></div></div>
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Anthem Branch at Gavilan Peak Pkwy &amp; Anthem Way</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Mortgage CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">ddemers@gmail.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(602) 555-4821</span></div></div>
         <div class="oq-full-quote">&ldquo;When you say I should select the mortgage option to set up my mortgage, it&rsquo;s a good thing to provide the link. It isn&rsquo;t there. Your customer service on mortgage loans also needs a lot of improvement.&rdquo;</div>
         <div class="oq-action-block">
           <div class="oq-action-label">Recommended Action</div>
@@ -1233,7 +1291,7 @@
         <button class="oq-move-btn grn" onclick="moveOQCard('demers','resolved')">&#8594; Resolved</button>
       </div>
     </div>
-    <div class="oq-card systemic" data-id="anon-digital">
+    <div class="oq-card systemic" data-id="anon-digital" data-branch="online" data-channel="digital">
       <div class="oq-card-top">
         <div class="oq-badges">
           <span class="oq-priority systemic">No Contact</span>
@@ -1262,7 +1320,7 @@
         <button class="oq-move-btn grn" onclick="moveOQCard('anon-digital','resolved')">&#8594; Resolved</button>
       </div>
     </div>
-    <div class="oq-card systemic" data-id="chat-multi">
+    <div class="oq-card systemic" data-id="chat-multi" data-branch="online" data-channel="chat">
       <div class="oq-card-top">
         <div class="oq-badges">
           <span class="oq-priority systemic">No Contact</span>
@@ -1276,7 +1334,7 @@
       <div class="oq-quote-preview">&ldquo;You&rsquo;re no help as automated chat, learn AI!! &hellip;did not help will go to my branch.&rdquo;</div>
       <div class="oq-card-footer">
         <span class="oq-issue-tag" style="background:var(--red-bg);color:var(--red)">Bot Failure</span>
-        <span class="oq-branch-tag">Solution Center</span>
+        <span class="oq-branch-tag">Solution Center (Online)</span>
       </div>
       <div class="oq-detail" id="oqDetail-chat-multi" style="display:flex">
         <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Channel</span><span class="oq-dv">Post-Chat (Talkdesk)</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Chat CSAT (1&ndash;5)</span></div><div class="oq-detail-item"><span class="oq-dl">Interaction IDs</span><span class="oq-dv">CHT-0114-7823, CHT-0122-4401</span></div><div class="oq-detail-item"><span class="oq-dl">Contact</span><span class="oq-dv">Anonymous &mdash; unavailable</span></div></div>
@@ -1291,7 +1349,7 @@
         <button class="oq-move-btn grn" onclick="moveOQCard('chat-multi','resolved')">&#8594; Resolved</button>
       </div>
     </div>
-    <div class="oq-card recognition" data-id="beauregard">
+    <div class="oq-card recognition" data-id="beauregard" data-branch="Arrowhead Branch" data-channel="loan">
       <div class="oq-card-top">
         <div class="oq-badges">
           <span class="oq-priority recognition">Recognition</span>
@@ -1305,10 +1363,10 @@
       <div class="oq-quote-preview">&ldquo;Liliana was very attentive in answering all questions. Handled quickly and efficiently. Positive and friendly.&rdquo;</div>
       <div class="oq-card-footer">
         <span class="oq-issue-tag" style="background:var(--green-bg);color:var(--green)">Liliana A.</span>
-        <span class="oq-branch-tag">Peoria Branch</span>
+        <span class="oq-branch-tag">Arrowhead Branch</span>
       </div>
       <div class="oq-detail" id="oqDetail-beauregard" style="display:flex">
-        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Peoria Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Consumer Loan CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">sbeauregard@outlook.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(623) 555-7734</span></div></div>
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Arrowhead Branch at 59th Ave &amp; Union Hills</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Consumer Loan CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">sbeauregard@outlook.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(623) 555-7734</span></div></div>
         <div class="oq-full-quote">&ldquo;Liliana was very attentive in answering and/or clarifying all questions. The process was handled quickly and efficiently. She was positive and friendly.&rdquo;</div>
         <div class="oq-action-block">
           <div class="oq-action-label">Recommended Action</div>
@@ -1320,7 +1378,7 @@
         <button class="oq-move-btn grn" onclick="moveOQCard('beauregard','resolved')">&#8594; Resolved</button>
       </div>
     </div>
-    <div class="oq-card recognition" data-id="banke">
+    <div class="oq-card recognition" data-id="banke" data-branch="Bell Branch" data-channel="newmbr">
       <div class="oq-card-top">
         <div class="oq-badges">
           <span class="oq-priority recognition">Recognition</span>
@@ -1334,10 +1392,10 @@
       <div class="oq-quote-preview">&ldquo;Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State!&rdquo;</div>
       <div class="oq-card-footer">
         <span class="oq-issue-tag" style="background:var(--green-bg);color:var(--green)">Debbie B.</span>
-        <span class="oq-branch-tag">Glendale Branch</span>
+        <span class="oq-branch-tag">Bell Branch</span>
       </div>
       <div class="oq-detail" id="oqDetail-banke" style="display:flex">
-        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Glendale Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">New Member CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">renee.banke@gmail.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(480) 555-2291</span></div></div>
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Bell Branch at I-17 &amp; Bell Rd</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">New Member CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">renee.banke@gmail.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(480) 555-2291</span></div></div>
         <div class="oq-full-quote">&ldquo;Debbie was patient, informative, kind, and had a good sense of humor. She is an asset to Copper State Credit Union!&rdquo;</div>
         <div class="oq-action-block">
           <div class="oq-action-label">Recommended Action</div>
@@ -1349,7 +1407,7 @@
         <button class="oq-move-btn grn" onclick="moveOQCard('banke','resolved')">&#8594; Resolved</button>
       </div>
     </div>
-    <div class="oq-card recognition" data-id="martin">
+    <div class="oq-card recognition" data-id="martin" data-branch="Anthem Branch" data-channel="mortgage">
       <div class="oq-card-top">
         <div class="oq-badges">
           <span class="oq-priority recognition">Recognition</span>
@@ -1363,10 +1421,10 @@
       <div class="oq-quote-preview">&ldquo;Eric, Mary and the team were very professional, friendly, patient and communicated all steps clearly.&rdquo;</div>
       <div class="oq-card-footer">
         <span class="oq-issue-tag" style="background:var(--green-bg);color:var(--green)">Eric &amp; Mary</span>
-        <span class="oq-branch-tag">Deer Valley Branch</span>
+        <span class="oq-branch-tag">Anthem Branch</span>
       </div>
       <div class="oq-detail" id="oqDetail-martin" style="display:flex">
-        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Deer Valley Branch</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Mortgage CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">mmartin@yahoo.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(602) 555-8847</span></div></div>
+        <div class="oq-detail-grid"><div class="oq-detail-item"><span class="oq-dl">Branch</span><span class="oq-dv">Anthem Branch at Gavilan Peak Pkwy &amp; Anthem Way</span></div><div class="oq-detail-item"><span class="oq-dl">Survey</span><span class="oq-dv">Mortgage CSAT</span></div><div class="oq-detail-item"><span class="oq-dl">Email</span><span class="oq-dv">mmartin@yahoo.com</span></div><div class="oq-detail-item"><span class="oq-dl">Phone</span><span class="oq-dv">(602) 555-8847</span></div></div>
         <div class="oq-full-quote">&ldquo;Eric, Mary and the team were very professional, friendly, patient and communicated all steps clearly.&rdquo;</div>
         <div class="oq-action-block">
           <div class="oq-action-label">Recommended Action</div>
@@ -3303,6 +3361,63 @@ function moveOQCard(id, targetCol) {
     if (countEl) countEl.textContent = cards.length;
   });
 }
+
+
+function toggleOQFilter(type) {
+  const dd = document.getElementById('oq' + (type === 'branch' ? 'Branch' : 'Channel') + 'Dropdown');
+  const btn = dd.previousElementSibling;
+  const isOpen = dd.style.display !== 'none';
+  // Close all dropdowns first
+  document.querySelectorAll('.oq-filter-dropdown').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.oq-filter-btn').forEach(el => el.classList.remove('active'));
+  if (!isOpen) { dd.style.display = ''; btn.classList.add('active'); }
+}
+
+function oqFilterAll(allChk, type) {
+  const dd = document.getElementById('oq' + (type === 'branch' ? 'Branch' : 'Channel') + 'Dropdown');
+  dd.querySelectorAll('input[type=checkbox]:not([value="__all__"])').forEach(c => c.checked = false);
+  allChk.checked = true;
+  applyOQFilters();
+}
+
+function oqFilterChange(type) {
+  const dd = document.getElementById('oq' + (type === 'branch' ? 'Branch' : 'Channel') + 'Dropdown');
+  const allChk = dd.querySelector('input[value="__all__"]');
+  const specific = [...dd.querySelectorAll('input[type=checkbox]:not([value="__all__"])')].filter(c => c.checked);
+  allChk.checked = specific.length === 0;
+  const labelEl = document.getElementById('oq' + (type === 'branch' ? 'Branch' : 'Channel') + 'Label');
+  labelEl.textContent = specific.length === 0 ? (type === 'branch' ? 'All Branches' : 'All Channels')
+    : specific.length === 1 ? specific[0].closest('label').textContent.trim()
+    : specific.length + ' selected';
+  applyOQFilters();
+}
+
+function applyOQFilters() {
+  const branchChecked = [...document.querySelectorAll('#oqBranchDropdown input:checked:not([value="__all__"])')].map(i => i.value);
+  const channelChecked = [...document.querySelectorAll('#oqChannelDropdown input:checked:not([value="__all__"])')].map(i => i.value);
+  document.querySelectorAll('.oq-card').forEach(card => {
+    const b = card.dataset.branch || '';
+    const c = card.dataset.channel || '';
+    const bOk = branchChecked.length === 0 || branchChecked.includes(b);
+    const cOk = channelChecked.length === 0 || channelChecked.includes(c);
+    card.style.display = bOk && cOk ? '' : 'none';
+  });
+  ['unresolved','active','resolved'].forEach(col => {
+    const visible = [...document.querySelectorAll('#oqCol-' + col + ' .oq-card')].filter(c => c.style.display !== 'none');
+    const emptyEl = document.getElementById('oqEmpty-' + col);
+    if (emptyEl) emptyEl.style.display = visible.length === 0 ? '' : 'none';
+    const countEl = document.getElementById('oqCount-' + col);
+    if (countEl) countEl.textContent = visible.length;
+  });
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.oq-filter-group')) {
+    document.querySelectorAll('.oq-filter-dropdown').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.oq-filter-btn').forEach(el => el.classList.remove('active'));
+  }
+});
 
 </script>
 </body>
