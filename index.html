@@ -1420,12 +1420,12 @@
       <table class="mv-table">
         <thead>
           <tr>
+            <th data-col="date"            style="min-width:110px">Submission Date</th>
             <th data-col="name"            style="min-width:130px">Contact Name</th>
             <th data-col="email"           style="min-width:170px">Email</th>
             <th data-col="rating"          style="min-width:60px">Rating</th>
             <th data-col="sentiment"       style="min-width:90px">Sentiment</th>
             <th data-col="quote"           style="min-width:280px">Comment</th>
-            <th data-col="date"            style="min-width:110px">Submission Date</th>
             <th data-col="loanSpecialist"  style="min-width:130px">Loan Specialist</th>
             <th data-col="branch"          style="min-width:110px">Branch</th>
             <th data-col="employee"        style="min-width:120px">Employee</th>
@@ -3233,12 +3233,12 @@ function renderMVComments() {
     const sentLabel = sent === 'unhappy' ? 'Unhappy' : sent === 'neutral' ? 'Neutral' : 'Happy';
     const tr = document.createElement('tr');
     tr.innerHTML = `
+      <td class="mv-date-cell">${v.date}</td>
       <td class="mv-member-cell">${v.name}</td>
       <td style="font-size:12px">${v.email || dash}</td>
       <td style="text-align:center;font-weight:700">${v.rating !== undefined ? v.rating : dash}</td>
       <td><span class="voice-sentiment ${sent}">${sentLabel}</span></td>
       <td class="mv-quote-cell">${v.quote}</td>
-      <td class="mv-date-cell">${v.date}</td>
       <td style="font-size:12px">${v.loanSpecialist || dash}</td>
       <td style="font-size:12px">${v.branch || dash}</td>
       <td style="font-size:12px">${v.employee || dash}</td>
