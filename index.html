@@ -1415,17 +1415,29 @@
         </div>
       </div>
       <div class="mv-filter-row" id="mvFilterRow"></div>
+      <div style="overflow-x:auto">
       <table class="mv-table">
         <thead>
           <tr>
-            <th style="width:110px">Date</th>
-            <th style="width:110px">Sentiment</th>
-            <th style="width:150px">Member</th>
-            <th>Comment</th>
+            <th style="min-width:130px">Contact Name</th>
+            <th style="min-width:170px">Email</th>
+            <th style="min-width:60px">Rating</th>
+            <th style="min-width:90px">Sentiment</th>
+            <th style="min-width:280px">Comment</th>
+            <th style="min-width:110px">Submission Date</th>
+            <th style="min-width:130px">Loan Specialist</th>
+            <th style="min-width:110px">Branch</th>
+            <th style="min-width:120px">Employee</th>
+            <th style="min-width:150px">Membership Start</th>
+            <th style="min-width:130px">Interaction ID</th>
+            <th style="min-width:120px">Agent Name</th>
+            <th style="min-width:110px">Ring Group</th>
+            <th style="min-width:120px">Flow Name</th>
           </tr>
         </thead>
         <tbody id="mvTableBody"></tbody>
       </table>
+      </div>
     </div>
   </div>
   </div><!-- /sub-voices -->
@@ -3170,17 +3182,29 @@ function renderMVComments() {
 
   tbody.innerHTML = '';
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="4" class="mv-empty">No comments for this channel.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="14" class="mv-empty">No comments for this channel.</td></tr>';
     return;
   }
+  const dash = '<span style="color:var(--muted)">—</span>';
   data.forEach(v => {
-    const label = mvChannelLabels[v.channel] || v.channel;
+    const sent = v.sentiment || 'happy';
+    const sentLabel = sent === 'unhappy' ? 'Unhappy' : sent === 'neutral' ? 'Neutral' : 'Happy';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="mv-date-cell">${v.date}</td>
-      <td><span class="voice-sentiment ${v.sentiment||'happy'}">${v.sentiment==='unhappy'?'Unhappy':v.sentiment==='neutral'?'Neutral':'Happy'}</span></td>
       <td class="mv-member-cell">${v.name}</td>
+      <td style="font-size:12px">${v.email || dash}</td>
+      <td style="text-align:center;font-weight:700">${v.rating !== undefined ? v.rating : dash}</td>
+      <td><span class="voice-sentiment ${sent}">${sentLabel}</span></td>
       <td class="mv-quote-cell">${v.quote}</td>
+      <td class="mv-date-cell">${v.date}</td>
+      <td style="font-size:12px">${v.loanSpecialist || dash}</td>
+      <td style="font-size:12px">${v.branch || dash}</td>
+      <td style="font-size:12px">${v.employee || dash}</td>
+      <td style="font-size:12px">${v.membershipStart || dash}</td>
+      <td style="font-size:12px;font-family:monospace">${v.interactionId || dash}</td>
+      <td style="font-size:12px">${v.agentName || dash}</td>
+      <td style="font-size:12px">${v.ringGroup || dash}</td>
+      <td style="font-size:12px">${v.flowName || dash}</td>
     `;
     tbody.appendChild(tr);
   });
