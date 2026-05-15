@@ -1125,7 +1125,6 @@
         <option value="oct25" disabled>October 2025</option>
       </select>
       <div class="card-title">How is each channel performing?</div>
-      <div class="card-subtitle">Jan 2026 satisfaction scores &mdash; ranked best to worst. Change column shows shift vs. previous period.</div>
       <div class="channel-bars" id="channelBars"></div>
       <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:12px;align-items:center;">
         <div style="font-size:11px;color:var(--muted);font-style:italic;flex:1;min-width:200px">
@@ -1997,6 +1996,18 @@ function tierBadgeHtml(tier) {
 
 // Channel bars
 const barsEl = document.getElementById('channelBars');
+
+// Header row
+const hdrRow = document.createElement('div');
+hdrRow.className = 'ch-row ch-header-row';
+hdrRow.innerHTML = `
+  <div class="ch-name"></div>
+  <div class="ch-bar-track" style="background:transparent"></div>
+  <div class="ch-score" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:right">Responses</div>
+  <div class="ch-delta" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);text-align:right">Change</div>
+`;
+barsEl.appendChild(hdrRow);
+
 channels.forEach(ch => {
   const row = document.createElement('div');
   row.className = 'ch-row';
@@ -2009,9 +2020,12 @@ channels.forEach(ch => {
     const lbl = ch.deltaLabel || `${ch.delta > 0 ? '+' : ''}${ch.delta.toFixed(2)}%`;
     deltaHtml = `<div class="ch-delta ${ch.deltaDir}">${ch.delta > 0 ? '▲' : '▼'} ${lbl}</div>`;
   }
-  const unit        = ch.unit !== undefined ? ch.unit : '%';
-  const barPct      = ch.barPct !== undefined ? ch.barPct : ch.score;
-  const dispScore   = unit === '/5' ? ch.score.toFixed(2) : ch.score.toFixed(1);
+  const unit       = ch.unit !== undefined ? ch.unit : '%';
+  const barPct     = ch.barPct !== undefined ? ch.barPct : ch.score;
+  const isNPS      = ch.name === 'NPS';
+  const dispScore  = isNPS ? Math.round(ch.score).toString()
+                   : unit === '/5' ? ch.score.toFixed(2)
+                   : ch.score.toFixed(1);
   const labelColor  = ch.color === '#FFC845' ? '#5A3F00' : 'rgba(255,255,255,.95)';
   const labelShadow = ch.color === '#FFC845' ? 'none' : '0 0 5px rgba(0,0,0,0.55)';
   const respColor   = ch.color === '#FFC845' ? '#7A5800' : ch.color;
@@ -2020,7 +2034,7 @@ channels.forEach(ch => {
     <div class="ch-name">${ch.name}</div>
     <div class="ch-bar-track">
       <div class="ch-bar-fill" style="width:${barPct}%;background:${ch.color}"></div>
-      <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${dispScore}${unit} &nbsp;${ch.tier}</span>
+      <span class="ch-bar-label" style="color:${labelColor};text-shadow:${labelShadow}">${dispScore}${isNPS ? '' : unit}</span>
     </div>
     <div class="ch-score" style="color:${respColor}">${respDisp}</div>
     ${deltaHtml}
