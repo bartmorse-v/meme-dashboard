@@ -699,6 +699,11 @@
 
     .mv-table { width: 100%; border-collapse: collapse; }
     .mv-table thead tr { border-bottom: 2px solid var(--border); }
+    .mv-table thead th[data-col] { cursor: pointer; user-select: none; white-space: nowrap; }
+    .mv-table thead th[data-col]:hover { color: var(--navy); }
+    .mv-table thead th[data-col]::after { content: ' ⇅'; opacity: .3; font-size: 10px; }
+    .mv-table thead th.mv-sort-asc::after  { content: ' ↑'; opacity: 1; color: var(--navy); }
+    .mv-table thead th.mv-sort-desc::after { content: ' ↓'; opacity: 1; color: var(--navy); }
     .mv-table thead th {
       text-align: left; padding: 8px 12px 8px 0;
       font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -1164,10 +1169,6 @@
         <div class="card-title">Member Voices</div>
         <div class="voices-controls">
           <div class="card-subtitle" id="voicesSubtitle" style="margin:0">Select a tile to filter</div>
-          <div class="voices-sort">
-            <button class="sort-btn active" data-sort="desc">Newest</button>
-            <button class="sort-btn" data-sort="asc">Oldest</button>
-          </div>
         </div>
         <div class="voices-scroll" id="voicesScroll"></div>
         <div style="padding:10px 0 2px;text-align:right">
@@ -1419,20 +1420,20 @@
       <table class="mv-table">
         <thead>
           <tr>
-            <th style="min-width:130px">Contact Name</th>
-            <th style="min-width:170px">Email</th>
-            <th style="min-width:60px">Rating</th>
-            <th style="min-width:90px">Sentiment</th>
-            <th style="min-width:280px">Comment</th>
-            <th style="min-width:110px">Submission Date</th>
-            <th style="min-width:130px">Loan Specialist</th>
-            <th style="min-width:110px">Branch</th>
-            <th style="min-width:120px">Employee</th>
-            <th style="min-width:150px">Membership Start</th>
-            <th style="min-width:130px">Interaction ID</th>
-            <th style="min-width:120px">Agent Name</th>
-            <th style="min-width:110px">Ring Group</th>
-            <th style="min-width:120px">Flow Name</th>
+            <th data-col="name"            style="min-width:130px">Contact Name</th>
+            <th data-col="email"           style="min-width:170px">Email</th>
+            <th data-col="rating"          style="min-width:60px">Rating</th>
+            <th data-col="sentiment"       style="min-width:90px">Sentiment</th>
+            <th data-col="quote"           style="min-width:280px">Comment</th>
+            <th data-col="date"            style="min-width:110px">Submission Date</th>
+            <th data-col="loanSpecialist"  style="min-width:130px">Loan Specialist</th>
+            <th data-col="branch"          style="min-width:110px">Branch</th>
+            <th data-col="employee"        style="min-width:120px">Employee</th>
+            <th data-col="membershipStart" style="min-width:150px">Membership Start</th>
+            <th data-col="interactionId"   style="min-width:130px">Interaction ID</th>
+            <th data-col="agentName"       style="min-width:120px">Agent Name</th>
+            <th data-col="ringGroup"       style="min-width:110px">Ring Group</th>
+            <th data-col="flowName"        style="min-width:120px">Flow Name</th>
           </tr>
         </thead>
         <tbody id="mvTableBody"></tbody>
@@ -2775,13 +2776,48 @@ function renderVoices() {
   });
 }
 
-document.querySelectorAll('.sort-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    voiceSortOrder = btn.dataset.sort;
-    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderVoices();
+// Member Voices table sortable columns
+let mvSortCol = 'date', mvSortDir = 'desc';
+document.addEventListener('DOMContentLoaded', () => {
+  const th = document.querySelector('.mv-table thead th[data-col="date"]');
+  if (th) th.classList.add('mv-sort-desc');
+});
+
+function getMVCellValue(v, col) {
+  switch(col) {
+    case 'name':            return (v.name || '').toLowerCase();
+    case 'email':           return (v.email || '').toLowerCase();
+    case 'rating':          return v.rating !== undefined ? Number(v.rating) : -1;
+    case 'sentiment':       return v.sentiment === 'unhappy' ? 0 : v.sentiment === 'neutral' ? 1 : 2;
+    case 'quote':           return (v.quote || '').toLowerCase();
+    case 'date':            return parseVoiceDate(v.date);
+    case 'loanSpecialist':  return (v.loanSpecialist || '').toLowerCase();
+    case 'branch':          return (v.branch || '').toLowerCase();
+    case 'employee':        return (v.employee || '').toLowerCase();
+    case 'membershipStart': return (v.membershipStart || '').toLowerCase();
+    case 'interactionId':   return (v.interactionId || '').toLowerCase();
+    case 'agentName':       return (v.agentName || '').toLowerCase();
+    case 'ringGroup':       return (v.ringGroup || '').toLowerCase();
+    case 'flowName':        return (v.flowName || '').toLowerCase();
+    default:                return '';
+  }
+}
+
+document.addEventListener('click', e => {
+  const th = e.target.closest('.mv-table thead th[data-col]');
+  if (!th) return;
+  const col = th.dataset.col;
+  if (mvSortCol === col) {
+    mvSortDir = mvSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    mvSortCol = col;
+    mvSortDir = col === 'date' ? 'desc' : 'asc';
+  }
+  document.querySelectorAll('.mv-table thead th[data-col]').forEach(t => {
+    t.classList.remove('mv-sort-asc', 'mv-sort-desc');
   });
+  th.classList.add(mvSortDir === 'asc' ? 'mv-sort-asc' : 'mv-sort-desc');
+  renderMVComments();
 });
 
 
@@ -3178,7 +3214,13 @@ function renderMVComments() {
   const data = memberVoicesData
     .filter(v => mvActiveChannel === 'all' || v.channel === mvActiveChannel)
     .slice()
-    .sort((a, b) => parseVoiceDate(b.date) - parseVoiceDate(a.date));
+    .sort((a, b) => {
+      const av = getMVCellValue(a, mvSortCol);
+      const bv = getMVCellValue(b, mvSortCol);
+      if (av < bv) return mvSortDir === 'asc' ? -1 : 1;
+      if (av > bv) return mvSortDir === 'asc' ?  1 : -1;
+      return 0;
+    });
 
   tbody.innerHTML = '';
   if (!data.length) {
