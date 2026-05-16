@@ -681,6 +681,17 @@
       padding-top: 10px; border-top: 1px solid var(--border);
       font-size: 11px; color: var(--muted);
     }
+    .mva-card { cursor: grab; transition: opacity 150ms, box-shadow 150ms; }
+    .mva-card:active { cursor: grabbing; }
+    .mva-card.dragging { opacity: .45; box-shadow: none; }
+    .mva-col.drag-over > .mva-col-header { outline: 2px dashed var(--navy); outline-offset: 2px; }
+    .mva-dismiss-btn {
+      margin-left: auto; padding: 2px 9px; border-radius: 6px; font-size: 10px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      border: 1px solid #FCA5A5; background: #FFF1F2; color: var(--red);
+      transition: background 150ms;
+    }
+    .mva-dismiss-btn:hover { background: #FEE2E2; }
 
     /* ── MEMBER VOICES FULL TABLE ───────────────── */
     .mv-filter-row {
@@ -1515,19 +1526,18 @@
 
   <div class="mva-kanban">
 
-  <div class="mva-col">
+  <div class="mva-col" data-col-type="risk">
     <div class="mva-col-header risk">
       <span class="mva-col-label">Not Started</span>
-      <span class="mva-col-count">5</span>
+      <span class="mva-col-count" id="cnt-risk">15</span>
     </div>
-    <div class="mva-card risk">
+    <div class="mva-card risk" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type risk">Not Started</span>
           <span class="mva-channel-tag">Phone</span>
           <span class="mva-channel-tag">Chat</span>
         </div>
-
       </div>
       <div class="mva-title">Phone Wait Times Are Actively Driving Members to Competitors</div>
       <div class="mva-body">At least seven detractor comments in January alone cite multi-hour hold times, inability to reach anyone across multiple days, confusing IVR routing, and inability to connect directly to a local branch. Several members state they would not recommend the credit union specifically because of phone access. For a CU whose brand promise is personal service, this is a direct contradiction.<br><br>Phone is the highest-volume service channel for members 40+, which is Copper State's current membership core. Reducing average wait time below 3 minutes is a measurable, achievable retention lever.</div>
@@ -1535,13 +1545,12 @@
       <div class="mva-footer"><span>Phone Avg Rating: 4.36/5 · 301 responses</span><span>~7 explicit detractor mentions this month</span></div>
     </div>
 
-    <div class="mva-card risk">
+    <div class="mva-card risk" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type risk">Not Started</span>
           <span class="mva-channel-tag">Digital</span>
         </div>
-
       </div>
       <div class="mva-title">Digital Experience Is a Growth Ceiling, Not Just a Low Score</div>
       <div class="mva-body">Digital Experience scored 51.89% — Off Track and the single lowest-rated channel in the January report. Member comments describe the website as "awful," "confusing," "forced upon us," and not user-friendly. The mobile app is missing card lock/unlock, has slow check deposit, and requires repeated re-authentication for Zelle. These are standard features at competing institutions.<br><br>For aggressive five-year growth, digital is the primary acquisition channel for members under 40. A substandard digital product makes it nearly impossible to grow in the millennial and Gen Z segments, which represent the largest generational wealth transfer in history.</div>
@@ -1549,13 +1558,12 @@
       <div class="mva-footer"><span>Digital CSAT: 51.89% · 106 responses</span><span>Only channel rated Off Track (raw score: 1)</span></div>
     </div>
 
-    <div class="mva-card risk">
+    <div class="mva-card risk" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type risk">Not Started</span>
           <span class="mva-channel-tag">Chat</span>
         </div>
-
       </div>
       <div class="mva-title">Autopilot Chat Is Eroding Trust in the Digital Channel</div>
       <div class="mva-body">Chat scored 2.50/5 in January (Mixed), but the underlying data reveals that Autopilot (AI bot) scores 1.05–2.00/5 while human agents score 3.0–4.75/5. The combined score masks a severe automation failure. Members are explicitly telling the survey they received "no help" and are redirecting to branches — the highest-cost service channel.<br><br>At scale, a poorly performing AI chatbot does not save cost; it transfers cost to branches while actively damaging satisfaction. A human-first chat routing model with AI assist — rather than AI-first deflection — would immediately improve scores and protect branch capacity as the member base grows.</div>
@@ -1563,14 +1571,13 @@
       <div class="mva-footer"><span>Chat Score: 2.50/5 · 26 responses</span><span>Autopilot vs. human agent gap is significant</span></div>
     </div>
 
-    <div class="mva-card risk">
+    <div class="mva-card risk" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type risk">Not Started</span>
           <span class="mva-channel-tag">Phone</span>
           <span class="mva-channel-tag">Digital</span>
         </div>
-
       </div>
       <div class="mva-title">Fraud Response Failures Create the Highest-Risk Churn Moments</div>
       <div class="mva-body">Three distinct fraud-related member complaints appear in January: one member lost $6,500 when the fraud department refused to speak with her by phone; another reports card replacement after fraud detection takes "way, way too long"; a third was told nothing could be done about CSCU phone numbers being spoofed by scammers. In banking, a poor fraud response is one of the strongest predictors of immediate account closure and negative word-of-mouth.<br><br>For a credit union competing on trust versus megabanks, a faster and more empathetic fraud response is a direct competitive advantage. Same-day card replacement and accessible fraud intake are table-stakes for growth-oriented institutions.</div>
@@ -1578,28 +1585,159 @@
       <div class="mva-footer"><span>Phone + Digital channels</span><span>Fraud response = #1 trust-critical moment</span></div>
     </div>
 
-    <div class="mva-card risk">
+    <div class="mva-card risk" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type risk">Not Started</span>
           <span class="mva-channel-tag">Branch</span>
           <span class="mva-channel-tag">Digital</span>
         </div>
-
       </div>
       <div class="mva-title">Physical Infrastructure Reliability Undermines the In-Branch Experience</div>
       <div class="mva-body">Specific infrastructure failures appear repeatedly: a drive-thru machine that is "always down," a drive-thru call button inaccessible from standard vehicles at the Dysart branch, an ATM placement that forces large vehicles to exit their car, and debit cards that fail at point-of-sale. Each failure is minor in isolation but cumulative in perception. Members who cite these issues are already advocates (scores of 7–8) who are being held below promoter status by preventable operational gaps.<br><br>A systematic audit of physical touch-point reliability — ATMs, drive-thrus, card authorization rates — with branch-level SLAs would directly convert passives to promoters. These fixes tend to have high NPS ROI relative to cost.</div>
       <div class="mva-voice">"Your drive-thru machine is always down." · "The drive-up call button is in a position that neither my car nor truck can access without getting out." · "I constantly have to use another card because yours does not work."</div>
       <div class="mva-footer"><span>Branch CSAT: 98.95% (infrastructure not in CSAT scope)</span><span>Passive→Promoter conversion opportunity</span></div>
     </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+      </div>
+      <div class="mva-title">Device Verification Loop Is Locking Members Out of Routine Transactions</div>
+      <div class="mva-body">Six or more digital CSAT respondents this month describe the same specific failure: after logging in from a device, they are shown a "This device is unverified" message and blocked from transfers, Zelle, and loan payments — but there is no functional "Review device" link to resolve it. Suzanne Lerose, Andrew Peters, Heather Botamer, and Jay Moore all independently describe this exact loop. Heather Botamer specifically notes she cannot pay her loan and is also being charged for paper statements she cannot turn off online.<br><br>This is not a general digital frustration — it is a specific, reproducible failure in the device authorization flow. Left unresolved, it forces members to call or visit a branch for transactions they should complete in seconds, directly increasing service costs and reducing digital engagement scores.</div>
+      <div class="mva-voice">"I need to transfer funds — it says my device is unverified, no 'Review device' link. This new web site is AWFUL." · "I logged in from a new device and was told to verify. Followed instructions but nothing worked." · "All actions are 'locked on this device' and I am unable to pay my loan."</div>
+      <div class="mva-footer"><span>Digital channel · 6+ members same specific failure</span><span>Fix: Add working 'Review device' path + fallback SMS/email auth</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+      </div>
+      <div class="mva-title">Zelle and External Account Enrollment Failures Blocking Member-to-Member Transfers</div>
+      <div class="mva-body">At least three digital respondents specifically report inability to enroll in Zelle or add external accounts. Antonia Bucz was told by a CSCU representative that Zelle would work next time — it failed repeatedly. Zachary Hutchinson could not add an external account and could not enroll in Zelle. A third member reports being blocked from transferring money to another member account in the app, on mobile web, and on desktop.<br><br>Zelle is increasingly a baseline expectation for checking account holders. Enrollment failures at setup are among the highest-friction moments in digital onboarding — they often trigger calls to the phone center and erode confidence in the platform before the member has even used it. Auditing the Zelle and external link flows end-to-end is a high-priority fix.</div>
+      <div class="mva-voice">"I was assured Zelle would work — it never did." · "Could not add external account, could not enroll in Zelle." · "Every time I need to transfer money, the option is NOT there!"</div>
+      <div class="mva-footer"><span>Digital channel · 3+ confirmed Zelle failures</span><span>Fix: Audit Zelle enrollment + external account linking flows</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Phone</span>
+        </div>
+      </div>
+      <div class="mva-title">Callback System Sending Surveys Before Members Are Ever Served</div>
+      <div class="mva-body">Multiple 1-star Talkdesk responses in January explicitly state the member was never reached — but received a CSAT survey anyway. "+16025531947: nobody called me back, it just sent me straight to the survey." A separate 5-star respondent also noted: "the option to get a callback does not work — when you hit 14 it does not work, I've called several times." This means CSAT data is being collected from members who had zero service contact, artificially inflating dissatisfied responses and undermining data integrity for the Phone channel.<br><br>This is both a member experience issue and a data quality issue. Fixing the callback-to-survey trigger so that surveys only fire after successful agent contact would improve actual scores, improve data accuracy, and give Talkdesk agents fairer performance metrics.</div>
+      <div class="mva-voice">"Nobody called me back, it just sent me straight to the survey." · "The callback option does not work — I've called several times and it has never worked."</div>
+      <div class="mva-footer"><span>Phone · Talkdesk CSAT data integrity issue</span><span>Fix: Survey trigger should require confirmed agent contact</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Digital</span>
+        </div>
+      </div>
+      <div class="mva-title">Running Balance View Removed in New System — Named Regression by Multiple Members</div>
+      <div class="mva-body">Charla Garcia specifically identifies a regression in the new online banking format: the running balance that appeared after each transaction is gone, replaced by a total balance only. She states the old system "showed what my current balance was" and the new format is "certainly not as user friendly." A second member notes that overdraft risk increased because the pending balance is not deducted from the visible total. These are separate but related issues: both stem from the transaction history display design in the new platform.<br><br>Running balance is one of the most-used features in personal financial management. Its removal is a concrete, fixable regression that is actively lowering member confidence in the new system and increasing calls to the phone center from members unsure of their true balance.</div>
+      <div class="mva-voice">"The new format doesn't show my balance after each transaction — I liked the old system better. This new format certainly isn't as user friendly." · "The pending balance should be deducted from the total — this app doesn't when all other bank apps do."</div>
+      <div class="mva-footer"><span>Digital · Specific UX regression in new online banking</span><span>Fix: Restore running balance to transaction history view</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Digital</span>
+          <span class="mva-channel-tag">Mortgage</span>
+        </div>
+      </div>
+      <div class="mva-title">Mortgage Statements and Payments Not Accessible in the New Online Banking System</div>
+      <div class="mva-body">Two digital respondents independently report mortgage-specific access issues: Marja Lull cannot find her mortgage statements anywhere in the new platform. Susan Milewski notes that the way to add other payments to a mortgage was changed — the mortgage department is "out of state," and what was usable before is now unclear. These issues affect members with a high-value, high-trust product and send them to the phone channel for tasks they should complete in self-service.<br><br>Mortgage members represent some of the highest-equity relationships in the portfolio. Removing self-service access to their own statements and payment tools erodes that trust and increases servicing cost. Surfacing mortgage accounts, statements, and payment management directly in the digital account view is a high-impact, high-loyalty fix.</div>
+      <div class="mva-voice">"Can't find my mortgage statements." · "Changed the way I can add other payments to mortgage — mortgage dept out of state is horrible, too busy and a bit rude."</div>
+      <div class="mva-footer"><span>Digital + Mortgage channels</span><span>Fix: Surface mortgage statements and payment tools in digital account</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Branch</span>
+        </div>
+      </div>
+      <div class="mva-title">Payson Branch's Kristen Is a Standout — Document and Replicate Her Approach</div>
+      <div class="mva-body">In January CSAT responses alone, Kristen at the Payson branch is mentioned by name in at least three independent reviews: Jerre Leavens ("knowledgeable &amp; kind — worked with Kristen today!"), Leslie Ross ("Kristen was quick to help and was very polite"), and David Meyer ("Kristen knew exactly how to take care of my request"). Multiple other members describe being helped immediately upon entry and having complex banking questions resolved clearly — consistent with a specific service approach.<br><br>Named employee recognition across independent respondents is a rare signal. It suggests a replicable behavior pattern, not just a personality. Interviewing Kristen about her intake process, documentation habits, and communication style could yield a peer training asset that other branches — especially Bell and Encanto — could benefit from.</div>
+      <div class="mva-voice">"Love this branch! So knowledgeable &amp; kind!! Worked with Kristen today!" · "Kristen was quick to help and was very polite." · "Kristen knew exactly how to take care of my request."</div>
+      <div class="mva-footer"><span>Payson Branch · 3+ named mentions in Jan CSAT</span><span>Action: Peer training model development</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Mortgage</span>
+        </div>
+      </div>
+      <div class="mva-title">Eric + Mary Mortgage Team Model Is Driving Outstanding Member Experiences — Scale It</div>
+      <div class="mva-body">Two separate mortgage CSAT respondents in January — Jennifer Perez and Michaelson Martin — independently praise Eric and Mary as a coordinated team. Jennifer specifically highlights Mary's proactive calling, availability, and follow-through: "She went above and beyond by calling me when I was available." Michaelson echoes: "Eric, Mary and the team...answered all of our questions for a seamless process." Both attribute the positive experience to team communication and coordination, not just individual effort.<br><br>A paired loan officer + processor model — where the LO owns the relationship and the processor owns the closing timeline — is clearly resonating. Documenting this handoff model and applying it systematically to all mortgage closings would raise YTD Mortgage CSAT from 80% toward the Exceptional threshold.</div>
+      <div class="mva-voice">"My loan processor, Mary, went above and beyond by calling me when I was available. Her communication, patience, and attentiveness truly made the process smooth and stress-free." · "Eric, Mary and the team communicated all of the steps clearly — answered all of our questions for a seamless process."</div>
+      <div class="mva-footer"><span>Mortgage · 2 independent respondents cite same team</span><span>Action: Formalize LO + processor paired model in all closings</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">New Loan</span>
+        </div>
+      </div>
+      <div class="mva-title">Loan Specialists Named in 11 of 14 January Reviews — Create a Named Specialist Referral Path</div>
+      <div class="mva-body">In January's 14 New Loan CSAT responses, four specialists are named directly: Carole Grady (3x), Anthony Arturi (3x), Stephanie Myers (3x), and Liliana Arvizu (2x). Members describe returning specifically because of the person: "She was very informative, very quick to answer my questions and super nice to work with." "Anthony was great to work with — very proficient and professional." This level of named recognition signals that the loan relationship is person-led, not process-led.<br><br>A named specialist referral system — allowing members to request a specific loan officer at the start of an inquiry — would lower friction for repeat borrowers, increase conversion rates, and give loan officers a direct incentive tied to member satisfaction scores. It also creates a natural data link between specialist and long-term member retention.</div>
+      <div class="mva-voice">"She was very informative, very quick to answer my questions and super nice to work with." · "Anthony was great to work with! Very proficient and professional." · "Exceptional service from start to finish — knowledgeable, friendly and very pleasant."</div>
+      <div class="mva-footer"><span>New Loan · 11/14 reviews name a specific specialist</span><span>Action: Build named specialist request into loan inquiry flow</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Digital</span>
+          <span class="mva-channel-tag">Phone</span>
+        </div>
+      </div>
+      <div class="mva-title">Proactive Fraud Detection Is a Praised Differentiator — It Needs to Be Marketed</div>
+      <div class="mva-body">Multiple NPS promoters specifically praise CSCU's proactive fraud detection as exceptional. Kit M.: "Their fraud alert process is fantastic! I value a business like CSCU that knows what it takes to be a success!" Jay W.: "My debt and cc cards have always been secure. Even frozen when suspect fraud. I appreciate this security." This is a meaningful contrast to the fraud response failures documented in detractor comments — the detection capability is working; the response process after detection is where the breakdown occurs.<br><br>Members who experience proactive fraud protection and appreciate it are among the strongest advocates. Creating member-facing content (app notifications, welcome email, onboarding flow) that explains how CSCU monitors for fraud would build proactive trust and turn a hidden capability into a visible competitive advantage versus megabanks.</div>
+      <div class="mva-voice">"Their fraud alert process is fantastic! I value a business like CSCU that knows what it takes to be a success!" · "My cards have always been secure — even frozen when suspect fraud. I appreciate this security."</div>
+      <div class="mva-footer"><span>NPS + Digital channels</span><span>Action: Add 'How we protect you' to app onboarding and website</span></div>
+    </div>
+
+    <div class="mva-card risk" draggable="true">
+      <div class="mva-card-top">
+        <div class="mva-card-tags">
+          <span class="mva-type risk">Not Started</span>
+          <span class="mva-channel-tag">Branch</span>
+        </div>
+      </div>
+      <div class="mva-title">Arrowhead Branch Has the Highest Named-Employee Density — A Relationship Banking Template</div>
+      <div class="mva-body">January Arrowhead Branch CSAT responses name individual employees at an exceptionally high rate: Carolyn ("deserves a raise — knows her products and is responsive to customer needs"), Hanna ("always been very responsive and pleasant"), Andy ("always sweet and makes transactions enjoyable"), and an unnamed female teller named as "go-to" for principal payment explanations. Diego Placencia writes that the staff "know my name" and make every visit feel "another level higher."<br><br>This cluster of named, positive recognition across multiple independent reviewers signals that Arrowhead has internalized relationship banking at the team level, not just the individual level. Studying the branch's staff development, recognition, and onboarding practices could provide a scalable blueprint — especially relevant as Copper State considers opening new branches in the East Valley.</div>
+      <div class="mva-voice">"Carolyn is my go-to — always wonderful to deal with, deserves a raise. She knows her products and is responsive to customer needs." · "They know my name and it makes it feel just another level higher." · "Hanna has always been very responsive and pleasant to deal with."</div>
+      <div class="mva-footer"><span>Arrowhead Branch · Highest named recognition density in Jan</span><span>Action: Study branch culture model for new branch playbook</span></div>
+    </div>
   </div>
 
-  <div class="mva-col">
+  <div class="mva-col" data-col-type="watch">
     <div class="mva-col-header watch">
       <span class="mva-col-label">Started</span>
-      <span class="mva-col-count">6</span>
+      <span class="mva-col-count" id="cnt-watch">6</span>
     </div>
-    <div class="mva-card watch">
+    <div class="mva-card watch" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type watch">Started</span>
@@ -1613,7 +1751,7 @@
       <div class="mva-footer"><span>Branch CSAT: 98.95%</span><span>Location cited in ~10% of non-10 scores</span></div>
     </div>
 
-    <div class="mva-card watch">
+    <div class="mva-card watch" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type watch">Started</span>
@@ -1627,7 +1765,7 @@
       <div class="mva-footer"><span>Cited by 6+ NPS respondents this month</span><span>Direct primary account barrier</span></div>
     </div>
 
-    <div class="mva-card watch">
+    <div class="mva-card watch" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type watch">Started</span>
@@ -1641,7 +1779,7 @@
       <div class="mva-footer"><span>Digital channel</span><span>Long-tenure members at highest transition risk</span></div>
     </div>
 
-    <div class="mva-card watch">
+    <div class="mva-card watch" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type watch">Started</span>
@@ -1655,7 +1793,7 @@
       <div class="mva-footer"><span>Cross-channel product issue</span><span>Proactive communication reduces detractor conversion</span></div>
     </div>
 
-    <div class="mva-card watch">
+    <div class="mva-card watch" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type watch">Started</span>
@@ -1669,7 +1807,7 @@
       <div class="mva-footer"><span>Digital channel dependency</span><span>National growth requires eligibility expansion</span></div>
     </div>
 
-    <div class="mva-card watch">
+    <div class="mva-card watch" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type watch">Started</span>
@@ -1684,12 +1822,12 @@
     </div>
   </div>
 
-  <div class="mva-col">
+  <div class="mva-col" data-col-type="strength">
     <div class="mva-col-header strength">
       <span class="mva-col-label">Done</span>
-      <span class="mva-col-count">4</span>
+      <span class="mva-col-count" id="cnt-strength">4</span>
     </div>
-    <div class="mva-card strength">
+    <div class="mva-card strength" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type strength">Done</span>
@@ -1704,7 +1842,7 @@
       <div class="mva-footer"><span>Branch CSAT: 98.95% · 95 responses</span><span>Top theme in 60%+ of promoter comments</span></div>
     </div>
 
-    <div class="mva-card strength">
+    <div class="mva-card strength" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type strength">Done</span>
@@ -1718,7 +1856,7 @@
       <div class="mva-footer"><span>Mentioned in 40%+ of 10-rated responses</span><span>Referral program ROI typically 3–5× paid acquisition</span></div>
     </div>
 
-    <div class="mva-card strength">
+    <div class="mva-card strength" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type strength">Done</span>
@@ -1733,7 +1871,7 @@
       <div class="mva-footer"><span>Geographic reach without new branches</span><span>Strong retention tool for relocated members</span></div>
     </div>
 
-    <div class="mva-card strength">
+    <div class="mva-card strength" draggable="true">
       <div class="mva-card-top">
         <div class="mva-card-tags">
           <span class="mva-type strength">Done</span>
@@ -3586,6 +3724,115 @@ document.addEventListener('click', e => {
     document.querySelectorAll('.oq-filter-btn').forEach(el => el.classList.remove('active'));
   }
 });
+
+// ── MVA KANBAN DRAG-AND-DROP ─────────────────────────────────────
+(function() {
+  let dragCard = null;
+
+  function colType(col) {
+    return col.dataset.colType || 'risk';
+  }
+
+  function labelFor(type) {
+    return type === 'risk' ? 'Not Started' : type === 'watch' ? 'Started' : 'Done';
+  }
+
+  function updateCounts() {
+    ['risk','watch','strength'].forEach(t => {
+      const col = document.querySelector(`.mva-col[data-col-type="${t}"]`);
+      const el  = document.getElementById(`cnt-${t}`);
+      if (col && el) el.textContent = col.querySelectorAll('.mva-card').length;
+    });
+  }
+
+  function addDismiss(card) {
+    if (card.querySelector('.mva-dismiss-btn')) return;
+    const footer = card.querySelector('.mva-footer');
+    if (!footer) return;
+    const btn = document.createElement('button');
+    btn.className = 'mva-dismiss-btn';
+    btn.textContent = 'Dismiss';
+    btn.addEventListener('click', () => {
+      card.remove();
+      updateCounts();
+    });
+    footer.appendChild(btn);
+  }
+
+  function removeDismiss(card) {
+    const btn = card.querySelector('.mva-dismiss-btn');
+    if (btn) btn.remove();
+  }
+
+  function refreshDismissButtons() {
+    const doneCol = document.querySelector('.mva-col[data-col-type="strength"]');
+    if (!doneCol) return;
+    document.querySelectorAll('.mva-card').forEach(card => {
+      if (card.closest('.mva-col[data-col-type="strength"]')) {
+        addDismiss(card);
+      } else {
+        removeDismiss(card);
+      }
+    });
+  }
+
+  function initCard(card) {
+    card.setAttribute('draggable', 'true');
+    card.addEventListener('dragstart', e => {
+      dragCard = card;
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => card.classList.add('dragging'), 0);
+    });
+    card.addEventListener('dragend', () => {
+      card.classList.remove('dragging');
+      document.querySelectorAll('.mva-col').forEach(c => c.classList.remove('drag-over'));
+    });
+  }
+
+  function initCol(col) {
+    col.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+    });
+    col.addEventListener('dragenter', () => col.classList.add('drag-over'));
+    col.addEventListener('dragleave', e => {
+      if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
+    });
+    col.addEventListener('drop', e => {
+      e.preventDefault();
+      col.classList.remove('drag-over');
+      if (!dragCard || col.contains(dragCard)) return;
+
+      const type = colType(col);
+
+      // update card class
+      dragCard.className = `mva-card ${type}`;
+      dragCard.setAttribute('draggable', 'true');
+
+      // update status chip
+      const chip = dragCard.querySelector('.mva-type');
+      if (chip) { chip.className = `mva-type ${type}`; chip.textContent = labelFor(type); }
+
+      col.appendChild(dragCard);
+      refreshDismissButtons();
+      updateCounts();
+    });
+  }
+
+  function init() {
+    document.querySelectorAll('.mva-card').forEach(initCard);
+    document.querySelectorAll('.mva-col').forEach(initCol);
+    refreshDismissButtons(); // add dismiss to any cards already in Done
+    updateCounts();
+  }
+
+  // Run after DOM ready (page may load this script deferred)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 
 </script>
 </body>
