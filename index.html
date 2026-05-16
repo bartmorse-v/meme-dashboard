@@ -980,6 +980,25 @@
     .oq-move-btn.back      { color: var(--muted); }
     .oq-move-btn.dismiss { color: var(--red); }
     .oq-move-btn.dismiss:hover { background: var(--red-bg); color: var(--red); border-color: var(--red); }
+    .oq-comments { border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .oq-comments-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+    .oq-comment-list { display: flex; flex-direction: column; gap: 5px; }
+    .oq-comment-item { background: var(--bg); border-radius: 6px; padding: 7px 9px; }
+    .oq-comment-text { font-size: 11px; color: var(--text); line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+    .oq-comment-meta { font-size: 9px; color: var(--muted); margin-top: 3px; }
+    .oq-comment-input-row { display: flex; gap: 6px; align-items: flex-start; }
+    .oq-comment-textarea {
+      flex: 1; padding: 7px 9px; border: 1.5px solid var(--border); border-radius: 6px;
+      font-family: inherit; font-size: 11px; color: var(--text); background: var(--card);
+      resize: vertical; min-height: 52px; line-height: 1.5; transition: border-color 150ms;
+    }
+    .oq-comment-textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(0,73,135,.1); }
+    .oq-comment-submit {
+      padding: 7px 13px; background: var(--navy); color: #fff; border: none; border-radius: 6px;
+      font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: background 150ms; align-self: flex-end;
+    }
+    .oq-comment-submit:hover { background: var(--navy-dark); }
 
   
     .oq-filter-bar   { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
@@ -3624,6 +3643,59 @@ document.addEventListener('click', e => {
     init();
   }
 })();
+
+// ── OQ CARD COMMENTS ─────────────────────────────────────
+function getOQComments(id) {
+  try { return JSON.parse(localStorage.getItem('oqComments_' + id) || '[]'); }
+  catch(e) { return []; }
+}
+function saveOQComments(id, comments) {
+  localStorage.setItem('oqComments_' + id, JSON.stringify(comments));
+}
+function renderOQCommentList(id) {
+  const list = document.getElementById('oqCommentList-' + id);
+  if (!list) return;
+  const comments = getOQComments(id);
+  list.innerHTML = comments.map(c => `
+    <div class="oq-comment-item">
+      <div class="oq-comment-text">${c.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      <div class="oq-comment-meta">${c.ts}</div>
+    </div>`).join('');
+}
+function addOQComment(id) {
+  const ta = document.getElementById('oqCommentTA-' + id);
+  const text = (ta.value || '').trim();
+  if (!text) return;
+  const comments = getOQComments(id);
+  const now = new Date();
+  const ts = now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' · ' +
+             now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  comments.push({ text, ts });
+  saveOQComments(id, comments);
+  ta.value = '';
+  renderOQCommentList(id);
+}
+function initOQComments() {
+  document.querySelectorAll('.oq-detail').forEach(detail => {
+    const id = detail.id.replace('oqDetail-', '');
+    const div = document.createElement('div');
+    div.className = 'oq-comments';
+    div.innerHTML = `
+      <div class="oq-comments-label">Notes</div>
+      <div class="oq-comment-list" id="oqCommentList-${id}"></div>
+      <div class="oq-comment-input-row">
+        <textarea class="oq-comment-textarea" id="oqCommentTA-${id}" placeholder="Add a note…"></textarea>
+        <button class="oq-comment-submit" onclick="addOQComment('${id}')">Add</button>
+      </div>`;
+    detail.appendChild(div);
+    renderOQCommentList(id);
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initOQComments);
+} else {
+  initOQComments();
+}
 
 </script>
 </body>
