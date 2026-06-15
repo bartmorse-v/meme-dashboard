@@ -1220,15 +1220,19 @@
         </div>
         <p id="channelTimelineNote" class="timeline-note"></p>
       </div>
-      <div class="card" style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden">
-        <span class="chart-period-chip">January 2026</span>
-        <div class="card-title">Member Voices</div>
-        <div class="voices-controls">
-          <div class="card-subtitle" id="voicesSubtitle" style="margin:0">Select a tile to filter</div>
+      <!-- DID YOU KNOW CAROUSEL -->
+      <div class="card" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="card-title" style="margin:0">Did You Know?</div>
+          <span style="font-size:11px;color:var(--muted);font-weight:600" id="dykCounter">1 / 10</span>
         </div>
-        <div class="voices-scroll" id="voicesScroll"></div>
-        <div style="padding:10px 0 2px;text-align:right">
-          <button id="dashSeeAllVoices" style="background:none;border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:600;color:var(--navy);cursor:pointer;font-family:inherit;">See All</button>
+        <div id="dykTrack" style="flex:1;position:relative;min-height:200px">
+          <!-- cards injected by JS -->
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px">
+          <button id="dykPrev" onclick="dykNav(-1)" style="background:none;border:1px solid var(--border);border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--navy);display:flex;align-items:center;justify-content:center;font-family:inherit">&#8592;</button>
+          <div id="dykDots" style="display:flex;gap:6px"></div>
+          <button id="dykNext" onclick="dykNav(1)" style="background:var(--navy);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:inherit">&#8594;</button>
         </div>
       </div>
     </div>
@@ -3311,14 +3315,89 @@ document.querySelectorAll('.header-nav a[data-page]').forEach(link => {
   });
 });
 
-document.getElementById('dashSeeAllVoices').addEventListener('click', () => {
-  document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
-  document.getElementById('page-voices').style.display = '';
-  document.querySelectorAll('.header-nav a[data-page]').forEach(a => a.classList.remove('active'));
-  document.querySelector('.header-nav a[data-page="voices"][data-sub="voices"]').classList.add('active');
-  showVoicesSub('voices');
-  window.scrollTo(0, 0);
-});
+/* ── DID YOU KNOW CAROUSEL ───────────────────────────── */
+const dykCards = [
+  {
+    icon: '📊',
+    headline: 'The MX Score is a composite of 9 channels',
+    body: 'Every channel — from NPS to Digital — feeds into the Member Experience (MX) Score. The result is a single number from 0 to 5.00 that reflects how members feel across every touchpoint.'
+  },
+  {
+    icon: '🔢',
+    headline: 'NPS is the only channel scored from -100 to +100',
+    body: 'NPS respondents rate likelihood to recommend on a 0–10 scale. Promoters (9–10) minus Detractors (0–6) equals the score. Passives (7–8) don\'t move the needle either way.'
+  },
+  {
+    icon: '😊',
+    headline: 'Most channels use three simple choices',
+    body: 'New Loan, New Member, Mortgage, Branch, and Digital all ask one question with three answers: Happy, Neutral, or Unhappy. The score is simply the percent of members who chose Happy.'
+  },
+  {
+    icon: '⭐',
+    headline: 'Phone and Chat use a 1–5 star rating',
+    body: 'Unlike CSAT channels, Phone and Chat use a weighted average star rating. 1 = very dissatisfied, 5 = very satisfied. The score is a decimal out of 5.00, not a percentage.'
+  },
+  {
+    icon: '📅',
+    headline: 'Branch surveys only go out 3 days a month',
+    body: 'To keep volume manageable, branch visit surveys are sent by text 1 day post-visit — but only on 3 randomly chosen days per month. Every branch member on those days gets the survey.'
+  },
+  {
+    icon: '💻',
+    headline: 'Digital surveys appear for just 1 week a month',
+    body: 'The Digital survey pops up on copperstatecu.org for one week per month and appears as a banner in online banking for one week per month — different weeks, different audiences.'
+  },
+  {
+    icon: '📞',
+    headline: 'Phone ratings are captured live on every call',
+    body: 'Solution Center reps verbally prompt members to rate their call experience before hanging up. No follow-up email or text needed — the rating is captured in real time via Talkdesk.'
+  },
+  {
+    icon: '🏦',
+    headline: 'Loan surveys go inside the funding communication',
+    body: 'New Loan and Mortgage surveys don\'t arrive separately — a survey link is embedded directly in the funding communication members receive at closing, reaching them at peak satisfaction.'
+  },
+  {
+    icon: '💬',
+    headline: 'Every single channel captures open-text comments',
+    body: 'All 9 channels have the Comment field enabled. That means every member in every interaction can leave a written response — creating the full member voice library in this dashboard.'
+  },
+  {
+    icon: '🎯',
+    headline: 'NPS only surveys 25% of members each quarter',
+    body: 'To avoid survey fatigue, only 25% of the membership is targeted per quarter via 2 emails. Over a full year, every member has an equal chance of being asked to share their feedback.'
+  }
+];
+
+let dykIndex = 0;
+
+function dykBuild() {
+  const track = document.getElementById('dykTrack');
+  const dots  = document.getElementById('dykDots');
+  if (!track) return;
+  track.innerHTML = dykCards.map((c, i) => `
+    <div class="dyk-card" data-i="${i}" style="display:${i===0?'flex':'none'};flex-direction:column;gap:10px;height:100%">
+      <div style="font-size:32px;line-height:1">${c.icon}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--navy);line-height:1.3">${c.headline}</div>
+      <div style="font-size:13px;color:var(--text-2);line-height:1.6">${c.body}</div>
+    </div>`).join('');
+  dots.innerHTML = dykCards.map((_, i) => `
+    <div onclick="dykGoTo(${i})" style="width:7px;height:7px;border-radius:50%;background:${i===0?'var(--navy)':'var(--border)'};cursor:pointer;transition:background 200ms"></div>`).join('');
+}
+
+function dykGoTo(i) {
+  document.querySelectorAll('.dyk-card').forEach(c => c.style.display = 'none');
+  document.querySelector(`.dyk-card[data-i="${i}"]`).style.display = 'flex';
+  document.querySelectorAll('#dykDots div').forEach((d, j) => d.style.background = j===i ? 'var(--navy)' : 'var(--border)');
+  document.getElementById('dykCounter').textContent = `${i+1} / ${dykCards.length}`;
+  dykIndex = i;
+}
+
+function dykNav(dir) {
+  dykGoTo((dykIndex + dir + dykCards.length) % dykCards.length);
+}
+
+dykBuild();
 
 /* ── PERIOD DROPDOWNS ────────────────────────────────── */
 document.getElementById('npsPeriodSelect').addEventListener('change', e => {
