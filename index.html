@@ -1089,15 +1089,16 @@
   <!-- KPI CARDS -->
   <div class="kpi-row">
     <div class="kpi-card tier-effective">
-      <div class="kpi-label">Overall MX Score</div>
+      <div class="kpi-label">Member Experience Score (MX)</div>
       <div class="kpi-value-row">
         <div class="kpi-value">3.56<span class="kpi-denom">/5.00</span></div>
         <span class="kpi-delta up">&#9650; +0.38</span>
       </div>
+      <div class="kpi-sub">from prior period</div>
       <span class="kpi-badge badge-effective">Effective</span>
     </div>
     <div class="kpi-card tier-effective kpi-thermo">
-      <div class="thermo-title">Performance Scale &mdash; Where do we stand?</div>
+      <div class="thermo-title">Performance Scale &mdash; <s>Where do we stand?</s></div>
       <div class="band-meter" style="margin-top:0">
         <div class="band-track">
           <div class="band-seg b-offtrack"></div>
@@ -1132,12 +1133,12 @@
         <div class="kpi-value">74</div>
         <span class="kpi-delta up">&#9650; +2 pts</span>
       </div>
+      <div class="kpi-sub">from prior period</div>
       <span class="kpi-badge badge-exceeds">Exceeds Expectations</span>
     </div>
   </div>
 
   <!-- NPS & MX SCORE TREND -->
-  <div class="section-label">Would our members recommend us?</div>
   <div class="row-full">
     <div class="card">
       <select class="chart-period-select" id="npsPeriodSelect">
@@ -1146,8 +1147,7 @@
         <option value="24">2024 Only</option>
         <option value="23">2023 Only</option>
       </select>
-      <div class="card-title">Net Promoter Score &amp; MX Score &mdash; Quarterly Trend</div>
-      <div class="card-subtitle">NPS tracks likelihood to recommend (left axis, quarterly Q3 2022&ndash;Q1 2026). MX Score is the composite of all 9 Experience Measures (right axis).</div>
+      <div class="card-title">Net Promoter Score | MX Score</div>
       <div class="chart-wrap" style="height:290px">
         <canvas id="npsChart"></canvas>
       </div>
@@ -1966,25 +1966,25 @@ const RED    = '#C41E3A';  // Semantic red (Off Track)
 const ORANGE = '#545859';  // Copper State Dark Gray (Mixed tier)
 const MUTED  = '#545859';  // Copper State Dark Gray
 
-// NPS plotted at quarter-end months on the 37-month mesLabels axis (Jan'23–Jan'26)
+// NPS plotted at quarter-end months on the 35-month mesLabels axis (Mar'23–Jan'26)
 const npsMonthly = [
-  null,null,67,  null,null,66,  null,null,66,  null,null,59,   // 2023 Q1–Q4
+  67,  null,null,66,  null,null,66,  null,null,59,             // 2023 Q1–Q4 (from Mar)
   null,null,68,  null,null,70,  null,null,69,  null,null,69,   // 2024 Q1–Q4
   null,null,67,  null,null,62,  null,null,72,  null,null,72,   // 2025 Q1–Q4
   74                                                             // Jan'26
 ];
-const npsEffective   = Array(37).fill(66);
-const npsExceeds     = Array(37).fill(70);
-const npsExceptional = Array(37).fill(80);
+const npsEffective   = Array(35).fill(66);
+const npsExceeds     = Array(35).fill(70);
+const npsExceptional = Array(35).fill(80);
 
 const mesLabels = [
-  'Jan\'23','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'23',
+  'Mar\'23','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'23',
   'Jan\'24','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'24',
   'Jan\'25','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec\'25',
   'Jan\'26'
 ];
 const mesScores = [
-  3.18,3.83,3.92,3.67,3.42,3.58,3.42,3.50,3.58,3.83,3.25,3.67,
+  3.92,3.67,3.42,3.58,3.42,3.50,3.58,3.83,3.25,3.67,
   3.64,4.08,3.83,3.67,3.75,3.50,3.83,3.75,3.25,3.58,3.75,3.80,
   3.82,2.56,3.11,2.70,2.60,2.90,3.10,3.18,3.27,3.36,3.36,3.18,
   3.56
@@ -2066,10 +2066,10 @@ channels.forEach(ch => {
 // NPS + MX Score Chart (dual axis, monthly x-axis)
 let npsChart = null;
 const npsRanges = {
-  'all':   { start: 0,  end: 37 },
-  '25-26': { start: 24, end: 37 },
-  '24':    { start: 12, end: 24 },
-  '23':    { start: 0,  end: 12 },
+  'all':   { start: 0,  end: 35 },
+  '25-26': { start: 22, end: 35 },
+  '24':    { start: 10, end: 22 },
+  '23':    { start: 0,  end: 10 },
 };
 
 function buildNpsChart(rangeKey) {
