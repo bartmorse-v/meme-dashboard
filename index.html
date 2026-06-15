@@ -1094,11 +1094,11 @@
         <div class="kpi-value">3.56<span class="kpi-denom">/5.00</span></div>
         <span class="kpi-delta up">&#9650; +0.38</span>
       </div>
-      <div class="kpi-sub">from prior period</div>
       <span class="kpi-badge badge-effective">Effective</span>
+      <div class="kpi-sub" style="text-align:left;margin-top:6px">since Dec 2025</div>
     </div>
     <div class="kpi-card tier-effective kpi-thermo">
-      <div class="thermo-title">Performance Scale &mdash; <s>Where do we stand?</s></div>
+      <div class="thermo-title">Performance Scale</div>
       <div class="band-meter" style="margin-top:0">
         <div class="band-track">
           <div class="band-seg b-offtrack"></div>
@@ -1133,8 +1133,8 @@
         <div class="kpi-value">74</div>
         <span class="kpi-delta up">&#9650; +2 pts</span>
       </div>
-      <div class="kpi-sub">from prior period</div>
       <span class="kpi-badge badge-exceeds">Exceeds Expectations</span>
+      <div class="kpi-sub" style="text-align:left;margin-top:6px">since Dec 2025</div>
     </div>
   </div>
 
@@ -1159,16 +1159,13 @@
           <div style="width:20px;height:3px;background:#B87333;border-radius:2px;border-top:2px dashed #B87333"></div> MX Score (right axis)
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
-          <div style="width:20px;height:0;border-top:2px dashed #86EFAC"></div> Exceptional (NPS 80)
+          <div style="width:20px;height:0;border-top:2px dashed #86EFAC"></div> Exceptional
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
-          <div style="width:20px;height:0;border-top:2px dashed #3B82F6"></div> Exceeds (NPS 70)
+          <div style="width:20px;height:0;border-top:2px dashed #3B82F6"></div> Exceeds
         </div>
         <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
-          <div style="width:20px;height:0;border-top:2px dashed #CA8A04"></div> Effective (NPS 66)
-        </div>
-        <div style="margin-left:auto;font-size:12px;font-weight:700;color:var(--navy)">
-          Q1 2026: NPS <span style="color:var(--blue)">74 &mdash; All-time high</span> &nbsp;&middot;&nbsp; MX <span style="color:#B87333">3.56</span>
+          <div style="width:20px;height:0;border-top:2px dashed #CA8A04"></div> Effective
         </div>
       </div>
     </div>
@@ -2116,7 +2113,7 @@ function buildNpsChart(rangeKey) {
         tooltip:{ callbacks:{ label: ctx => {
           if (ctx.dataset.label==='NPS Score') return ` NPS: ${ctx.parsed.y}`;
           if (ctx.dataset.label==='MX Score') return ctx.raw===null ? null : ` MX Score: ${Number(ctx.raw).toFixed(2)}`;
-          return ` ${ctx.dataset.label}: ${ctx.parsed.y}`;
+          return null;
         }}}
       },
       scales:{
